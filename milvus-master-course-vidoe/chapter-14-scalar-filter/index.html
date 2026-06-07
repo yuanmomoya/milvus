@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 14 Scalar Filter</title>
+</head>
+<body>
+<div data-composition-id="ch-14-scalar-filter" data-start="0" data-duration="161.30" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="161.30" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们用混合检索解决了漏召回问题 (0.0s - 19.9s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="19.87" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们用混合检索解决了漏召回问题</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们用混合检索解决了漏召回问题。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 但很多时候，用户的需求不只是"找相似的"，还有"找相似的且满足某些条件的"。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 比如：找和这篇文章语义相似的、但只要最近一周发布的、且分类是技术的。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 这就是标量过滤。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 标量过滤的本质是在向量搜索的基础上加WH (19.9s - 35.9s) -->
+  <div id="scene-2" class="scene clip" data-start="19.87" data-duration="16.06" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">标量过滤的本质是在向量搜索的基础上加WH</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 标量过滤的本质是在向量搜索的基础上加WHERE条件。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> Milvus的search方法有个filter参数，传入一个表达式字符串，语法类似SQL的WHERE子句。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 支持比较运算、逻辑运算、IN、LIKE、JSON路径等。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 常用的过滤表达式长这样 (35.9s - 60.4s) -->
+  <div id="scene-3" class="scene clip" data-start="35.93" data-duration="24.46" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">常用的过滤表达式长这样</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 常用的过滤表达式长这样。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 等于：category == "tech"。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 范围：created_at > 1700000000。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 包含：status in ["active", "pending"]。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 过滤有两种执行策略：前过滤和后过滤 (60.4s - 79.2s) -->
+  <div id="scene-4" class="scene clip" data-start="60.38" data-duration="18.86" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">过滤有两种执行策略：前过滤和后过滤</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 过滤有两种执行策略：前过滤和后过滤。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 前过滤是先按条件筛选出符合的数据，再在这个子集里做向量搜索。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 后过滤是先做向量搜索拿到候选集，再用条件过滤掉不符合的。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> Milvus会自动选择策略，但理解区别很重要。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 前过滤的问题是：如果过滤后数据量太小，向 (79.2s - 101.3s) -->
+  <div id="scene-5" class="scene clip" data-start="79.25" data-duration="22.03" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">前过滤的问题是：如果过滤后数据量太小，向</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 前过滤的问题是：如果过滤后数据量太小，向量搜索的索引可能失效，退化成暴力扫描。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 后过滤的问题是：如果过滤比例很高，比如99%的数据都不符合条件，那TopK个结果可能凑不够。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> Milvus的做法是动态调整：过滤比例低时用后过滤，高时用前过滤。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 要让过滤快，关键是给高频过滤字段建标量索 (101.3s - 124.0s) -->
+  <div id="scene-6" class="scene clip" data-start="101.28" data-duration="22.70" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">要让过滤快，关键是给高频过滤字段建标量索</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 要让过滤快，关键是给高频过滤字段建标量索引。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 用INVERTED类型，适合等值和IN查询。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 不建索引的字段也能过滤，但会全量扫描，数据量大时很慢。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 建议：category、status、tenant_id这些高频过滤字段一定要建索引。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 有个常见坑：过滤条件太严导致结果不够 (124.0s - 142.4s) -->
+  <div id="scene-7" class="scene clip" data-start="123.98" data-duration="18.46" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">有个常见坑：过滤条件太严导致结果不够</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 有个常见坑：过滤条件太严导致结果不够。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 比如你要TopK等于10，但满足条件的数据只有3条。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 这时候Milvus会返回3条，不会报错但结果不完整。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 解决方案是放宽条件，或者在应用层处理结果不足的情况。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (142.4s - 161.3s) -->
+  <div id="scene-8" class="scene clip" data-start="142.44" data-duration="18.86" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 标量过滤是向量搜索的精细化工具。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 记住三点：高频字段建INVERTED索引、注意过滤比例对性能的影响、处理好结果不足的边界情况。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们看Partition分区设计，另一种数据隔离方式。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="161.30" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们用混合检索解决了漏召回问题。</div>
+    <div class="subtitle-text" id="sub-01">但很多时候，用户的需求不只是&quot;找相似的&quot;，还有&quot;找相似的且满足某些条件的&quot;。</div>
+    <div class="subtitle-text" id="sub-02">比如：找和这篇文章语义相似的、但只要最近一周发布的、且分类是技术的。</div>
+    <div class="subtitle-text" id="sub-03">这就是标量过滤。</div>
+    <div class="subtitle-text" id="sub-04">标量过滤的本质是在向量搜索的基础上加WHERE条件。</div>
+    <div class="subtitle-text" id="sub-05">Milvus的search方法有个filter参数，传入一个表达式字符串，语法类似SQL的WHERE子句。</div>
+    <div class="subtitle-text" id="sub-06">支持比较运算、逻辑运算、IN、LIKE、JSON路径等。</div>
+    <div class="subtitle-text" id="sub-07">常用的过滤表达式长这样。</div>
+    <div class="subtitle-text" id="sub-08">等于：category == &quot;tech&quot;。</div>
+    <div class="subtitle-text" id="sub-09">范围：created_at &gt; 1700000000。</div>
+    <div class="subtitle-text" id="sub-10">包含：status in [&quot;active&quot;, &quot;pending&quot;]。</div>
+    <div class="subtitle-text" id="sub-11">模糊匹配：title like &quot;%Milvus%&quot;。</div>
+    <div class="subtitle-text" id="sub-12">JSON路径：metadata[&quot;author&quot;] == &quot;张三&quot;。</div>
+    <div class="subtitle-text" id="sub-13">多条件组合用and和or连接。</div>
+    <div class="subtitle-text" id="sub-14">过滤有两种执行策略：前过滤和后过滤。</div>
+    <div class="subtitle-text" id="sub-15">前过滤是先按条件筛选出符合的数据，再在这个子集里做向量搜索。</div>
+    <div class="subtitle-text" id="sub-16">后过滤是先做向量搜索拿到候选集，再用条件过滤掉不符合的。</div>
+    <div class="subtitle-text" id="sub-17">Milvus会自动选择策略，但理解区别很重要。</div>
+    <div class="subtitle-text" id="sub-18">前过滤的问题是：如果过滤后数据量太小，向量搜索的索引可能失效，退化成暴力扫描。</div>
+    <div class="subtitle-text" id="sub-19">后过滤的问题是：如果过滤比例很高，比如99%的数据都不符合条件，那TopK个结果可能凑不够。</div>
+    <div class="subtitle-text" id="sub-20">Milvus的做法是动态调整：过滤比例低时用后过滤，高时用前过滤。</div>
+    <div class="subtitle-text" id="sub-21">要让过滤快，关键是给高频过滤字段建标量索引。</div>
+    <div class="subtitle-text" id="sub-22">用INVERTED类型，适合等值和IN查询。</div>
+    <div class="subtitle-text" id="sub-23">不建索引的字段也能过滤，但会全量扫描，数据量大时很慢。</div>
+    <div class="subtitle-text" id="sub-24">建议：category、status、tenant_id这些高频过滤字段一定要建索引。</div>
+    <div class="subtitle-text" id="sub-25">有个常见坑：过滤条件太严导致结果不够。</div>
+    <div class="subtitle-text" id="sub-26">比如你要TopK等于10，但满足条件的数据只有3条。</div>
+    <div class="subtitle-text" id="sub-27">这时候Milvus会返回3条，不会报错但结果不完整。</div>
+    <div class="subtitle-text" id="sub-28">解决方案是放宽条件，或者在应用层处理结果不足的情况。</div>
+    <div class="subtitle-text" id="sub-29">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-30">标量过滤是向量搜索的精细化工具。</div>
+    <div class="subtitle-text" id="sub-31">记住三点：高频字段建INVERTED索引、注意过滤比例对性能的影响、处理好结果不足的边界情况。</div>
+    <div class="subtitle-text" id="sub-32">下一章我们看Partition分区设计，另一种数据隔离方式。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-14-scalar-filter"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (19.9s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 20.17);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.07);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.57);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.07);
+
+  // === Scene 3 (35.9s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 36.23);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 37.13);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 38.63);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 40.13);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 41.63);
+
+  // === Scene 4 (60.4s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 60.68);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 61.58);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 63.08);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 64.58);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 66.08);
+
+  // === Scene 5 (79.2s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 79.55);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 80.45);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 81.95);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 83.45);
+
+  // === Scene 6 (101.3s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 101.58);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 102.48);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 103.98);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 105.48);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 106.98);
+
+  // === Scene 7 (124.0s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 124.28);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 125.18);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 126.68);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 128.18);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 129.68);
+
+  // === Scene 8 (142.4s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 142.74);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 143.64);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 145.14);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 146.64);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 148.14);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 3.51);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 3.81);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 11.14);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.44);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 17.96);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 18.26);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 19.57);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 19.87);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 23.47);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.77);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 31.43);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 31.73);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 35.63);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.93);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 37.34);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 37.64);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 40.47);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 40.77);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 44.30);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.60);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 49.28);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 49.58);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 53.12);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 53.42);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 57.96);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 58.26);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 60.09);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.38);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 63.51);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 63.81);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 69.22);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 69.52);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 74.56);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.86);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 78.94);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.25);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 86.23);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.53);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 94.82);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.12);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 100.98);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 101.28);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 105.36);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.66);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 109.74);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 110.04);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 115.12);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 115.42);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 123.68);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 123.98);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 127.30);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.60);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 132.24);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 132.54);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 137.19);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 137.49);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 142.14);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 142.44);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 143.46);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 143.76);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 146.48);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.78);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 155.34);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.64);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 161.00);
+
+  window.__timelines["ch-14-scalar-filter"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

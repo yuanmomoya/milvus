@@ -1,0 +1,15 @@
+前面三十七章我们一直在用Milvus，这一章我们打开它的源码看看里面是怎么实现的。不是要你成为Milvus开发者，而是理解内部机制后，遇到问题能更快定位，做架构决策时能更有底气。
+
+Milvus的源码在GitHub上，主要用Go语言写，搜索核心用C++和CGO桥接。目录结构大致是：internal/proxy是Proxy组件、internal/datacoord是DataCoord、internal/querynodev2是QueryNode、internal/indexnode是IndexNode。每个组件是一个独立的Go package。
+
+先看写入路径。Proxy收到insert请求后，分配时间戳，按Shard路由，把数据序列化成消息发到消息队列。代码在internal/proxy/impl.go的Insert方法。DataNode从消息队列消费，写入内存的growing segment，代码在internal/datanode/flow_graph。
+
+再看搜索路径。Proxy收到search请求后，从QueryCoord获取Segment分布，把请求发给对应的QueryNode。QueryNode在本地执行ANN搜索，代码在internal/querynodev2/segments/segment.go。搜索核心是CGO调用C++的knowhere库，knowhere封装了HNSW、IVF等算法的实现。
+
+knowhere是Milvus的向量搜索引擎，独立仓库。它封装了faiss、hnswlib等开源库，提供统一的索引接口。如果你想理解HNSW搜索的具体实现，看knowhere/index/hnsw目录。如果想理解IVF，看knowhere/index/ivf目录。
+
+Segment的生命周期管理在DataCoord里。internal/datacoord/segment_manager.go管理Segment的分配和封存。Compaction逻辑在internal/datacoord/compaction目录。理解这部分代码能帮你理解为什么有时候Segment会碎片化，以及Compaction的触发条件。
+
+怎么高效阅读源码？几个建议。第一，从接口入手：先看proto定义，理解每个RPC的输入输出。proto文件在internal/proto目录。第二，跟着请求走：从Proxy的handler开始，一路跟到Node的执行逻辑。第三，看测试：单元测试是最好的使用示例。第四，用IDE的跳转功能，Go的接口实现关系用IDE追踪最方便。
+
+好，总结一下。读源码不是为了改源码，是为了理解黑盒。知道写入走WAL、搜索走knowhere、Segment有生命周期，遇到问题时就能快速定位到对应的代码路径。下一章是面试题大全，帮你把前面学的知识系统化。

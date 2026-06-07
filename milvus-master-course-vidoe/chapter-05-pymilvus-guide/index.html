@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 05 Pymilvus Guide</title>
+</head>
+<body>
+<div data-composition-id="ch-05-pymilvus-guide" data-start="0" data-duration="173.90" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="173.90" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们用Docker把Milvus跑 (0.0s - 20.3s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="20.30" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们用Docker把Milvus跑</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们用Docker把Milvus跑起来了，这一章深入pymilvus这个Python SDK。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 搞清楚五件事：怎么连接、怎么定义Schema、怎么建索引、怎么增删改查、以及生产环境的批量写入模式。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这五件事覆盖了日常开发百分之九十的场景。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先说连接 (20.3s - 48.2s) -->
+  <div id="scene-2" class="scene clip" data-start="20.30" data-duration="27.86" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先说连接</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先说连接。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> pymilvus提供了MilvusClient这个高层API，三行代码搞定。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 传入uri和token就能连上。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 本地开发不需要token，Zilliz Cloud需要API Key。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 连上了，下一步定义Schema (48.2s - 74.6s) -->
+  <div id="scene-3" class="scene clip" data-start="48.17" data-duration="26.42" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">连上了，下一步定义Schema</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 连上了，下一步定义Schema。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> Schema就是表结构：主键字段、标量字段、向量字段。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 主键推荐用VARCHAR加业务ID，这样才能用upsert做幂等写入。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 向量字段必须指定维度dim，要和Embedding模型输出一致。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: Schema定义好了，接下来建索引 (74.6s - 100.5s) -->
+  <div id="scene-4" class="scene clip" data-start="74.59" data-duration="25.87" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">Schema定义好了，接下来建索引</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> Schema定义好了，接下来建索引。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 向量索引决定搜索速度和精度。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> HNSW适合中小规模、对延迟敏感的场景。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> IVF_FLAT适合数据量大但内存充足的场景。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 核心来了：增删改查 (100.5s - 131.3s) -->
+  <div id="scene-5" class="scene clip" data-start="100.46" data-duration="30.89" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">核心来了：增删改查</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 核心来了：增删改查。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> insert写入新数据，upsert写入或覆盖，delete按表达式删除。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> search是向量相似度搜索，返回TopK。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> query是标量条件查询，类似SQL的WHERE。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 最后说生产级的批量写入 (131.3s - 154.8s) -->
+  <div id="scene-6" class="scene clip" data-start="131.35" data-duration="23.47" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">最后说生产级的批量写入</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 最后说生产级的批量写入。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 一次upsert几万条数据，不要一条一条写。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 推荐每批一千到五千条，用循环分批提交。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 失败了要重试，用指数退避。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 好，总结一下 (154.8s - 173.9s) -->
+  <div id="scene-7" class="scene clip" data-start="154.82" data-duration="19.08" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> pymilvus的日常就是五个动作：connect、create、insert、search、query。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 记住用MilvusClient、用upsert、用HNSW加COSINE，这三个默认选择能覆盖大多数场景。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 下一章我们聊Collection设计的最佳实践。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="173.90" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们用Docker把Milvus跑起来了，这一章深入pymilvus这个Python SDK。</div>
+    <div class="subtitle-text" id="sub-01">搞清楚五件事：怎么连接、怎么定义Schema、怎么建索引、怎么增删改查、以及生产环境的批量写入模式。</div>
+    <div class="subtitle-text" id="sub-02">这五件事覆盖了日常开发百分之九十的场景。</div>
+    <div class="subtitle-text" id="sub-03">先说连接。</div>
+    <div class="subtitle-text" id="sub-04">pymilvus提供了MilvusClient这个高层API，三行代码搞定。</div>
+    <div class="subtitle-text" id="sub-05">传入uri和token就能连上。</div>
+    <div class="subtitle-text" id="sub-06">本地开发不需要token，Zilliz Cloud需要API Key。</div>
+    <div class="subtitle-text" id="sub-07">连上之后调list_collections验证一下，没报错就说明OK。</div>
+    <div class="subtitle-text" id="sub-08">注意：新项目一律用MilvusClient，不要用旧版的connections.connect加Collection那套ORM。</div>
+    <div class="subtitle-text" id="sub-09">连上了，下一步定义Schema。</div>
+    <div class="subtitle-text" id="sub-10">Schema就是表结构：主键字段、标量字段、向量字段。</div>
+    <div class="subtitle-text" id="sub-11">主键推荐用VARCHAR加业务ID，这样才能用upsert做幂等写入。</div>
+    <div class="subtitle-text" id="sub-12">向量字段必须指定维度dim，要和Embedding模型输出一致。</div>
+    <div class="subtitle-text" id="sub-13">还有个开关叫enable_dynamic_field，开了之后可以写入Schema里没定义的字段，灵活但过滤性能差一些。</div>
+    <div class="subtitle-text" id="sub-14">Schema定义好了，接下来建索引。</div>
+    <div class="subtitle-text" id="sub-15">向量索引决定搜索速度和精度。</div>
+    <div class="subtitle-text" id="sub-16">HNSW适合中小规模、对延迟敏感的场景。</div>
+    <div class="subtitle-text" id="sub-17">IVF_FLAT适合数据量大但内存充足的场景。</div>
+    <div class="subtitle-text" id="sub-18">DISKANN适合超大规模、内存有限的场景。</div>
+    <div class="subtitle-text" id="sub-19">标量字段也可以建索引，用INVERTED类型，加速过滤查询。</div>
+    <div class="subtitle-text" id="sub-20">索引必须在load_collection之前创建。</div>
+    <div class="subtitle-text" id="sub-21">核心来了：增删改查。</div>
+    <div class="subtitle-text" id="sub-22">insert写入新数据，upsert写入或覆盖，delete按表达式删除。</div>
+    <div class="subtitle-text" id="sub-23">search是向量相似度搜索，返回TopK。</div>
+    <div class="subtitle-text" id="sub-24">query是标量条件查询，类似SQL的WHERE。</div>
+    <div class="subtitle-text" id="sub-25">search和query可以组合：先用向量找相似的，再用filter过滤不符合条件的。</div>
+    <div class="subtitle-text" id="sub-26">过滤表达式支持大于小于、in、like、JSON路径这些。</div>
+    <div class="subtitle-text" id="sub-27">最后说生产级的批量写入。</div>
+    <div class="subtitle-text" id="sub-28">一次upsert几万条数据，不要一条一条写。</div>
+    <div class="subtitle-text" id="sub-29">推荐每批一千到五千条，用循环分批提交。</div>
+    <div class="subtitle-text" id="sub-30">失败了要重试，用指数退避。</div>
+    <div class="subtitle-text" id="sub-31">写入前先检查数据格式，向量维度不对会直接报错。</div>
+    <div class="subtitle-text" id="sub-32">大批量写入时可以先不建索引，写完再统一建，速度快很多。</div>
+    <div class="subtitle-text" id="sub-33">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-34">pymilvus的日常就是五个动作：connect、create、insert、search、query。</div>
+    <div class="subtitle-text" id="sub-35">记住用MilvusClient、用upsert、用HNSW加COSINE，这三个默认选择能覆盖大多数场景。</div>
+    <div class="subtitle-text" id="sub-36">下一章我们聊Collection设计的最佳实践。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-05-pymilvus-guide"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (20.3s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 20.60);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.50);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.00);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.50);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 26.00);
+
+  // === Scene 3 (48.2s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 48.47);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.37);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 50.87);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 52.37);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 53.87);
+
+  // === Scene 4 (74.6s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 74.89);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 75.79);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 77.29);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 78.79);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 80.29);
+
+  // === Scene 5 (100.5s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 100.76);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 101.66);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 103.16);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 104.66);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 106.16);
+
+  // === Scene 6 (131.3s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 131.65);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 132.55);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 134.05);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 135.55);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 137.05);
+
+  // === Scene 7 (154.8s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 155.12);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 156.02);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 157.52);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 159.02);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 160.52);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 8.16);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 8.46);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 16.62);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 16.92);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 20.00);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.30);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 20.72);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.02);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.21);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.51);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 28.52);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 28.82);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 33.57);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 33.87);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 38.62);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 38.92);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 47.86);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 48.17);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 50.36);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 50.66);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 54.55);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 54.85);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 59.99);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.29);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 64.97);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 65.27);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 74.29);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.59);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 77.35);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 77.65);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 79.74);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 80.04);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 83.14);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 83.44);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 87.05);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 87.35);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 90.80);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 91.10);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 95.91);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 96.21);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 100.16);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 100.46);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 102.02);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 102.32);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 108.91);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 109.21);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 113.00);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 113.30);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 117.65);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 117.95);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 125.65);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.95);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 131.05);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.35);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 133.48);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 133.78);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 137.93);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.23);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 141.77);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 142.07);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 144.40);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 144.70);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 149.06);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 149.36);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 154.52);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.82);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 155.49);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.79);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 162.88);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 163.18);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 170.26);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 170.56);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 173.60);
+
+  window.__timelines["ch-05-pymilvus-guide"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

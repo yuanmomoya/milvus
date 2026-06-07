@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 30 Image Search</title>
+</head>
+<body>
+<div data-composition-id="ch-30-image-search" data-start="0" data-duration="172.10" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="172.10" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面二十九章都在聊文本检索，从这一章开始 (0.0s - 19.2s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="19.25" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面二十九章都在聊文本检索，从这一章开始</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面二十九章都在聊文本检索，从这一章开始我们进入多模态领域。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 第一站：图片检索。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 用户上传一张图片或输入一段文字描述，系统返回最相似的图片。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 电商找同款、内容审核、以图搜图，都是这个场景。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 图片检索的核心和文本检索一样：把图片变成 (19.2s - 40.9s) -->
+  <div id="scene-2" class="scene clip" data-start="19.25" data-duration="21.67" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">图片检索的核心和文本检索一样：把图片变成</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 图片检索的核心和文本检索一样：把图片变成向量，存入Milvus，搜索时比较向量距离。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 区别在于Embedding模型不同。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 文本用BGE这类语言模型，图片用视觉模型。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 最常用的是CLIP：它能同时处理图片和文本，把两者映射到同一个向量空间。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: CLIP的特别之处在于：你可以用文字搜图 (40.9s - 59.8s) -->
+  <div id="scene-3" class="scene clip" data-start="40.92" data-duration="18.86" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">CLIP的特别之处在于：你可以用文字搜图</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> CLIP的特别之处在于：你可以用文字搜图片。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 比如输入"一只橘猫趴在键盘上"，CLIP把这段文字编码成向量，和图片向量在同一个空间里比较距离，就能找到匹配的图片。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 这叫跨模态检索，是CLIP最强大的能力。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 图片入库流程 (59.8s - 81.9s) -->
+  <div id="scene-4" class="scene clip" data-start="59.78" data-duration="22.08" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">图片入库流程</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 图片入库流程。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 第一步，收集图片，记录路径或URL。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 第二步，用CLIP的图片编码器提取特征向量。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 第三步，连同图片路径、标签、尺寸等元数据一起upsert到Milvus。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 搜索有两种模式 (81.9s - 105.9s) -->
+  <div id="scene-5" class="scene clip" data-start="81.86" data-duration="24.07" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">搜索有两种模式</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 搜索有两种模式。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 以图搜图：用户上传图片，用CLIP图片编码器提取向量，搜索Milvus返回相似图片。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 以文搜图：用户输入文字描述，用CLIP文本编码器提取向量，搜索Milvus返回匹配图片。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 两种模式用同一个Collection，因为CLIP把图片和文本映射到了同一个空间。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 工程上有几个注意点 (105.9s - 133.0s) -->
+  <div id="scene-6" class="scene clip" data-start="105.94" data-duration="27.05" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">工程上有几个注意点</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 工程上有几个注意点。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 第一，图片预处理：统一resize到模型要求的尺寸，通常224x224。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 第二，批量编码：GPU上批量处理图片比逐张快很多。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 第三，去重：用图片的感知哈希做主键，避免重复入库。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: CLIP模型的选择 (133.0s - 154.0s) -->
+  <div id="scene-7" class="scene clip" data-start="132.98" data-duration="21.07" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">CLIP模型的选择</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> CLIP模型的选择。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> clip-vit-base-patch32：512维，速度快，适合入门和资源受限场景。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> clip-vit-large-patch14：768维，精度更高，适合对质量要求高的场景。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 中文场景可以用Chinese-CLIP，对中文描述的理解更好。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (154.1s - 172.1s) -->
+  <div id="scene-8" class="scene clip" data-start="154.06" data-duration="18.05" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 图片检索等于CLIP编码加Milvus存储加向量搜索。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 支持以图搜图和以文搜图两种模式。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 核心是选对模型、做好预处理、设计好元数据Schema。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="172.10" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面二十九章都在聊文本检索，从这一章开始我们进入多模态领域。</div>
+    <div class="subtitle-text" id="sub-01">第一站：图片检索。</div>
+    <div class="subtitle-text" id="sub-02">用户上传一张图片或输入一段文字描述，系统返回最相似的图片。</div>
+    <div class="subtitle-text" id="sub-03">电商找同款、内容审核、以图搜图，都是这个场景。</div>
+    <div class="subtitle-text" id="sub-04">图片检索的核心和文本检索一样：把图片变成向量，存入Milvus，搜索时比较向量距离。</div>
+    <div class="subtitle-text" id="sub-05">区别在于Embedding模型不同。</div>
+    <div class="subtitle-text" id="sub-06">文本用BGE这类语言模型，图片用视觉模型。</div>
+    <div class="subtitle-text" id="sub-07">最常用的是CLIP：它能同时处理图片和文本，把两者映射到同一个向量空间。</div>
+    <div class="subtitle-text" id="sub-08">CLIP的特别之处在于：你可以用文字搜图片。</div>
+    <div class="subtitle-text" id="sub-09">比如输入&quot;一只橘猫趴在键盘上&quot;，CLIP把这段文字编码成向量，和图片向量在同一个空间里比较距离，就能找到匹配的图片。</div>
+    <div class="subtitle-text" id="sub-10">这叫跨模态检索，是CLIP最强大的能力。</div>
+    <div class="subtitle-text" id="sub-11">图片入库流程。</div>
+    <div class="subtitle-text" id="sub-12">第一步，收集图片，记录路径或URL。</div>
+    <div class="subtitle-text" id="sub-13">第二步，用CLIP的图片编码器提取特征向量。</div>
+    <div class="subtitle-text" id="sub-14">第三步，连同图片路径、标签、尺寸等元数据一起upsert到Milvus。</div>
+    <div class="subtitle-text" id="sub-15">注意：Milvus里不存图片本身，只存向量和元数据。</div>
+    <div class="subtitle-text" id="sub-16">图片文件放在对象存储或文件系统里。</div>
+    <div class="subtitle-text" id="sub-17">搜索有两种模式。</div>
+    <div class="subtitle-text" id="sub-18">以图搜图：用户上传图片，用CLIP图片编码器提取向量，搜索Milvus返回相似图片。</div>
+    <div class="subtitle-text" id="sub-19">以文搜图：用户输入文字描述，用CLIP文本编码器提取向量，搜索Milvus返回匹配图片。</div>
+    <div class="subtitle-text" id="sub-20">两种模式用同一个Collection，因为CLIP把图片和文本映射到了同一个空间。</div>
+    <div class="subtitle-text" id="sub-21">工程上有几个注意点。</div>
+    <div class="subtitle-text" id="sub-22">第一，图片预处理：统一resize到模型要求的尺寸，通常224x224。</div>
+    <div class="subtitle-text" id="sub-23">第二，批量编码：GPU上批量处理图片比逐张快很多。</div>
+    <div class="subtitle-text" id="sub-24">第三，去重：用图片的感知哈希做主键，避免重复入库。</div>
+    <div class="subtitle-text" id="sub-25">第四，缩略图：搜索结果展示时用缩略图，不要加载原图。</div>
+    <div class="subtitle-text" id="sub-26">CLIP模型的选择。</div>
+    <div class="subtitle-text" id="sub-27">clip-vit-base-patch32：512维，速度快，适合入门和资源受限场景。</div>
+    <div class="subtitle-text" id="sub-28">clip-vit-large-patch14：768维，精度更高，适合对质量要求高的场景。</div>
+    <div class="subtitle-text" id="sub-29">中文场景可以用Chinese-CLIP，对中文描述的理解更好。</div>
+    <div class="subtitle-text" id="sub-30">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-31">图片检索等于CLIP编码加Milvus存储加向量搜索。</div>
+    <div class="subtitle-text" id="sub-32">支持以图搜图和以文搜图两种模式。</div>
+    <div class="subtitle-text" id="sub-33">核心是选对模型、做好预处理、设计好元数据Schema。</div>
+    <div class="subtitle-text" id="sub-34">下一章我们深入CLIP多模态检索的更多玩法。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-30-image-search"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (19.2s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 19.55);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 20.45);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.95);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.45);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.95);
+
+  // === Scene 3 (40.9s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 41.22);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 42.12);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 43.62);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 45.12);
+
+  // === Scene 4 (59.8s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 60.08);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 60.98);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 62.48);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 63.98);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 65.48);
+
+  // === Scene 5 (81.9s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 82.16);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 83.06);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 84.56);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 86.06);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 87.56);
+
+  // === Scene 6 (105.9s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 106.24);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 107.14);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 108.64);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 110.14);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 111.64);
+
+  // === Scene 7 (133.0s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 133.28);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 134.18);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 135.68);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 137.18);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 138.68);
+
+  // === Scene 8 (154.1s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 154.36);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 155.26);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 156.76);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 158.26);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 159.76);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 6.05);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 6.35);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 7.95);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 8.25);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 14.08);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 14.38);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 18.95);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 19.25);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.73);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 27.03);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 30.06);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 30.36);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 33.95);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 34.25);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 40.62);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 40.92);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 44.77);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 45.07);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 55.71);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 56.01);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 59.48);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 59.78);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 60.71);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 61.01);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 63.86);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 64.16);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 67.72);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 68.02);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 74.02);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.32);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 78.58);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 78.88);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 81.56);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 81.86);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 82.99);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 83.29);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 90.47);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.77);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 98.32);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 98.62);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 105.63);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.94);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 107.86);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 108.16);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 115.84);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 116.14);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 121.38);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 121.68);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 126.93);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.23);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 132.69);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 132.98);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 134.31);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 134.61);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 141.34);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 141.64);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 148.69);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 148.99);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 153.75);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.06);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 155.04);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.34);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 159.96);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 160.26);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 162.88);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 163.18);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 167.80);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.10);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 171.81);
+
+  window.__timelines["ch-30-image-search"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

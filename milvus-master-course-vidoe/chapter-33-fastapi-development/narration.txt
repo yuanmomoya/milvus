@@ -1,0 +1,15 @@
+前面我们一直在写检索逻辑，但检索系统最终要通过API暴露给前端或其他服务。这一章我们用FastAPI开发向量检索的API接口：路由设计、请求响应模型、异步处理、错误处理、以及性能优化。
+
+FastAPI的优势是什么？类型安全、自动文档、异步支持、性能好。用Pydantic定义请求和响应模型，FastAPI自动做参数校验和文档生成。async/await让IO密集的操作不阻塞，适合调用Milvus和LLM这种网络IO场景。
+
+API路由设计。核心接口通常有四个。POST /documents：上传文档，切分编码入库。POST /search：语义搜索，传入查询文本返回相似结果。POST /ask：RAG问答，传入问题返回AI生成的答案。DELETE /documents/{id}：删除指定文档。简洁明了，RESTful风格。
+
+请求响应模型用Pydantic定义。SearchRequest包含query、top_k、filter等字段。SearchResponse包含results列表，每条有id、text、score、metadata。用Pydantic的好处是自动校验：top_k必须大于0、query不能为空，不合法的请求直接返回422错误。
+
+异步处理是关键。Milvus的pymilvus客户端本身是同步的，但可以用asyncio.to_thread包装成异步调用。Embedding编码如果用GPU，也是同步阻塞的，同样需要包装。这样多个请求可以并发处理，不会互相阻塞。
+
+错误处理要分层。Milvus连接失败返回503 Service Unavailable。Collection不存在返回404。参数错误返回422。LLM调用超时返回504。内部错误返回500。每种错误都要有清晰的错误消息，方便调用方排查。用FastAPI的exception_handler统一处理。
+
+性能优化几个点。第一，Embedding模型启动时加载一次，用lifespan事件管理。第二，MilvusClient也是启动时创建一次，全局复用。第三，大文档上传用后台任务处理，接口立即返回任务ID，客户端轮询状态。第四，搜索结果加缓存，相同查询短时间内直接返回缓存。
+
+好，总结一下。FastAPI加Milvus是构建向量检索API的标准组合。类型安全保证接口质量，异步处理保证并发性能，分层错误处理保证可维护性。下一章我们把所有组件整合，构建一个完整的AI搜索系统。

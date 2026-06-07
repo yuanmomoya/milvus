@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 04 Docker Deploy</title>
+</head>
+<body>
+<div data-composition-id="ch-04-docker-deploy" data-start="0" data-duration="164.23" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="164.23" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们五步跑通了Milvus，用的是 (0.0s - 16.5s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="16.46" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们五步跑通了Milvus，用的是</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们五步跑通了Milvus，用的是默认配置。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 但生产环境不能靠默认值。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这一章我们深入Docker Compose部署：搞清楚三个服务各自干什么、端口怎么规划、配置文件怎么覆盖、以及启动失败怎</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先看Docker Compose里的三个 (16.5s - 43.7s) -->
+  <div id="scene-2" class="scene clip" data-start="16.46" data-duration="27.24" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先看Docker Compose里的三个</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先看Docker Compose里的三个服务。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> etcd负责存元数据——Collection的Schema、Segment的位置信息、服务发现。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> MinIO是对象存储，存的是真正的向量数据文件：Binlog、DeltaLog和索引文件。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> Milvus Standalone是计算引擎，负责写入、索引构建和搜索。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 端口规划很简单 (43.7s - 66.0s) -->
+  <div id="scene-3" class="scene clip" data-start="43.70" data-duration="22.27" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">端口规划很简单</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 端口规划很简单。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 19530是SDK连接端口，你的Python代码连这个。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 9091是健康检查和Prometheus指标端口，运维用。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 9000和9001是MinIO的API和Web控制台。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 光靠环境变量不够精细，Milvus还支持 (66.0s - 94.6s) -->
+  <div id="scene-4" class="scene clip" data-start="65.98" data-duration="28.66" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">光靠环境变量不够精细，Milvus还支持</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 光靠环境变量不够精细，Milvus还支持配置文件覆盖。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 把milvus.yaml挂载到容器的configs目录，就能控制日志级别、鉴权开关、Segment大小、索引并行度这些参</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 开发环境关鉴权、调debug日志；生产环境开鉴权、调info日志、增大Segment上限。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 改完配置重启standalone容器就生效。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 跨平台部署有几个坑要注意 (94.6s - 118.7s) -->
+  <div id="scene-5" class="scene clip" data-start="94.63" data-duration="24.07" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">跨平台部署有几个坑要注意</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 跨平台部署有几个坑要注意。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> macOS上Docker Desktop默认只给2G内存，Milvus建议4G以上。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> Windows必须用WSL2后端，Hyper-V模式性能差很多。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> Linux要注意vm.max_map_count这个内核参数，太小会导致mmap失败。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 最后说说启动失败怎么排查 (118.7s - 146.3s) -->
+  <div id="scene-6" class="scene clip" data-start="118.70" data-duration="27.65" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">最后说说启动失败怎么排查</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 最后说说启动失败怎么排查。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 最常见的是Milvus反复重启——通常是etcd没就绪就启动了，检查depends_on配置。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 端口被占用用lsof查。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> OOM就给Docker加内存。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 好，总结一下 (146.3s - 164.2s) -->
+  <div id="scene-7" class="scene clip" data-start="146.35" data-duration="17.88" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> Docker部署的核心是三件事：服务依赖顺序、端口和数据卷规划、配置文件覆盖。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 掌握了这些，本地开发环境就稳了。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 下一章我们深入pymilvus，看看SDK提供了哪些能力。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="164.23" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们五步跑通了Milvus，用的是默认配置。</div>
+    <div class="subtitle-text" id="sub-01">但生产环境不能靠默认值。</div>
+    <div class="subtitle-text" id="sub-02">这一章我们深入Docker Compose部署：搞清楚三个服务各自干什么、端口怎么规划、配置文件怎么覆盖、以及启动失败怎么排查。</div>
+    <div class="subtitle-text" id="sub-03">先看Docker Compose里的三个服务。</div>
+    <div class="subtitle-text" id="sub-04">etcd负责存元数据——Collection的Schema、Segment的位置信息、服务发现。</div>
+    <div class="subtitle-text" id="sub-05">MinIO是对象存储，存的是真正的向量数据文件：Binlog、DeltaLog和索引文件。</div>
+    <div class="subtitle-text" id="sub-06">Milvus Standalone是计算引擎，负责写入、索引构建和搜索。</div>
+    <div class="subtitle-text" id="sub-07">三者的依赖关系是：Milvus必须等etcd和MinIO都健康了才能启动。</div>
+    <div class="subtitle-text" id="sub-08">端口规划很简单。</div>
+    <div class="subtitle-text" id="sub-09">19530是SDK连接端口，你的Python代码连这个。</div>
+    <div class="subtitle-text" id="sub-10">9091是健康检查和Prometheus指标端口，运维用。</div>
+    <div class="subtitle-text" id="sub-11">9000和9001是MinIO的API和Web控制台。</div>
+    <div class="subtitle-text" id="sub-12">如果端口冲突，改docker-compose.yml里冒号左边的数字就行，右边不要动。</div>
+    <div class="subtitle-text" id="sub-13">光靠环境变量不够精细，Milvus还支持配置文件覆盖。</div>
+    <div class="subtitle-text" id="sub-14">把milvus.yaml挂载到容器的configs目录，就能控制日志级别、鉴权开关、Segment大小、索引并行度这些参数。</div>
+    <div class="subtitle-text" id="sub-15">开发环境关鉴权、调debug日志；生产环境开鉴权、调info日志、增大Segment上限。</div>
+    <div class="subtitle-text" id="sub-16">改完配置重启standalone容器就生效。</div>
+    <div class="subtitle-text" id="sub-17">跨平台部署有几个坑要注意。</div>
+    <div class="subtitle-text" id="sub-18">macOS上Docker Desktop默认只给2G内存，Milvus建议4G以上。</div>
+    <div class="subtitle-text" id="sub-19">Windows必须用WSL2后端，Hyper-V模式性能差很多。</div>
+    <div class="subtitle-text" id="sub-20">Linux要注意vm.max_map_count这个内核参数，太小会导致mmap失败。</div>
+    <div class="subtitle-text" id="sub-21">Apple Silicon完全兼容，不用担心。</div>
+    <div class="subtitle-text" id="sub-22">最后说说启动失败怎么排查。</div>
+    <div class="subtitle-text" id="sub-23">最常见的是Milvus反复重启——通常是etcd没就绪就启动了，检查depends_on配置。</div>
+    <div class="subtitle-text" id="sub-24">端口被占用用lsof查。</div>
+    <div class="subtitle-text" id="sub-25">OOM就给Docker加内存。</div>
+    <div class="subtitle-text" id="sub-26">etcd报database space exceeded就是元数据存储满了，需要compaction。</div>
+    <div class="subtitle-text" id="sub-27">记住一个排查思路：先docker compose ps看哪个服务不健康，再看那个服务的日志。</div>
+    <div class="subtitle-text" id="sub-28">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-29">Docker部署的核心是三件事：服务依赖顺序、端口和数据卷规划、配置文件覆盖。</div>
+    <div class="subtitle-text" id="sub-30">掌握了这些，本地开发环境就稳了。</div>
+    <div class="subtitle-text" id="sub-31">下一章我们深入pymilvus，看看SDK提供了哪些能力。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-04-docker-deploy"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (16.5s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 16.76);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 17.66);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 19.16);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 20.66);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.16);
+
+  // === Scene 3 (43.7s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 44.00);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 44.90);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.40);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.90);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.40);
+
+  // === Scene 4 (66.0s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 66.28);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.18);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 68.68);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 70.18);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 71.68);
+
+  // === Scene 5 (94.6s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 94.93);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 95.83);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 97.33);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 98.83);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 100.33);
+
+  // === Scene 6 (118.7s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 119.00);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 119.90);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 121.40);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 122.90);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 124.40);
+
+  // === Scene 7 (146.3s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 146.65);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.55);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 149.05);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 150.55);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 152.05);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 3.77);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.07);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 5.73);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 6.03);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 16.16);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 16.46);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 19.47);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 19.77);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.39);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.69);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 32.88);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 33.18);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 38.07);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 38.37);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 43.40);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 43.70);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 44.72);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 45.02);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 49.34);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 49.64);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 54.12);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 54.42);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 58.58);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 58.88);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 65.67);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 65.98);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 70.64);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.94);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 82.03);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 82.33);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 90.30);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.60);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 94.34);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 94.63);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 96.38);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 96.68);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 102.98);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 103.28);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 108.02);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 108.32);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 114.78);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 115.08);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 118.40);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 118.70);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 120.35);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 120.65);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 127.42);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.72);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 129.22);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 129.52);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 131.47);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.77);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 139.14);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 139.44);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 146.05);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.35);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 147.43);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 147.73);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 155.09);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.39);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 158.23);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 158.53);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 163.93);
+
+  window.__timelines["ch-04-docker-deploy"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

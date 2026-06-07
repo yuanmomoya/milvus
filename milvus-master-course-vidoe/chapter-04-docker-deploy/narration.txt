@@ -1,0 +1,13 @@
+上一章我们五步跑通了Milvus，用的是默认配置。但生产环境不能靠默认值。这一章我们深入Docker Compose部署：搞清楚三个服务各自干什么、端口怎么规划、配置文件怎么覆盖、以及启动失败怎么排查。
+
+先看Docker Compose里的三个服务。etcd负责存元数据——Collection的Schema、Segment的位置信息、服务发现。MinIO是对象存储，存的是真正的向量数据文件：Binlog、DeltaLog和索引文件。Milvus Standalone是计算引擎，负责写入、索引构建和搜索。三者的依赖关系是：Milvus必须等etcd和MinIO都健康了才能启动。
+
+端口规划很简单。19530是SDK连接端口，你的Python代码连这个。9091是健康检查和Prometheus指标端口，运维用。9000和9001是MinIO的API和Web控制台。如果端口冲突，改docker-compose.yml里冒号左边的数字就行，右边不要动。
+
+光靠环境变量不够精细，Milvus还支持配置文件覆盖。把milvus.yaml挂载到容器的configs目录，就能控制日志级别、鉴权开关、Segment大小、索引并行度这些参数。开发环境关鉴权、调debug日志；生产环境开鉴权、调info日志、增大Segment上限。改完配置重启standalone容器就生效。
+
+跨平台部署有几个坑要注意。macOS上Docker Desktop默认只给2G内存，Milvus建议4G以上。Windows必须用WSL2后端，Hyper-V模式性能差很多。Linux要注意vm.max_map_count这个内核参数，太小会导致mmap失败。Apple Silicon完全兼容，不用担心。
+
+最后说说启动失败怎么排查。最常见的是Milvus反复重启——通常是etcd没就绪就启动了，检查depends_on配置。端口被占用用lsof查。OOM就给Docker加内存。etcd报database space exceeded就是元数据存储满了，需要compaction。记住一个排查思路：先docker compose ps看哪个服务不健康，再看那个服务的日志。
+
+好，总结一下。Docker部署的核心是三件事：服务依赖顺序、端口和数据卷规划、配置文件覆盖。掌握了这些，本地开发环境就稳了。下一章我们深入pymilvus，看看SDK提供了哪些能力。

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 01 Vector Database Basics</title>
+</head>
+<body>
+<div data-composition-id="ch-01-vector-database" data-start="0" data-duration="192.91" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="192.91" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 想象一下，你问电脑：苹果和香蕉，哪个更像 (0.0s - 20.1s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="20.06" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">想象一下，你问电脑：苹果和香蕉，哪个更像</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 想象一下，你问电脑：苹果和香蕉，哪个更像橘子？</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 传统数据库会一脸懵，它只认编号，不懂"像"。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 但向量数据库可以。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 这一章我们搞明白三件事：向量是什么、怎么衡量相似度、以及为什么需要索引加速。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先来看最直观的区别 (20.1s - 34.9s) -->
+  <div id="scene-2" class="scene clip" data-start="20.06" data-duration="14.86" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先来看最直观的区别</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先来看最直观的区别。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 传统数据库像图书馆的索书号系统，你必须知道确切的书名或编号才能找到书。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 向量数据库更像一个按气味摆放的仓库，意思相近的东西，自然靠在一起。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 那这个气味到底是什么呢 (34.9s - 56.4s) -->
+  <div id="scene-3" class="scene clip" data-start="34.92" data-duration="21.48" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">那这个气味到底是什么呢</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 那这个气味到底是什么呢？</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 其实就是向量，一组浮点数。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 比如零点一二，负零点零三，零点八八这样的数列。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> Embedding模型就是那台坐标测量仪，它把文字、图片变成高维空间里的一个点。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 知道了向量长什么样，下一个问题自然就来了 (56.4s - 79.1s) -->
+  <div id="scene-4" class="scene clip" data-start="56.40" data-duration="22.70" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">知道了向量长什么样，下一个问题自然就来了</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 知道了向量长什么样，下一个问题自然就来了：怎么衡量两个向量之间的近呢？</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 三种方式。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 余弦相似度：看两个箭头方向是否一致，像比较两个人走路的方向。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> L2距离：直接量两点之间的直线距离。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 有了向量和距离公式，理论上就能搜索了 (79.1s - 97.4s) -->
+  <div id="scene-5" class="scene clip" data-start="79.10" data-duration="18.29" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">有了向量和距离公式，理论上就能搜索了</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 有了向量和距离公式，理论上就能搜索了。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 但问题是规模。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 如果只有一百条数据，挨个比较就行。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 但如果有一亿条呢？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 所以工业界发明了近似搜索的索引算法，先看 (97.4s - 119.2s) -->
+  <div id="scene-6" class="scene clip" data-start="97.39" data-duration="21.86" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">所以工业界发明了近似搜索的索引算法，先看</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 所以工业界发明了近似搜索的索引算法，先看第一种：HNSW。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 它的思路是修高速公路。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 最上层是稀疏的快速通道，几步就能跳到目标附近。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 然后逐层下沉到密集的邻接图，精细搜索。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 第二种是IVF，思路完全不同，它靠分片区 (119.3s - 135.7s) -->
+  <div id="scene-7" class="scene clip" data-start="119.26" data-duration="16.44" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">第二种是IVF，思路完全不同，它靠分片区</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 第二种是IVF，思路完全不同，它靠分片区。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 先把所有向量聚成若干簇，搜索时只看最可能的几个簇。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 就像把北京分成朝阳、海淀、西城，你要找的人大概率在海淀，那就只搜海淀。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 第三种是PQ，它解决的是内存问题 (135.7s - 153.0s) -->
+  <div id="scene-8" class="scene clip" data-start="135.70" data-duration="17.26" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">第三种是PQ，它解决的是内存问题</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 第三种是PQ，它解决的是内存问题。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> PQ是压缩大师，把一个长向量切成几段，每段用一个短编码代替。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 内存省了，但精度会有一点损失。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 像把高清照片压成缩略图，大致能认出来。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 9: 算法选好了，怎么评价效果呢 (152.9s - 177.6s) -->
+  <div id="scene-9" class="scene clip" data-start="152.95" data-duration="24.70" data-track-index="9">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s9-title">算法选好了，怎么评价效果呢</div>
+      <div class="item-list">
+        <div class="item-row" id="s9-item1"><span class="item-bullet">▸</span> 算法选好了，怎么评价效果呢？</div>
+        <div class="item-row" id="s9-item2"><span class="item-bullet">▸</span> 看四个指标：召回率，该找到的找到了多少。</div>
+        <div class="item-row" id="s9-item3"><span class="item-bullet">▸</span> QPS，每秒能处理多少请求。</div>
+        <div class="item-row" id="s9-item4"><span class="item-bullet">▸</span> 延迟，单次查询要等多久，重点看P99。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 10: 好，总结一下 (177.7s - 192.9s) -->
+  <div id="scene-10" class="scene clip" data-start="177.65" data-duration="15.26" data-track-index="10">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s10-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s10-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s10-item2"><span class="item-bullet">▸</span> 记住一句话：向量检索不是魔法。</div>
+        <div class="item-row" id="s10-item3"><span class="item-bullet">▸</span> 它是表示学习加距离计算加索引加速的组合。</div>
+        <div class="item-row" id="s10-item4"><span class="item-bullet">▸</span> 原理搞清楚了，下一章我们看看Milvus是怎么把这套组合拳落地成一个工程系统的。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="192.91" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">想象一下，你问电脑：苹果和香蕉，哪个更像橘子？</div>
+    <div class="subtitle-text" id="sub-01">传统数据库会一脸懵，它只认编号，不懂&quot;像&quot;。</div>
+    <div class="subtitle-text" id="sub-02">但向量数据库可以。</div>
+    <div class="subtitle-text" id="sub-03">这一章我们搞明白三件事：向量是什么、怎么衡量相似度、以及为什么需要索引加速。</div>
+    <div class="subtitle-text" id="sub-04">搞懂这三点，后面学Milvus就有底了。</div>
+    <div class="subtitle-text" id="sub-05">先来看最直观的区别。</div>
+    <div class="subtitle-text" id="sub-06">传统数据库像图书馆的索书号系统，你必须知道确切的书名或编号才能找到书。</div>
+    <div class="subtitle-text" id="sub-07">向量数据库更像一个按气味摆放的仓库，意思相近的东西，自然靠在一起。</div>
+    <div class="subtitle-text" id="sub-08">那这个气味到底是什么呢？</div>
+    <div class="subtitle-text" id="sub-09">其实就是向量，一组浮点数。</div>
+    <div class="subtitle-text" id="sub-10">比如零点一二，负零点零三，零点八八这样的数列。</div>
+    <div class="subtitle-text" id="sub-11">Embedding模型就是那台坐标测量仪，它把文字、图片变成高维空间里的一个点。</div>
+    <div class="subtitle-text" id="sub-12">语义越接近的内容，在这个空间里距离越近。</div>
+    <div class="subtitle-text" id="sub-13">知道了向量长什么样，下一个问题自然就来了：怎么衡量两个向量之间的近呢？</div>
+    <div class="subtitle-text" id="sub-14">三种方式。</div>
+    <div class="subtitle-text" id="sub-15">余弦相似度：看两个箭头方向是否一致，像比较两个人走路的方向。</div>
+    <div class="subtitle-text" id="sub-16">L2距离：直接量两点之间的直线距离。</div>
+    <div class="subtitle-text" id="sub-17">内积：方向一致且长度越大，分数越高。</div>
+    <div class="subtitle-text" id="sub-18">有了向量和距离公式，理论上就能搜索了。</div>
+    <div class="subtitle-text" id="sub-19">但问题是规模。</div>
+    <div class="subtitle-text" id="sub-20">如果只有一百条数据，挨个比较就行。</div>
+    <div class="subtitle-text" id="sub-21">但如果有一亿条呢？</div>
+    <div class="subtitle-text" id="sub-22">每次查询都要算一亿次距离。</div>
+    <div class="subtitle-text" id="sub-23">这就像在北京找一个人，挨家挨户敲门问。</div>
+    <div class="subtitle-text" id="sub-24">不现实。</div>
+    <div class="subtitle-text" id="sub-25">所以工业界发明了近似搜索的索引算法，先看第一种：HNSW。</div>
+    <div class="subtitle-text" id="sub-26">它的思路是修高速公路。</div>
+    <div class="subtitle-text" id="sub-27">最上层是稀疏的快速通道，几步就能跳到目标附近。</div>
+    <div class="subtitle-text" id="sub-28">然后逐层下沉到密集的邻接图，精细搜索。</div>
+    <div class="subtitle-text" id="sub-29">就像先坐高铁到城市，再打车到小区，最后步行到门口。</div>
+    <div class="subtitle-text" id="sub-30">第二种是IVF，思路完全不同，它靠分片区。</div>
+    <div class="subtitle-text" id="sub-31">先把所有向量聚成若干簇，搜索时只看最可能的几个簇。</div>
+    <div class="subtitle-text" id="sub-32">就像把北京分成朝阳、海淀、西城，你要找的人大概率在海淀，那就只搜海淀。</div>
+    <div class="subtitle-text" id="sub-33">第三种是PQ，它解决的是内存问题。</div>
+    <div class="subtitle-text" id="sub-34">PQ是压缩大师，把一个长向量切成几段，每段用一个短编码代替。</div>
+    <div class="subtitle-text" id="sub-35">内存省了，但精度会有一点损失。</div>
+    <div class="subtitle-text" id="sub-36">像把高清照片压成缩略图，大致能认出来。</div>
+    <div class="subtitle-text" id="sub-37">实际中这三种算法经常组合使用。</div>
+    <div class="subtitle-text" id="sub-38">算法选好了，怎么评价效果呢？</div>
+    <div class="subtitle-text" id="sub-39">看四个指标：召回率，该找到的找到了多少。</div>
+    <div class="subtitle-text" id="sub-40">QPS，每秒能处理多少请求。</div>
+    <div class="subtitle-text" id="sub-41">延迟，单次查询要等多久，重点看P99。</div>
+    <div class="subtitle-text" id="sub-42">内存成本，存一亿条向量要多少钱。</div>
+    <div class="subtitle-text" id="sub-43">这四个指标永远互相牵制，工程师的活就是找平衡点。</div>
+    <div class="subtitle-text" id="sub-44">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-45">记住一句话：向量检索不是魔法。</div>
+    <div class="subtitle-text" id="sub-46">它是表示学习加距离计算加索引加速的组合。</div>
+    <div class="subtitle-text" id="sub-47">原理搞清楚了，下一章我们看看Milvus是怎么把这套组合拳落地成一个工程系统的。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-01-vector-database"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (20.1s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 20.36);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.26);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.76);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.26);
+
+  // === Scene 3 (34.9s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 35.22);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 36.12);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 37.62);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 39.12);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 40.62);
+
+  // === Scene 4 (56.4s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 56.70);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 57.60);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 59.10);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 60.60);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 62.10);
+
+  // === Scene 5 (79.1s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 79.40);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 80.30);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 81.80);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 83.30);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 84.80);
+
+  // === Scene 6 (97.4s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 97.69);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 98.59);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 100.09);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 101.59);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 103.09);
+
+  // === Scene 7 (119.3s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 119.56);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 120.46);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 121.96);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 123.46);
+
+  // === Scene 8 (135.7s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 136.00);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 136.90);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 138.40);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 139.90);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 141.40);
+
+  // === Scene 9 (152.9s) ===
+  tl.fromTo("#s9-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 153.25);
+  tl.fromTo("#s9-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 154.15);
+  tl.fromTo("#s9-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 155.65);
+  tl.fromTo("#s9-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 157.15);
+  tl.fromTo("#s9-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 158.65);
+
+  // === Scene 10 (177.7s) ===
+  tl.fromTo("#s10-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 177.95);
+  tl.fromTo("#s10-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 178.85);
+  tl.fromTo("#s10-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 180.35);
+  tl.fromTo("#s10-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 181.85);
+  tl.fromTo("#s10-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 183.35);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 3.82);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.12);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 7.76);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 8.06);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 9.37);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 9.67);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 16.18);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 16.48);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 19.76);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.06);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 21.67);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.97);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 28.33);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 28.63);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 34.62);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 34.92);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 37.01);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 37.31);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 39.59);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 39.89);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 44.17);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.47);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 52.12);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 52.42);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 56.10);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 56.40);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 63.60);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 63.90);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 64.67);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 64.97);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 71.09);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 71.39);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 74.95);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 75.25);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 78.80);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.10);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 82.75);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 83.05);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 84.20);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 84.50);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 87.74);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 88.04);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 89.61);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 89.91);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 92.31);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 92.61);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 96.26);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 96.56);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 97.09);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 97.39);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 103.01);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 103.31);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 105.26);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.56);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 109.96);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 110.26);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 113.84);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 114.14);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 118.95);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 119.26);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 123.22);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 123.52);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 128.30);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 128.60);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 135.40);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 135.70);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 138.46);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.76);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 143.85);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 144.15);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 146.55);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.85);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 149.96);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 150.26);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 152.66);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 152.95);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 155.88);
+  tl.fromTo("#sub-39", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 156.18);
+  tl.to("#sub-39", {opacity:0, duration:0.25, ease:"power2.in"}, 160.50);
+  tl.fromTo("#sub-40", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 160.80);
+  tl.to("#sub-40", {opacity:0, duration:0.25, ease:"power2.in"}, 163.73);
+  tl.fromTo("#sub-41", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 164.03);
+  tl.to("#sub-41", {opacity:0, duration:0.25, ease:"power2.in"}, 168.12);
+  tl.fromTo("#sub-42", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.42);
+  tl.to("#sub-42", {opacity:0, duration:0.25, ease:"power2.in"}, 171.81);
+  tl.fromTo("#sub-43", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 172.11);
+  tl.to("#sub-43", {opacity:0, duration:0.25, ease:"power2.in"}, 177.35);
+  tl.fromTo("#sub-44", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 177.65);
+  tl.to("#sub-44", {opacity:0, duration:0.25, ease:"power2.in"}, 178.65);
+  tl.fromTo("#sub-45", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 178.95);
+  tl.to("#sub-45", {opacity:0, duration:0.25, ease:"power2.in"}, 181.44);
+  tl.fromTo("#sub-46", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 181.74);
+  tl.to("#sub-46", {opacity:0, duration:0.25, ease:"power2.in"}, 185.17);
+  tl.fromTo("#sub-47", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 185.47);
+  tl.to("#sub-47", {opacity:0, duration:0.25, ease:"power2.in"}, 192.61);
+
+  window.__timelines["ch-01-vector-database"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

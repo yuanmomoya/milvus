@@ -1,0 +1,11 @@
+services:
+  demo:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      MILVUS_URI: http://host.docker.internal:19530
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && python main.py"

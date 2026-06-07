@@ -1,0 +1,28 @@
+# Milvus 2.6.x 教程配置示例。
+# 生产环境不要直接照搬：请结合数据规模、索引类型、QueryNode 内存、对象存储和监控指标逐项压测。
+
+log:
+  level: info
+
+common:
+  security:
+    authorizationEnabled: false
+
+proxy:
+  maxNameLength: 255
+  maxFieldNum: 64
+
+queryNode:
+  mmap:
+    enabled: false
+  lazyload:
+    enabled: false
+
+dataCoord:
+  segment:
+    maxSize: 512
+    sealProportion: 0.12
+
+indexNode:
+  scheduler:
+    buildParallel: 1

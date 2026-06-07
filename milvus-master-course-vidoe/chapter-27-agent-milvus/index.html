@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 27 Agent Milvus</title>
+</head>
+<body>
+<div data-composition-id="ch-27-agent-milvus" data-start="0" data-duration="174.94" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="174.94" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面的RAG系统有个假设：每次用户提问都 (0.0s - 18.8s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="18.84" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面的RAG系统有个假设：每次用户提问都</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面的RAG系统有个假设：每次用户提问都需要检索。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 但实际上不是所有问题都需要查知识库。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> "你好"不需要检索，"今天天气怎么样"也不需要。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> Agent的作用就是让AI自己判断：这个问题需不需要检索、检索什么、检索几次。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Agent的核心概念是Tool Call (18.8s - 43.5s) -->
+  <div id="scene-2" class="scene clip" data-start="18.84" data-duration="24.67" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">Agent的核心概念是Tool Call</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> Agent的核心概念是Tool Calling。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 你给大模型定义一组工具，比如search_knowledge_base、get_user_info、calculate。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 模型根据用户问题自己决定调用哪个工具、传什么参数。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> Milvus检索就是其中一个工具。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 怎么把Milvus包装成Agent工具 (43.5s - 65.2s) -->
+  <div id="scene-3" class="scene clip" data-start="43.51" data-duration="21.67" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">怎么把Milvus包装成Agent工具</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 怎么把Milvus包装成Agent工具？</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 定义一个函数，接收查询文本和可选的过滤条件，内部调用Milvus的search，返回检索结果。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 然后把这个函数注册为LLM的tool。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 函数描述要写清楚：这个工具用于搜索内部知识库，输入是自然语言查询，返回相关文档片段。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: Agent比纯RAG强在哪 (65.2s - 88.4s) -->
+  <div id="scene-4" class="scene clip" data-start="65.18" data-duration="23.26" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">Agent比纯RAG强在哪</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> Agent比纯RAG强在哪？</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 第一，多步推理。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 复杂问题可能需要多次检索：先搜A的信息，再搜B的信息，最后综合回答。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> Agent能自动做这个循环。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 实现Agent有几种方式 (88.4s - 114.9s) -->
+  <div id="scene-5" class="scene clip" data-start="88.44" data-duration="26.50" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">实现Agent有几种方式</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 实现Agent有几种方式。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 最简单的是用OpenAI的Function Calling API：定义tools列表，模型返回tool_calls，你</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> LangChain和LlamaIndex都封装了Agent框架，提供了更高层的抽象。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 也可以自己写循环：调模型、解析工具调用、执行、再调模型，直到模型不再调用工具。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: Agent的挑战 (114.9s - 140.0s) -->
+  <div id="scene-6" class="scene clip" data-start="114.94" data-duration="25.08" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">Agent的挑战</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> Agent的挑战。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 第一，延迟增加。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 每次工具调用都是一次LLM请求加一次Milvus搜索，多步推理延迟叠加。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 第二，成本增加。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 一个实用的模式是ReAct：Reason (140.0s - 154.5s) -->
+  <div id="scene-7" class="scene clip" data-start="140.02" data-duration="14.47" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">一个实用的模式是ReAct：Reason</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 一个实用的模式是ReAct：Reasoning加Acting。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 模型先思考需要什么信息，再决定调用什么工具，看到结果后再思考下一步。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 这个思考过程对用户可见，增加了透明度和可调试性。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (154.5s - 174.9s) -->
+  <div id="scene-8" class="scene clip" data-start="154.49" data-duration="20.45" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> Agent让AI从被动检索变成主动决策。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> Milvus作为Agent的一个工具，被按需调用。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 这种模式更灵活、更智能，但也更复杂、更贵。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="174.94" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面的RAG系统有个假设：每次用户提问都需要检索。</div>
+    <div class="subtitle-text" id="sub-01">但实际上不是所有问题都需要查知识库。</div>
+    <div class="subtitle-text" id="sub-02">&quot;你好&quot;不需要检索，&quot;今天天气怎么样&quot;也不需要。</div>
+    <div class="subtitle-text" id="sub-03">Agent的作用就是让AI自己判断：这个问题需不需要检索、检索什么、检索几次。</div>
+    <div class="subtitle-text" id="sub-04">Agent的核心概念是Tool Calling。</div>
+    <div class="subtitle-text" id="sub-05">你给大模型定义一组工具，比如search_knowledge_base、get_user_info、calculate。</div>
+    <div class="subtitle-text" id="sub-06">模型根据用户问题自己决定调用哪个工具、传什么参数。</div>
+    <div class="subtitle-text" id="sub-07">Milvus检索就是其中一个工具。</div>
+    <div class="subtitle-text" id="sub-08">模型可能先检索一次，看结果不够再换个关键词检索第二次。</div>
+    <div class="subtitle-text" id="sub-09">怎么把Milvus包装成Agent工具？</div>
+    <div class="subtitle-text" id="sub-10">定义一个函数，接收查询文本和可选的过滤条件，内部调用Milvus的search，返回检索结果。</div>
+    <div class="subtitle-text" id="sub-11">然后把这个函数注册为LLM的tool。</div>
+    <div class="subtitle-text" id="sub-12">函数描述要写清楚：这个工具用于搜索内部知识库，输入是自然语言查询，返回相关文档片段。</div>
+    <div class="subtitle-text" id="sub-13">Agent比纯RAG强在哪？</div>
+    <div class="subtitle-text" id="sub-14">第一，多步推理。</div>
+    <div class="subtitle-text" id="sub-15">复杂问题可能需要多次检索：先搜A的信息，再搜B的信息，最后综合回答。</div>
+    <div class="subtitle-text" id="sub-16">Agent能自动做这个循环。</div>
+    <div class="subtitle-text" id="sub-17">第二，条件判断。</div>
+    <div class="subtitle-text" id="sub-18">简单问题直接回答，复杂问题才检索。</div>
+    <div class="subtitle-text" id="sub-19">第三，参数优化。</div>
+    <div class="subtitle-text" id="sub-20">Agent可以自己决定用什么过滤条件、搜多少条。</div>
+    <div class="subtitle-text" id="sub-21">实现Agent有几种方式。</div>
+    <div class="subtitle-text" id="sub-22">最简单的是用OpenAI的Function Calling API：定义tools列表，模型返回tool_calls，你执行后把结果喂回去。</div>
+    <div class="subtitle-text" id="sub-23">LangChain和LlamaIndex都封装了Agent框架，提供了更高层的抽象。</div>
+    <div class="subtitle-text" id="sub-24">也可以自己写循环：调模型、解析工具调用、执行、再调模型，直到模型不再调用工具。</div>
+    <div class="subtitle-text" id="sub-25">Agent的挑战。</div>
+    <div class="subtitle-text" id="sub-26">第一，延迟增加。</div>
+    <div class="subtitle-text" id="sub-27">每次工具调用都是一次LLM请求加一次Milvus搜索，多步推理延迟叠加。</div>
+    <div class="subtitle-text" id="sub-28">第二，成本增加。</div>
+    <div class="subtitle-text" id="sub-29">多次LLM调用意味着更多token消耗。</div>
+    <div class="subtitle-text" id="sub-30">第三，可控性下降。</div>
+    <div class="subtitle-text" id="sub-31">模型可能做出意料之外的决策，比如无限循环调用工具。</div>
+    <div class="subtitle-text" id="sub-32">要设置最大步数限制。</div>
+    <div class="subtitle-text" id="sub-33">一个实用的模式是ReAct：Reasoning加Acting。</div>
+    <div class="subtitle-text" id="sub-34">模型先思考需要什么信息，再决定调用什么工具，看到结果后再思考下一步。</div>
+    <div class="subtitle-text" id="sub-35">这个思考过程对用户可见，增加了透明度和可调试性。</div>
+    <div class="subtitle-text" id="sub-36">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-37">Agent让AI从被动检索变成主动决策。</div>
+    <div class="subtitle-text" id="sub-38">Milvus作为Agent的一个工具，被按需调用。</div>
+    <div class="subtitle-text" id="sub-39">这种模式更灵活、更智能，但也更复杂、更贵。</div>
+    <div class="subtitle-text" id="sub-40">简单场景用纯RAG就够，复杂场景上Agent。</div>
+    <div class="subtitle-text" id="sub-41">下一章我们看LangChain怎么集成Milvus。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-27-agent-milvus"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (18.8s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 19.14);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 20.04);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.54);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.04);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.54);
+
+  // === Scene 3 (43.5s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 43.81);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 44.71);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.21);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.71);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.21);
+
+  // === Scene 4 (65.2s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 65.48);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 66.38);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.88);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 69.38);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 70.88);
+
+  // === Scene 5 (88.4s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 88.74);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 89.64);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 91.14);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 92.64);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 94.14);
+
+  // === Scene 6 (114.9s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 115.24);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 116.14);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 117.64);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 119.14);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 120.64);
+
+  // === Scene 7 (140.0s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 140.32);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 141.22);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 142.72);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 144.22);
+
+  // === Scene 8 (154.5s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 154.79);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 155.69);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 157.19);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 158.69);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 160.19);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 4.14);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.44);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 7.34);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 7.64);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 11.61);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.91);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 18.54);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 18.84);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 22.41);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 22.71);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 32.08);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 32.38);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 36.12);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 36.42);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 38.86);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 39.16);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 43.21);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 43.51);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 46.60);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 46.90);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 54.55);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 54.85);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 57.77);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 58.07);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 64.88);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 65.18);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 67.44);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 67.74);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 68.91);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 69.21);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 75.14);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 75.44);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 77.70);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 78.00);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 79.17);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.47);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 82.28);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 82.58);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 83.74);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 84.04);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 88.14);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 88.44);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 90.24);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.54);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 101.55);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 101.85);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 108.34);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 108.64);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 114.64);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 114.94);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 116.45);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 116.75);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 118.05);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 118.35);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 125.27);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.57);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 126.88);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.18);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 130.89);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.19);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 132.70);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 133.00);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 137.71);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.01);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 139.72);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 140.02);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 144.76);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 145.06);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 150.29);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 150.59);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 154.19);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.49);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 155.36);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.66);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 158.72);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 159.02);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 162.91);
+  tl.fromTo("#sub-39", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 163.21);
+  tl.to("#sub-39", {opacity:0, duration:0.25, ease:"power2.in"}, 166.43);
+  tl.fromTo("#sub-40", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 166.73);
+  tl.to("#sub-40", {opacity:0, duration:0.25, ease:"power2.in"}, 170.28);
+  tl.fromTo("#sub-41", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 170.58);
+  tl.to("#sub-41", {opacity:0, duration:0.25, ease:"power2.in"}, 174.64);
+
+  window.__timelines["ch-27-agent-milvus"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

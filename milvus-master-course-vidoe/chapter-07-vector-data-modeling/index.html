@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 07 Vector Data Modeling</title>
+</head>
+<body>
+<div data-composition-id="ch-07-vector-data" data-start="0" data-duration="162.53" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="162.53" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们设计了Collection的S (0.0s - 17.3s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="17.28" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们设计了Collection的S</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们设计了Collection的Schema，这一章往里填内容：向量数据建模。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 核心问题是：除了向量本身，还需要保存什么信息？</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 我们分三种场景来看：文本、图片、多模态。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 每种场景的建模重点不一样。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先看文本建模，这是最常见的场景 (17.3s - 43.2s) -->
+  <div id="scene-2" class="scene clip" data-start="17.28" data-duration="25.87" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先看文本建模，这是最常见的场景</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先看文本建模，这是最常见的场景。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 一篇长文档不能直接存，要先切成Chunk。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 每个Chunk就是一条记录。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 关键是保留上下文：这个Chunk来自哪个文档、第几页、第几段。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 文本切分有讲究 (43.1s - 62.2s) -->
+  <div id="scene-3" class="scene clip" data-start="43.15" data-duration="19.08" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">文本切分有讲究</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 文本切分有讲究。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 切太长，向量表达不精确，因为一段话里可能有多个主题。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 切太短，丢失上下文，搜索结果断章取义。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 经验值是200到500个字符一段，段落之间保留20%的重叠。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 图片建模和文本不一样 (62.2s - 84.3s) -->
+  <div id="scene-4" class="scene clip" data-start="62.23" data-duration="22.08" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">图片建模和文本不一样</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 图片建模和文本不一样。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 图片的元数据是尺寸、格式、标签、版权信息。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 图片本身不存在Milvus里，存的是图片的URL或路径。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 向量是用CLIP或其他视觉模型从图片提取的特征。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 多模态建模更复杂一些 (84.3s - 108.1s) -->
+  <div id="scene-5" class="scene clip" data-start="84.31" data-duration="23.83" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">多模态建模更复杂一些</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 多模态建模更复杂一些。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 同一个Collection里可能有文本和图片混在一起。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 关键是它们必须在同一个向量空间里——也就是说，必须用同一个多模态模型编码。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> CLIP就是这样的模型，它把文本和图片映射到同一个空间。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 不管哪种场景，都要考虑数据的生命周期 (108.1s - 127.8s) -->
+  <div id="scene-6" class="scene clip" data-start="108.14" data-duration="19.66" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">不管哪种场景，都要考虑数据的生命周期</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 不管哪种场景，都要考虑数据的生命周期。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 加一个created_at时间戳字段，方便按时间过滤和清理过期数据。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 加一个model_version字段，记录用的哪个Embedding模型版本。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 模型升级时，可以按版本批量重建向量，不用全量重跑。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 最后说数据清洗 (127.8s - 146.5s) -->
+  <div id="scene-7" class="scene clip" data-start="127.80" data-duration="18.70" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">最后说数据清洗</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 最后说数据清洗。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 入库前要做三件事：去重、标准化、校验维度。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 去重靠主键的内容哈希。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 标准化是统一文本格式，去掉多余空白和特殊字符。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (146.5s - 162.5s) -->
+  <div id="scene-8" class="scene clip" data-start="146.50" data-duration="16.03" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 向量数据建模的核心是三层：检索层决定搜什么，展示层决定返回什么，管理层决定怎么维护。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 想清楚这三层，Schema自然就出来了。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们深入Embedding模型的选型和使用。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="162.53" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们设计了Collection的Schema，这一章往里填内容：向量数据建模。</div>
+    <div class="subtitle-text" id="sub-01">核心问题是：除了向量本身，还需要保存什么信息？</div>
+    <div class="subtitle-text" id="sub-02">我们分三种场景来看：文本、图片、多模态。</div>
+    <div class="subtitle-text" id="sub-03">每种场景的建模重点不一样。</div>
+    <div class="subtitle-text" id="sub-04">先看文本建模，这是最常见的场景。</div>
+    <div class="subtitle-text" id="sub-05">一篇长文档不能直接存，要先切成Chunk。</div>
+    <div class="subtitle-text" id="sub-06">每个Chunk就是一条记录。</div>
+    <div class="subtitle-text" id="sub-07">关键是保留上下文：这个Chunk来自哪个文档、第几页、第几段。</div>
+    <div class="subtitle-text" id="sub-08">这些追溯信息让你能从搜索结果反推原文位置。</div>
+    <div class="subtitle-text" id="sub-09">Schema里除了向量字段，还要有source、page、chunk_index这些字段。</div>
+    <div class="subtitle-text" id="sub-10">文本切分有讲究。</div>
+    <div class="subtitle-text" id="sub-11">切太长，向量表达不精确，因为一段话里可能有多个主题。</div>
+    <div class="subtitle-text" id="sub-12">切太短，丢失上下文，搜索结果断章取义。</div>
+    <div class="subtitle-text" id="sub-13">经验值是200到500个字符一段，段落之间保留20%的重叠。</div>
+    <div class="subtitle-text" id="sub-14">重叠的目的是让边界处的信息不丢失。</div>
+    <div class="subtitle-text" id="sub-15">图片建模和文本不一样。</div>
+    <div class="subtitle-text" id="sub-16">图片的元数据是尺寸、格式、标签、版权信息。</div>
+    <div class="subtitle-text" id="sub-17">图片本身不存在Milvus里，存的是图片的URL或路径。</div>
+    <div class="subtitle-text" id="sub-18">向量是用CLIP或其他视觉模型从图片提取的特征。</div>
+    <div class="subtitle-text" id="sub-19">搜索时可以用文本搜图片，也可以用图片搜图片，取决于你用的模型。</div>
+    <div class="subtitle-text" id="sub-20">多模态建模更复杂一些。</div>
+    <div class="subtitle-text" id="sub-21">同一个Collection里可能有文本和图片混在一起。</div>
+    <div class="subtitle-text" id="sub-22">关键是它们必须在同一个向量空间里——也就是说，必须用同一个多模态模型编码。</div>
+    <div class="subtitle-text" id="sub-23">CLIP就是这样的模型，它把文本和图片映射到同一个空间。</div>
+    <div class="subtitle-text" id="sub-24">Schema里加一个modality字段标记数据类型，搜索时可以按模态过滤。</div>
+    <div class="subtitle-text" id="sub-25">不管哪种场景，都要考虑数据的生命周期。</div>
+    <div class="subtitle-text" id="sub-26">加一个created_at时间戳字段，方便按时间过滤和清理过期数据。</div>
+    <div class="subtitle-text" id="sub-27">加一个model_version字段，记录用的哪个Embedding模型版本。</div>
+    <div class="subtitle-text" id="sub-28">模型升级时，可以按版本批量重建向量，不用全量重跑。</div>
+    <div class="subtitle-text" id="sub-29">最后说数据清洗。</div>
+    <div class="subtitle-text" id="sub-30">入库前要做三件事：去重、标准化、校验维度。</div>
+    <div class="subtitle-text" id="sub-31">去重靠主键的内容哈希。</div>
+    <div class="subtitle-text" id="sub-32">标准化是统一文本格式，去掉多余空白和特殊字符。</div>
+    <div class="subtitle-text" id="sub-33">校验维度是确保每条向量的长度和Schema定义一致，不一致会直接报错。</div>
+    <div class="subtitle-text" id="sub-34">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-35">向量数据建模的核心是三层：检索层决定搜什么，展示层决定返回什么，管理层决定怎么维护。</div>
+    <div class="subtitle-text" id="sub-36">想清楚这三层，Schema自然就出来了。</div>
+    <div class="subtitle-text" id="sub-37">下一章我们深入Embedding模型的选型和使用。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-07-vector-data"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (17.3s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 17.58);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 18.48);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 19.98);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.48);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.98);
+
+  // === Scene 3 (43.1s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 43.45);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 44.35);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 45.85);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.35);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 48.85);
+
+  // === Scene 4 (62.2s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 62.53);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 63.43);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 64.93);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 66.43);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.93);
+
+  // === Scene 5 (84.3s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 84.61);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 85.51);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 87.01);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 88.51);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 90.01);
+
+  // === Scene 6 (108.1s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 108.44);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 109.34);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 110.84);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 112.34);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 113.84);
+
+  // === Scene 7 (127.8s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 128.10);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 129.00);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 130.50);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 132.00);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 133.50);
+
+  // === Scene 8 (146.5s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 146.80);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.70);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 149.20);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 150.70);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 152.20);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 7.11);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 7.41);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 11.16);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.46);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 14.69);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 14.99);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 16.98);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 17.28);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 19.78);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.08);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 23.45);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.75);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 25.89);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.19);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 31.31);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 31.61);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 34.98);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.28);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 42.85);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 43.15);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 44.38);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.68);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 49.34);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 49.64);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 52.96);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 53.26);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 58.69);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 58.99);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 61.93);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 62.23);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 64.04);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 64.34);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 68.07);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 68.37);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 73.45);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 73.75);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 78.06);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 78.36);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 84.01);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 84.31);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 85.87);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.17);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 90.43);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.73);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 96.69);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 96.99);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 101.42);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 101.72);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 107.84);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 108.14);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 111.03);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 111.33);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 116.75);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 117.05);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 123.30);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 123.60);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 127.50);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.80);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 129.03);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 129.33);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 133.03);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 133.33);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 135.13);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 135.43);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 139.52);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 139.82);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 146.20);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.50);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 147.39);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 147.69);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 154.56);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.86);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 157.97);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 158.27);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 162.23);
+
+  window.__timelines["ch-07-vector-data"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

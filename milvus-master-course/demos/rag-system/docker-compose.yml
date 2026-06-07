@@ -1,0 +1,13 @@
+services:
+  rag-api:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - '8001:8001'
+    environment:
+      MILVUS_URI: http://host.docker.internal:19530
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8001"

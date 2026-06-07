@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 34 Ai Search System</title>
+</head>
+<body>
+<div data-composition-id="ch-34-ai-search" data-start="0" data-duration="170.74" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="170.74" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面三十三章我们学了各种组件和技术，这一 (0.0s - 15.7s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="15.67" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面三十三章我们学了各种组件和技术，这一</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面三十三章我们学了各种组件和技术，这一章把它们整合成一个完整的AI搜索系统。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 从架构设计到部署上线，走一遍完整的工程流程。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这不是Demo，是一个能真正服务用户的生产系统。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 系统架构分四层 (15.7s - 41.6s) -->
+  <div id="scene-2" class="scene clip" data-start="15.67" data-duration="25.90" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">系统架构分四层</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 系统架构分四层。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 接入层：Nginx做负载均衡和HTTPS终止，FastAPI处理请求。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 检索层：Milvus做向量搜索，支持多路召回和混合检索。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 生成层：LLM做答案生成，支持流式输出。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 数据处理管道是离线部分 (41.6s - 63.0s) -->
+  <div id="scene-3" class="scene clip" data-start="41.57" data-duration="21.48" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">数据处理管道是离线部分</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 数据处理管道是离线部分。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 文档上传后进入队列，Worker异步处理：解析文档格式、按语义切分、用Embedding模型编码、upsert到Milv</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 处理完成后更新状态。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 支持增量更新：文档修改后只重新处理变化的部分，用内容哈希判断是否需要更新。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 在线检索流程 (63.0s - 85.5s) -->
+  <div id="scene-4" class="scene clip" data-start="63.05" data-duration="22.46" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">在线检索流程</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 在线检索流程。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 用户提问进来，先做Query Rewrite生成多个查询变体。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 然后多路并行检索：稠密向量搜索、稀疏向量搜索。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 结果融合去重后送入Rerank模型精排。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 前端交互设计 (85.5s - 105.2s) -->
+  <div id="scene-5" class="scene clip" data-start="85.51" data-duration="19.66" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">前端交互设计</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 前端交互设计。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 搜索框支持自然语言输入。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 结果展示分两部分：AI生成的答案在上方，引用的原始文档在下方。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 每条引用可以点击跳转到原文。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 部署架构 (105.2s - 127.4s) -->
+  <div id="scene-6" class="scene clip" data-start="105.17" data-duration="22.27" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">部署架构</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 部署架构。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> FastAPI用Gunicorn加Uvicorn多Worker部署。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> Milvus用Docker Compose或Kubernetes部署。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> LLM用vLLM或Ollama本地部署，或者调用云端API。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 监控和运维 (127.4s - 151.1s) -->
+  <div id="scene-7" class="scene clip" data-start="127.44" data-duration="23.64" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">监控和运维</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 监控和运维。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 接口层面：请求量、延迟P99、错误率。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 检索层面：召回率、Milvus搜索延迟、Segment数量。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 生成层面：LLM延迟、token消耗、答案质量评分。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (151.1s - 170.7s) -->
+  <div id="scene-8" class="scene clip" data-start="151.08" data-duration="19.66" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 完整的AI搜索系统是多个组件的协同：数据管道保证知识库新鲜，多路检索保证召回质量，Rerank保证排序精度，LLM保证答</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 下一章我们聊海量数据场景下的架构设计。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="170.74" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面三十三章我们学了各种组件和技术，这一章把它们整合成一个完整的AI搜索系统。</div>
+    <div class="subtitle-text" id="sub-01">从架构设计到部署上线，走一遍完整的工程流程。</div>
+    <div class="subtitle-text" id="sub-02">这不是Demo，是一个能真正服务用户的生产系统。</div>
+    <div class="subtitle-text" id="sub-03">系统架构分四层。</div>
+    <div class="subtitle-text" id="sub-04">接入层：Nginx做负载均衡和HTTPS终止，FastAPI处理请求。</div>
+    <div class="subtitle-text" id="sub-05">检索层：Milvus做向量搜索，支持多路召回和混合检索。</div>
+    <div class="subtitle-text" id="sub-06">生成层：LLM做答案生成，支持流式输出。</div>
+    <div class="subtitle-text" id="sub-07">数据层：文档处理管道，负责解析、切分、编码、入库。</div>
+    <div class="subtitle-text" id="sub-08">数据处理管道是离线部分。</div>
+    <div class="subtitle-text" id="sub-09">文档上传后进入队列，Worker异步处理：解析文档格式、按语义切分、用Embedding模型编码、upsert到Milvus。</div>
+    <div class="subtitle-text" id="sub-10">处理完成后更新状态。</div>
+    <div class="subtitle-text" id="sub-11">支持增量更新：文档修改后只重新处理变化的部分，用内容哈希判断是否需要更新。</div>
+    <div class="subtitle-text" id="sub-12">在线检索流程。</div>
+    <div class="subtitle-text" id="sub-13">用户提问进来，先做Query Rewrite生成多个查询变体。</div>
+    <div class="subtitle-text" id="sub-14">然后多路并行检索：稠密向量搜索、稀疏向量搜索。</div>
+    <div class="subtitle-text" id="sub-15">结果融合去重后送入Rerank模型精排。</div>
+    <div class="subtitle-text" id="sub-16">取Top5作为上下文，拼接Prompt调用LLM生成答案。</div>
+    <div class="subtitle-text" id="sub-17">答案流式返回给前端。</div>
+    <div class="subtitle-text" id="sub-18">前端交互设计。</div>
+    <div class="subtitle-text" id="sub-19">搜索框支持自然语言输入。</div>
+    <div class="subtitle-text" id="sub-20">结果展示分两部分：AI生成的答案在上方，引用的原始文档在下方。</div>
+    <div class="subtitle-text" id="sub-21">每条引用可以点击跳转到原文。</div>
+    <div class="subtitle-text" id="sub-22">支持追问：用户可以基于上一轮答案继续提问，系统保持对话上下文。</div>
+    <div class="subtitle-text" id="sub-23">部署架构。</div>
+    <div class="subtitle-text" id="sub-24">FastAPI用Gunicorn加Uvicorn多Worker部署。</div>
+    <div class="subtitle-text" id="sub-25">Milvus用Docker Compose或Kubernetes部署。</div>
+    <div class="subtitle-text" id="sub-26">LLM用vLLM或Ollama本地部署，或者调用云端API。</div>
+    <div class="subtitle-text" id="sub-27">Redis做缓存和会话管理。</div>
+    <div class="subtitle-text" id="sub-28">Celery加Redis做异步任务队列。</div>
+    <div class="subtitle-text" id="sub-29">Nginx做反向代理。</div>
+    <div class="subtitle-text" id="sub-30">监控和运维。</div>
+    <div class="subtitle-text" id="sub-31">接口层面：请求量、延迟P99、错误率。</div>
+    <div class="subtitle-text" id="sub-32">检索层面：召回率、Milvus搜索延迟、Segment数量。</div>
+    <div class="subtitle-text" id="sub-33">生成层面：LLM延迟、token消耗、答案质量评分。</div>
+    <div class="subtitle-text" id="sub-34">数据层面：文档处理队列长度、入库速度。</div>
+    <div class="subtitle-text" id="sub-35">所有指标接入Prometheus加Grafana。</div>
+    <div class="subtitle-text" id="sub-36">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-37">完整的AI搜索系统是多个组件的协同：数据管道保证知识库新鲜，多路检索保证召回质量，Rerank保证排序精度，LLM保证答案质量，监控保证系统稳定。</div>
+    <div class="subtitle-text" id="sub-38">下一章我们聊海量数据场景下的架构设计。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-34-ai-search"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (15.7s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 15.97);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 16.87);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 18.37);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 19.87);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.37);
+
+  // === Scene 3 (41.6s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 41.87);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 42.77);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 44.27);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 45.77);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.27);
+
+  // === Scene 4 (63.0s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 63.35);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 64.25);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 65.75);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.25);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 68.75);
+
+  // === Scene 5 (85.5s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 85.81);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 86.71);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 88.21);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 89.71);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 91.21);
+
+  // === Scene 6 (105.2s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 105.47);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 106.37);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 107.87);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 109.37);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 110.87);
+
+  // === Scene 7 (127.4s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 127.74);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 128.64);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 130.14);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 131.64);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 133.14);
+
+  // === Scene 8 (151.1s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 151.38);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 152.28);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 153.78);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 155.28);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 6.89);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 7.19);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 10.95);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.25);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 15.37);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 15.67);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 17.16);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 17.46);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 24.97);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 25.27);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 31.22);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 31.52);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 35.69);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.99);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 41.27);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 41.57);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 43.38);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 43.68);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 54.47);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 54.77);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 56.24);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 56.54);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 62.75);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 63.05);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 64.06);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 64.36);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 69.86);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.16);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 74.17);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.47);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 77.91);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 78.21);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 83.34);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 83.64);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 85.21);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 85.51);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 86.66);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.96);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 89.14);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 89.44);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 95.56);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.86);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 98.45);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 98.75);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 104.87);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.17);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 105.62);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.92);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 110.70);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 111.00);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 115.93);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 116.23);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 120.41);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 120.71);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 122.51);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 122.81);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 125.50);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.80);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 127.14);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.44);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 128.27);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 128.57);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 131.87);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 132.17);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 137.54);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 137.84);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 142.46);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 142.76);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 146.05);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.35);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 150.78);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 151.08);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 152.17);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 152.47);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 166.67);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 166.97);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 170.44);
+
+  window.__timelines["ch-34-ai-search"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

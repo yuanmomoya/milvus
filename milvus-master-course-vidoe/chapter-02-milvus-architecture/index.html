@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 02 Milvus Architecture</title>
+</head>
+<body>
+<div data-composition-id="ch-02-milvus-architecture" data-start="0" data-duration="172.27" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="172.27" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们知道了向量检索的原理，但原理只 (0.0s - 21.1s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="21.07" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们知道了向量检索的原理，但原理只</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们知道了向量检索的原理，但原理只是一半，工程落地才是另一半。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 这一章我们搞清楚Milvus的整体架构：它是怎么把向量写入、索引构建和搜索这三件事，拆成一个可扩展的分布式系统的。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 理解了架构，后面排查问题就有方向了。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先用一个类比建立直觉 (21.1s - 45.7s) -->
+  <div id="scene-2" class="scene clip" data-start="21.07" data-duration="24.65" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先用一个类比建立直觉</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先用一个类比建立直觉。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> Milvus的架构像一个大型物流中心。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> Proxy是前台接待，负责接收客户订单。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> Coord系列像调度室，决定货物放哪里、由谁搬运。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 具体来看，Milvus有四类Coord： (45.7s - 71.2s) -->
+  <div id="scene-3" class="scene clip" data-start="45.72" data-duration="25.46" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">具体来看，Milvus有四类Coord：</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 具体来看，Milvus有四类Coord：RootCoord管元数据，DataCoord管数据分片，QueryCoord管</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 对应的Node也有三类：DataNode负责写入落盘，QueryNode负责搜索计算，IndexNode负责建索引。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 这种Coord加Node的拆分，让调度和执行可以独立扩缩容。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 知道了组件分工，来看数据怎么写进去 (71.2s - 95.2s) -->
+  <div id="scene-4" class="scene clip" data-start="71.18" data-duration="24.05" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">知道了组件分工，来看数据怎么写进去</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 知道了组件分工，来看数据怎么写进去。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 应用调用insert，Proxy先把数据写入WAL——就是消息队列。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 写入WAL成功就返回客户端OK。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 然后DataNode异步消费消息，形成growing segment。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 光写入还不够，还得能搜出来 (95.2s - 113.3s) -->
+  <div id="scene-5" class="scene clip" data-start="95.23" data-duration="18.07" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">光写入还不够，还得能搜出来</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 光写入还不够，还得能搜出来。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 查询时Proxy把请求拆给多个QueryNode，每个Node搜自己负责的segment，返回局部TopK。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> Proxy再把所有局部结果归并排序，得到全局TopK返回给客户端。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 这就是scatter-gather模式。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 这里有个关键概念：Segment (113.3s - 134.9s) -->
+  <div id="scene-6" class="scene clip" data-start="113.30" data-duration="21.65" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">这里有个关键概念：Segment</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 这里有个关键概念：Segment。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 它是Milvus数据管理的最小单位。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 新写入的数据先在growing segment里，flush后变成sealed segment，建完索引变成indexe</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> Compaction会定期合并小segment、清理删除数据。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 最后说说Standalone和Clust (134.9s - 153.4s) -->
+  <div id="scene-7" class="scene clip" data-start="134.95" data-duration="18.46" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">最后说说Standalone和Clust</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 最后说说Standalone和Cluster的区别。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> Standalone把所有Coord和Node跑在一个进程里，用Rocksmq代替Pulsar做消息队列。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 适合开发和小规模场景。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> Cluster模式下每个组件独立部署，可以按需扩缩容，适合生产环境。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (153.4s - 172.3s) -->
+  <div id="scene-8" class="scene clip" data-start="153.41" data-duration="18.86" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> Milvus的核心是两条链路：写入链路把数据变成segment和索引，查询链路把分散的局部结果归并成全局TopK。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 后面所有调优都围绕这两条链路展开。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们动手，五步把Milvus跑起来。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="172.27" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们知道了向量检索的原理，但原理只是一半，工程落地才是另一半。</div>
+    <div class="subtitle-text" id="sub-01">这一章我们搞清楚Milvus的整体架构：它是怎么把向量写入、索引构建和搜索这三件事，拆成一个可扩展的分布式系统的。</div>
+    <div class="subtitle-text" id="sub-02">理解了架构，后面排查问题就有方向了。</div>
+    <div class="subtitle-text" id="sub-03">先用一个类比建立直觉。</div>
+    <div class="subtitle-text" id="sub-04">Milvus的架构像一个大型物流中心。</div>
+    <div class="subtitle-text" id="sub-05">Proxy是前台接待，负责接收客户订单。</div>
+    <div class="subtitle-text" id="sub-06">Coord系列像调度室，决定货物放哪里、由谁搬运。</div>
+    <div class="subtitle-text" id="sub-07">Node系列是具体操作工位，真正干活。</div>
+    <div class="subtitle-text" id="sub-08">etcd是墙上的总账本，MinIO是后方仓库，消息队列是传送带。</div>
+    <div class="subtitle-text" id="sub-09">具体来看，Milvus有四类Coord：RootCoord管元数据，DataCoord管数据分片，QueryCoord管搜索调度，IndexCoord管索引任务。</div>
+    <div class="subtitle-text" id="sub-10">对应的Node也有三类：DataNode负责写入落盘，QueryNode负责搜索计算，IndexNode负责建索引。</div>
+    <div class="subtitle-text" id="sub-11">这种Coord加Node的拆分，让调度和执行可以独立扩缩容。</div>
+    <div class="subtitle-text" id="sub-12">知道了组件分工，来看数据怎么写进去。</div>
+    <div class="subtitle-text" id="sub-13">应用调用insert，Proxy先把数据写入WAL——就是消息队列。</div>
+    <div class="subtitle-text" id="sub-14">写入WAL成功就返回客户端OK。</div>
+    <div class="subtitle-text" id="sub-15">然后DataNode异步消费消息，形成growing segment。</div>
+    <div class="subtitle-text" id="sub-16">数据量够了就flush，segment被封存到MinIO。</div>
+    <div class="subtitle-text" id="sub-17">最后IndexNode给它建索引。</div>
+    <div class="subtitle-text" id="sub-18">光写入还不够，还得能搜出来。</div>
+    <div class="subtitle-text" id="sub-19">查询时Proxy把请求拆给多个QueryNode，每个Node搜自己负责的segment，返回局部TopK。</div>
+    <div class="subtitle-text" id="sub-20">Proxy再把所有局部结果归并排序，得到全局TopK返回给客户端。</div>
+    <div class="subtitle-text" id="sub-21">这就是scatter-gather模式。</div>
+    <div class="subtitle-text" id="sub-22">这里有个关键概念：Segment。</div>
+    <div class="subtitle-text" id="sub-23">它是Milvus数据管理的最小单位。</div>
+    <div class="subtitle-text" id="sub-24">新写入的数据先在growing segment里，flush后变成sealed segment，建完索引变成indexed segment。</div>
+    <div class="subtitle-text" id="sub-25">Compaction会定期合并小segment、清理删除数据。</div>
+    <div class="subtitle-text" id="sub-26">segment过碎会拖慢搜索，过大会拖慢加载。</div>
+    <div class="subtitle-text" id="sub-27">最后说说Standalone和Cluster的区别。</div>
+    <div class="subtitle-text" id="sub-28">Standalone把所有Coord和Node跑在一个进程里，用Rocksmq代替Pulsar做消息队列。</div>
+    <div class="subtitle-text" id="sub-29">适合开发和小规模场景。</div>
+    <div class="subtitle-text" id="sub-30">Cluster模式下每个组件独立部署，可以按需扩缩容，适合生产环境。</div>
+    <div class="subtitle-text" id="sub-31">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-32">Milvus的核心是两条链路：写入链路把数据变成segment和索引，查询链路把分散的局部结果归并成全局TopK。</div>
+    <div class="subtitle-text" id="sub-33">后面所有调优都围绕这两条链路展开。</div>
+    <div class="subtitle-text" id="sub-34">下一章我们动手，五步把Milvus跑起来。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-02-milvus-architecture"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (21.1s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.37);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.27);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.77);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.27);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 26.77);
+
+  // === Scene 3 (45.7s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 46.02);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.92);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 48.42);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.92);
+
+  // === Scene 4 (71.2s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 71.48);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 72.38);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 73.88);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 75.38);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 76.88);
+
+  // === Scene 5 (95.2s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 95.53);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 96.43);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 97.93);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 99.43);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 100.93);
+
+  // === Scene 6 (113.3s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 113.60);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 114.50);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 116.00);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 117.50);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 119.00);
+
+  // === Scene 7 (134.9s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 135.25);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 136.15);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 137.65);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 139.15);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 140.65);
+
+  // === Scene 8 (153.4s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 153.71);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 154.61);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 156.11);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 157.61);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 159.11);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 6.27);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 6.57);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 17.29);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 17.59);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 20.77);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.07);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 22.92);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.22);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.64);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.94);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 30.55);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 30.85);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 35.44);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.74);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 39.16);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 39.46);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 45.42);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 45.72);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 57.62);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 57.92);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 66.36);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.66);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 70.88);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 71.18);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 73.79);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.09);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 79.27);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.57);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 81.86);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 82.16);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 87.51);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 87.81);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 92.19);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 92.49);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 94.93);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.23);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 97.02);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 97.32);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 105.09);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.39);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 110.01);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 110.31);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 113.00);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 113.30);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 115.31);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 115.61);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 117.77);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 118.07);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 127.30);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.60);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 131.52);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.82);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 134.65);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 134.95);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 138.52);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.82);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 146.41);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.71);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 148.05);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 148.35);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 153.11);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 153.41);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 154.40);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.70);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 164.94);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 165.24);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 168.09);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.39);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 171.97);
+
+  window.__timelines["ch-02-milvus-architecture"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

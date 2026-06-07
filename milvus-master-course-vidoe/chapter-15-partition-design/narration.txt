@@ -1,0 +1,15 @@
+上一章我们用标量过滤缩小搜索范围，但过滤是逻辑层面的。如果你的数据天然按某个维度分成几大块——比如按租户、按时间、按类别——那物理隔离比逻辑过滤更高效。这就是Partition分区。
+
+Partition和Filter的区别是什么？Filter是搜索时临时筛选，每次都要扫描索引判断条件。Partition是写入时就把数据物理分开，搜索时直接跳过不相关的分区，连索引都不用碰。就像Filter是在一个大仓库里贴标签找货，Partition是直接把货放在不同的仓库里。
+
+什么时候用Partition？三种典型场景。按租户分区：每个客户的数据放一个分区，搜索时指定分区名，天然隔离。按时间分区：按月或按周分区，查最近数据时只搜最近的分区。按类别分区：比如商品按一级类目分区，搜服装时只看服装分区。
+
+Partition的限制要知道。每个Collection最多4096个分区。分区内的数据共享同一套索引参数。分区不能嵌套。如果你的分区维度有几万个值，比如用户ID，那不适合用Partition，应该用Filter。
+
+在Milvus里怎么用？创建分区：client.create_partition(collection_name, partition_name)。写入时指定分区：client.upsert(collection_name, data, partition_name)。搜索时指定分区：在search方法里传partition_names参数，可以传多个。不指定就搜所有分区。
+
+Partition Key是另一种方式。不用手动管理分区，而是指定一个字段作为Partition Key，Milvus自动按这个字段的值做哈希分区。好处是不用手动创建分区，坏处是分区数量和分布由Milvus控制，不够灵活。适合租户数量多、分布均匀的场景。
+
+一个常见的设计模式是时间分区加TTL。按月创建分区，比如2024_01、2024_02。数据写入对应月份的分区。过期数据直接drop_partition整个删除，比逐条delete快几个数量级。这在日志、事件流场景特别有用。
+
+好，总结一下。Partition是物理隔离，Filter是逻辑筛选。数据天然分块且块数不多时用Partition，否则用Filter。两者可以组合：先按分区缩小范围，再用Filter精细过滤。下一章我们聊批量写入优化。

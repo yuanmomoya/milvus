@@ -1,0 +1,13 @@
+上一章我们手动实现了Agent，这一章用LangChain框架来简化集成。LangChain是目前最流行的LLM应用框架，它把Milvus封装成了VectorStore组件，几行代码就能接入RAG链路。我们看怎么用、有什么坑、什么时候该用什么时候不该用。
+
+LangChain集成Milvus的核心是Milvus类，在langchain_milvus包里。初始化时传入Embedding模型和连接参数，它会自动创建Collection、建索引、管理数据。写入用add_documents，检索用similarity_search或as_retriever。底层调的还是pymilvus，只是封装了一层。
+
+一个典型的RAG链路用LangChain怎么写？四步。第一步，初始化Milvus向量存储。第二步，创建Retriever。第三步，定义Prompt模板。第四步，用LCEL把Retriever、Prompt和LLM串成一条链。调用链的invoke方法，传入问题，自动完成检索加生成。
+
+LangChain的好处是什么？开发速度快。标准化的接口让你可以快速切换不同的向量数据库、不同的LLM、不同的Embedding模型，不用改业务逻辑。社区生态丰富，各种Document Loader、Text Splitter、Retriever都有现成的。适合快速原型和中等复杂度的应用。
+
+LangChain的坑在哪？第一，抽象泄漏。LangChain的Milvus封装隐藏了很多细节，比如索引参数、搜索参数、Schema设计。当你需要精细控制时，反而要绕过框架直接用pymilvus。第二，版本变动快。LangChain的API经常改，升级可能破坏现有代码。第三，性能开销。多层封装带来额外的序列化和调用开销。
+
+什么时候用LangChain，什么时候直接用pymilvus？快速原型、标准RAG流程、需要频繁切换组件时用LangChain。对性能要求高、需要精细控制索引和搜索参数、或者架构比较定制时直接用pymilvus。两者不冲突，可以混用：LangChain管链路编排，关键路径用pymilvus优化。
+
+好，总结一下。LangChain让Milvus集成变得简单：几行代码搞定RAG。但要理解它的抽象边界——简单场景用框架，复杂场景用原生API。下一章我们看另一个框架LlamaIndex，它在数据索引和检索方面有不同的设计哲学。

@@ -1,0 +1,3 @@
+第 28 章 · LangChain集成
+
+上一章我们手动实现了Agent，这一章用LangChain框架来简化集成。LangChain是目前最流行的LLM应用框架，它把Milvus封装成了VectorStore组件，几行代码就能接入RAG链路。我们看怎么用、有什么坑、什么时候该用什么时候不该用。

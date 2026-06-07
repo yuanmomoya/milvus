@@ -1,0 +1,53 @@
+{
+  "total_duration": 168.29,
+  "scenes": [
+    {
+      "index": 0,
+      "start": 0.0,
+      "duration": 18.07,
+      "chars": 106
+    },
+    {
+      "index": 1,
+      "start": 18.07,
+      "duration": 20.3,
+      "chars": 137
+    },
+    {
+      "index": 2,
+      "start": 38.38,
+      "duration": 16.46,
+      "chars": 119
+    },
+    {
+      "index": 3,
+      "start": 54.84,
+      "duration": 28.42,
+      "chars": 182
+    },
+    {
+      "index": 4,
+      "start": 83.26,
+      "duration": 21.65,
+      "chars": 128
+    },
+    {
+      "index": 5,
+      "start": 104.9,
+      "duration": 18.7,
+      "chars": 112
+    },
+    {
+      "index": 6,
+      "start": 123.6,
+      "duration": 22.25,
+      "chars": 133
+    },
+    {
+      "index": 7,
+      "start": 145.85,
+      "duration": 22.44,
+      "chars": 116
+    }
+  ]
+}

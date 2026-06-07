@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 18 Cluster Deploy</title>
+</head>
+<body>
+<div data-composition-id="ch-18-cluster-deploy" data-start="0" data-duration="158.90" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="158.90" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面十七章我们一直在单机Standalo (0.0s - 19.7s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="19.68" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面十七章我们一直在单机Standalo</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面十七章我们一直在单机Standalone模式下工作。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 单机有天花板：CPU、内存、磁盘IO都是硬上限。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 当数据量超过单机容量、写入吞吐需要水平扩展、或者需要高可用时，就该上集群了。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 这一章我们看Milvus集群怎么部署。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 集群模式和Standalone的核心区别 (19.7s - 44.5s) -->
+  <div id="scene-2" class="scene clip" data-start="19.68" data-duration="24.84" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">集群模式和Standalone的核心区别</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 集群模式和Standalone的核心区别是：每个组件独立部署、可以独立扩缩容。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> Proxy可以有多个，做负载均衡。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> DataNode可以有多个，并行消费写入。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> QueryNode可以有多个，分担搜索压力。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 基础设施也不一样 (44.5s - 65.2s) -->
+  <div id="scene-3" class="scene clip" data-start="44.52" data-duration="20.69" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">基础设施也不一样</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 基础设施也不一样。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> Standalone用Rocksmq做消息队列，集群模式要换成Pulsar或Kafka。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> etcd和MinIO还是必须的，但生产环境建议用三节点etcd集群和分布式对象存储。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 这些基础设施的可靠性直接决定了Milvus集群的可靠性。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 部署方式有三种 (65.2s - 84.7s) -->
+  <div id="scene-4" class="scene clip" data-start="65.21" data-duration="19.46" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">部署方式有三种</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 部署方式有三种。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> Helm Chart部署到Kubernetes，这是生产推荐方式。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> Docker Compose部署，适合测试和开发。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> Milvus Operator，Kubernetes原生的方式，支持声明式管理和自动扩缩容。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 扩容的思路是按瓶颈扩 (84.7s - 104.7s) -->
+  <div id="scene-5" class="scene clip" data-start="84.67" data-duration="20.06" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">扩容的思路是按瓶颈扩</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 扩容的思路是按瓶颈扩。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 搜索慢就加QueryNode。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 写入慢就加DataNode。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 索引构建慢就加IndexNode。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 集群部署后，数据怎么分布 (104.7s - 124.8s) -->
+  <div id="scene-6" class="scene clip" data-start="104.74" data-duration="20.04" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">集群部署后，数据怎么分布</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 集群部署后，数据怎么分布？</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> Milvus用Segment作为调度单位。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> QueryCoord负责把Segment分配给不同的QueryNode。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 一个Collection的数据可能分散在多个QueryNode上。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 有个重要概念：副本 (124.8s - 142.0s) -->
+  <div id="scene-7" class="scene clip" data-start="124.78" data-duration="17.26" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">有个重要概念：副本</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 有个重要概念：副本。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 一个Collection可以加载多个副本，每个副本是完整数据的一份拷贝，分布在不同的QueryNode上。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 副本数越多，搜索吞吐越高，但内存消耗也成倍增长。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 通常2到3个副本就够了。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (142.0s - 158.9s) -->
+  <div id="scene-8" class="scene clip" data-start="142.03" data-duration="16.87" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 集群部署的核心是：组件独立扩缩容、按瓶颈加资源、用副本提升吞吐。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 从Standalone到Cluster不需要改应用代码，只需要改部署配置。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们聊高可用设计，集群挂了怎么办。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="158.90" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面十七章我们一直在单机Standalone模式下工作。</div>
+    <div class="subtitle-text" id="sub-01">单机有天花板：CPU、内存、磁盘IO都是硬上限。</div>
+    <div class="subtitle-text" id="sub-02">当数据量超过单机容量、写入吞吐需要水平扩展、或者需要高可用时，就该上集群了。</div>
+    <div class="subtitle-text" id="sub-03">这一章我们看Milvus集群怎么部署。</div>
+    <div class="subtitle-text" id="sub-04">集群模式和Standalone的核心区别是：每个组件独立部署、可以独立扩缩容。</div>
+    <div class="subtitle-text" id="sub-05">Proxy可以有多个，做负载均衡。</div>
+    <div class="subtitle-text" id="sub-06">DataNode可以有多个，并行消费写入。</div>
+    <div class="subtitle-text" id="sub-07">QueryNode可以有多个，分担搜索压力。</div>
+    <div class="subtitle-text" id="sub-08">IndexNode可以有多个，加速索引构建。</div>
+    <div class="subtitle-text" id="sub-09">Coord系列通常各一个就够，它们是轻量的调度角色。</div>
+    <div class="subtitle-text" id="sub-10">基础设施也不一样。</div>
+    <div class="subtitle-text" id="sub-11">Standalone用Rocksmq做消息队列，集群模式要换成Pulsar或Kafka。</div>
+    <div class="subtitle-text" id="sub-12">etcd和MinIO还是必须的，但生产环境建议用三节点etcd集群和分布式对象存储。</div>
+    <div class="subtitle-text" id="sub-13">这些基础设施的可靠性直接决定了Milvus集群的可靠性。</div>
+    <div class="subtitle-text" id="sub-14">部署方式有三种。</div>
+    <div class="subtitle-text" id="sub-15">Helm Chart部署到Kubernetes，这是生产推荐方式。</div>
+    <div class="subtitle-text" id="sub-16">Docker Compose部署，适合测试和开发。</div>
+    <div class="subtitle-text" id="sub-17">Milvus Operator，Kubernetes原生的方式，支持声明式管理和自动扩缩容。</div>
+    <div class="subtitle-text" id="sub-18">大多数团队选Helm加Kubernetes。</div>
+    <div class="subtitle-text" id="sub-19">扩容的思路是按瓶颈扩。</div>
+    <div class="subtitle-text" id="sub-20">搜索慢就加QueryNode。</div>
+    <div class="subtitle-text" id="sub-21">写入慢就加DataNode。</div>
+    <div class="subtitle-text" id="sub-22">索引构建慢就加IndexNode。</div>
+    <div class="subtitle-text" id="sub-23">连接数不够就加Proxy。</div>
+    <div class="subtitle-text" id="sub-24">每种Node的资源需求不同：QueryNode吃内存，IndexNode吃CPU，DataNode吃IO。</div>
+    <div class="subtitle-text" id="sub-25">按需分配资源，不要一刀切。</div>
+    <div class="subtitle-text" id="sub-26">集群部署后，数据怎么分布？</div>
+    <div class="subtitle-text" id="sub-27">Milvus用Segment作为调度单位。</div>
+    <div class="subtitle-text" id="sub-28">QueryCoord负责把Segment分配给不同的QueryNode。</div>
+    <div class="subtitle-text" id="sub-29">一个Collection的数据可能分散在多个QueryNode上。</div>
+    <div class="subtitle-text" id="sub-30">搜索时Proxy把请求广播给所有相关的QueryNode，收集局部结果后合并。</div>
+    <div class="subtitle-text" id="sub-31">有个重要概念：副本。</div>
+    <div class="subtitle-text" id="sub-32">一个Collection可以加载多个副本，每个副本是完整数据的一份拷贝，分布在不同的QueryNode上。</div>
+    <div class="subtitle-text" id="sub-33">副本数越多，搜索吞吐越高，但内存消耗也成倍增长。</div>
+    <div class="subtitle-text" id="sub-34">通常2到3个副本就够了。</div>
+    <div class="subtitle-text" id="sub-35">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-36">集群部署的核心是：组件独立扩缩容、按瓶颈加资源、用副本提升吞吐。</div>
+    <div class="subtitle-text" id="sub-37">从Standalone到Cluster不需要改应用代码，只需要改部署配置。</div>
+    <div class="subtitle-text" id="sub-38">下一章我们聊高可用设计，集群挂了怎么办。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-18-cluster-deploy"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (19.7s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 19.98);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 20.88);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.38);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.88);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.38);
+
+  // === Scene 3 (44.5s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 44.82);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 45.72);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.22);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 48.72);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 50.22);
+
+  // === Scene 4 (65.2s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 65.51);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 66.41);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.91);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 69.41);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 70.91);
+
+  // === Scene 5 (84.7s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 84.97);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 85.87);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 87.37);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 88.87);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 90.37);
+
+  // === Scene 6 (104.7s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 105.04);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 105.94);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 107.44);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 108.94);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 110.44);
+
+  // === Scene 7 (124.8s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 125.08);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 125.98);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 127.48);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 128.98);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 130.48);
+
+  // === Scene 8 (142.0s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 142.33);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 143.23);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 144.73);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 146.23);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.73);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 4.76);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 5.06);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 9.09);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 9.39);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 15.95);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 16.25);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 19.38);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 19.68);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 25.97);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.27);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 28.84);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 29.14);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 32.39);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 32.69);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 36.11);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 36.41);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 39.83);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 40.13);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 44.22);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.52);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 45.73);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 46.03);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 53.14);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 53.44);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 60.20);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.50);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 64.91);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 65.21);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 66.07);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.37);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 70.86);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 71.16);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 74.49);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.79);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 81.18);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 81.48);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 84.37);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 84.67);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 85.99);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.29);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 88.21);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 88.50);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 90.27);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.57);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 92.78);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 93.08);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 94.70);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.00);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 102.51);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 102.81);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 104.43);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 104.74);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 106.27);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 106.57);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 109.24);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 109.54);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 114.32);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 114.62);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 118.98);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 119.28);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 124.48);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 124.78);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 126.22);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 126.52);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 135.46);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 135.76);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 139.65);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 139.95);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 141.74);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 142.03);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 142.96);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 143.26);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 148.58);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 148.88);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 155.09);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.39);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 158.60);
+
+  window.__timelines["ch-18-cluster-deploy"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

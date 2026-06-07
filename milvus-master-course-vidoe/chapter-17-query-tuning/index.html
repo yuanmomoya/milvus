@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 17 Query Tuning</title>
+</head>
+<body>
+<div data-composition-id="ch-17-query-tuning" data-start="0" data-duration="185.54" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="185.54" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们优化了写入，这一章优化搜索 (0.0s - 20.9s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="20.86" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们优化了写入，这一章优化搜索</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们优化了写入，这一章优化搜索。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 查询慢是生产环境最常见的问题。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 要调优，首先得知道延迟花在哪里。</div>
+        <div class="item-row" id="s1-item4"><span class="item-bullet">▸</span> 搜索延迟可以拆成四部分：ANN搜索本身、标量过滤、字段回填、Segment合并。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: ANN搜索是核心耗时 (20.9s - 53.3s) -->
+  <div id="scene-2" class="scene clip" data-start="20.86" data-duration="32.45" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">ANN搜索是核心耗时</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> ANN搜索是核心耗时。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> HNSW的ef参数直接决定搜索精度和速度。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> ef从64增大到256，召回率从93%提升到98%，但延迟翻倍。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> IVF的nprobe同理。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 标量过滤的开销容易被忽视 (53.3s - 76.0s) -->
+  <div id="scene-3" class="scene clip" data-start="53.30" data-duration="22.70" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">标量过滤的开销容易被忽视</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 标量过滤的开销容易被忽视。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 如果过滤字段没建索引，每次搜索都要全量扫描标量数据。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 解决方案很简单：给高频过滤字段建INVERTED索引。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 另外，过滤表达式的复杂度也影响性能。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: output_fields也会影响延迟 (76.0s - 102.3s) -->
+  <div id="scene-4" class="scene clip" data-start="76.01" data-duration="26.28" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">output_fields也会影响延迟</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> output_fields也会影响延迟。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 搜索时指定返回哪些字段，Milvus需要从存储里读取这些字段的值。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 如果返回一个4096字符的text字段，IO开销不小。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 建议：搜索时只返回必要的字段，比如id和score。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: Segment数量是另一个隐藏杀手 (102.3s - 125.8s) -->
+  <div id="scene-5" class="scene clip" data-start="102.29" data-duration="23.47" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">Segment数量是另一个隐藏杀手</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> Segment数量是另一个隐藏杀手。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 每个Segment都要独立搜索，结果再合并。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 如果一个Collection有几千个小Segment，合并开销就很大。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 解决方案：触发Compaction合并小Segment，或者在批量导入后手动compact。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: TopK的大小也影响性能 (125.8s - 145.4s) -->
+  <div id="scene-6" class="scene clip" data-start="125.76" data-duration="19.68" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">TopK的大小也影响性能</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> TopK的大小也影响性能。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> TopK从10增大到1000，延迟可能翻几倍，因为需要维护更大的候选集。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 如果业务只需要前10个结果，就不要设TopK等于100"以防万一"。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 需要翻页的场景，用offset加limit分页，但注意offset太大性能也会下降。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 并发也是个维度 (145.4s - 167.1s) -->
+  <div id="scene-7" class="scene clip" data-start="145.44" data-duration="21.67" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">并发也是个维度</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 并发也是个维度。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 单个搜索请求的延迟和并发请求数有关。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> QPS上去后，QueryNode的CPU和内存压力增大，单次延迟会上升。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 如果延迟要求严格，要么加QueryNode副本，要么限制并发数。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (167.1s - 185.5s) -->
+  <div id="scene-8" class="scene clip" data-start="167.11" data-duration="18.43" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 查询调优的思路是：定位瓶颈、逐个击破。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> ANN参数找拐点、过滤字段建索引、output_fields精简、Segment合并、TopK合理设置。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们从单机走向集群，看Milvus怎么水平扩展。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="185.54" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们优化了写入，这一章优化搜索。</div>
+    <div class="subtitle-text" id="sub-01">查询慢是生产环境最常见的问题。</div>
+    <div class="subtitle-text" id="sub-02">要调优，首先得知道延迟花在哪里。</div>
+    <div class="subtitle-text" id="sub-03">搜索延迟可以拆成四部分：ANN搜索本身、标量过滤、字段回填、Segment合并。</div>
+    <div class="subtitle-text" id="sub-04">搞清楚瓶颈在哪，才能对症下药。</div>
+    <div class="subtitle-text" id="sub-05">ANN搜索是核心耗时。</div>
+    <div class="subtitle-text" id="sub-06">HNSW的ef参数直接决定搜索精度和速度。</div>
+    <div class="subtitle-text" id="sub-07">ef从64增大到256，召回率从93%提升到98%，但延迟翻倍。</div>
+    <div class="subtitle-text" id="sub-08">IVF的nprobe同理。</div>
+    <div class="subtitle-text" id="sub-09">调参的方法论是：先用测试集测量不同参数下的召回率和延迟，画出曲线，找到拐点——召回率增长变缓但延迟还在线性增长的那个点。</div>
+    <div class="subtitle-text" id="sub-10">标量过滤的开销容易被忽视。</div>
+    <div class="subtitle-text" id="sub-11">如果过滤字段没建索引，每次搜索都要全量扫描标量数据。</div>
+    <div class="subtitle-text" id="sub-12">解决方案很简单：给高频过滤字段建INVERTED索引。</div>
+    <div class="subtitle-text" id="sub-13">另外，过滤表达式的复杂度也影响性能。</div>
+    <div class="subtitle-text" id="sub-14">尽量用简单的等值或IN查询，避免复杂的嵌套逻辑和LIKE模糊匹配。</div>
+    <div class="subtitle-text" id="sub-15">output_fields也会影响延迟。</div>
+    <div class="subtitle-text" id="sub-16">搜索时指定返回哪些字段，Milvus需要从存储里读取这些字段的值。</div>
+    <div class="subtitle-text" id="sub-17">如果返回一个4096字符的text字段，IO开销不小。</div>
+    <div class="subtitle-text" id="sub-18">建议：搜索时只返回必要的字段，比如id和score。</div>
+    <div class="subtitle-text" id="sub-19">需要完整内容时，拿到id后再单独query获取。</div>
+    <div class="subtitle-text" id="sub-20">Segment数量是另一个隐藏杀手。</div>
+    <div class="subtitle-text" id="sub-21">每个Segment都要独立搜索，结果再合并。</div>
+    <div class="subtitle-text" id="sub-22">如果一个Collection有几千个小Segment，合并开销就很大。</div>
+    <div class="subtitle-text" id="sub-23">解决方案：触发Compaction合并小Segment，或者在批量导入后手动compact。</div>
+    <div class="subtitle-text" id="sub-24">理想状态是每个Segment在100MB到512MB之间。</div>
+    <div class="subtitle-text" id="sub-25">TopK的大小也影响性能。</div>
+    <div class="subtitle-text" id="sub-26">TopK从10增大到1000，延迟可能翻几倍，因为需要维护更大的候选集。</div>
+    <div class="subtitle-text" id="sub-27">如果业务只需要前10个结果，就不要设TopK等于100&quot;以防万一&quot;。</div>
+    <div class="subtitle-text" id="sub-28">需要翻页的场景，用offset加limit分页，但注意offset太大性能也会下降。</div>
+    <div class="subtitle-text" id="sub-29">并发也是个维度。</div>
+    <div class="subtitle-text" id="sub-30">单个搜索请求的延迟和并发请求数有关。</div>
+    <div class="subtitle-text" id="sub-31">QPS上去后，QueryNode的CPU和内存压力增大，单次延迟会上升。</div>
+    <div class="subtitle-text" id="sub-32">如果延迟要求严格，要么加QueryNode副本，要么限制并发数。</div>
+    <div class="subtitle-text" id="sub-33">Milvus支持多副本，同一份数据加载到多个QueryNode上分担压力。</div>
+    <div class="subtitle-text" id="sub-34">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-35">查询调优的思路是：定位瓶颈、逐个击破。</div>
+    <div class="subtitle-text" id="sub-36">ANN参数找拐点、过滤字段建索引、output_fields精简、Segment合并、TopK合理设置。</div>
+    <div class="subtitle-text" id="sub-37">下一章我们从单机走向集群，看Milvus怎么水平扩展。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-17-query-tuning"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+  tl.fromTo("#s1-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 5.70);
+
+  // === Scene 2 (20.9s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.16);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.06);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.56);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.06);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 26.56);
+
+  // === Scene 3 (53.3s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 53.60);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 54.50);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 56.00);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 57.50);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 59.00);
+
+  // === Scene 4 (76.0s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 76.31);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 77.21);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 78.71);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 80.21);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 81.71);
+
+  // === Scene 5 (102.3s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 102.59);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 103.49);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 104.99);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 106.49);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 107.99);
+
+  // === Scene 6 (125.8s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 126.06);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 126.96);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 128.46);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 129.96);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 131.46);
+
+  // === Scene 7 (145.4s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 145.74);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 146.64);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 148.14);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 149.64);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 151.14);
+
+  // === Scene 8 (167.1s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 167.41);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 168.31);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 169.81);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 171.31);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 172.81);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 3.47);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 3.77);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 6.45);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 6.75);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 9.63);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 9.93);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 17.58);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 17.88);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 20.56);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.86);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 23.17);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.47);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 28.14);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 28.44);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 35.72);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 36.02);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 38.80);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 39.10);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 53.01);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 53.30);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 55.52);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 55.82);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 60.57);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.87);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 65.81);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.11);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 69.30);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 69.60);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 75.70);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 76.01);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 79.75);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 80.05);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 86.42);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.72);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 91.88);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 92.18);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 97.14);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 97.44);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 101.99);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 102.29);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 104.81);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.11);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 108.25);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 108.55);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 113.73);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 114.03);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 120.92);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 121.22);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 125.46);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.76);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 127.51);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 127.81);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 133.17);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 133.47);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 138.53);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.83);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 145.14);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 145.44);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 146.46);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.76);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 149.44);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 149.74);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 155.40);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.70);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 160.69);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 160.99);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 166.81);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 167.11);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 168.04);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.34);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 171.37);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 171.67);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 180.50);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 180.80);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 185.24);
+
+  window.__timelines["ch-17-query-tuning"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

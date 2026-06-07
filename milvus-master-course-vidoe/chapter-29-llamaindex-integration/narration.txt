@@ -1,0 +1,15 @@
+上一章用LangChain集成Milvus，这一章看LlamaIndex。LlamaIndex和LangChain的定位不同：LangChain是通用的LLM应用框架，LlamaIndex专注于数据索引和检索。如果你的核心需求是把各种数据源高效地接入RAG，LlamaIndex可能更合适。
+
+LlamaIndex的核心概念是Index。它把文档加载、切分、编码、存储封装成一个Index对象。MilvusVectorStore是其中一种存储后端。创建Index时传入文档和向量存储，LlamaIndex自动完成切分和入库。查询时用QueryEngine，传入问题就能得到答案。
+
+和LangChain相比，LlamaIndex的优势在数据处理。它内置了几十种Document Loader：PDF、Word、网页、数据库、API。切分策略也更丰富：按句子、按段落、按语义边界。还有Node关系的概念：Chunk之间可以有父子、前后关系，检索时能利用这些关系获取更多上下文。
+
+在LlamaIndex里用Milvus怎么写？三步。第一步，创建MilvusVectorStore，传入连接参数和Collection名。第二步，用VectorStoreIndex.from_documents加载文档，自动切分编码入库。第三步，创建QueryEngine，调用query方法提问。整个过程比直接用pymilvus简洁很多。
+
+LlamaIndex的高级特性。SubQuestionQueryEngine：把复杂问题拆成多个子问题，分别检索再合并。RouterQueryEngine：根据问题类型路由到不同的检索策略。CitationQueryEngine：自动在答案中标注引用来源。这些在LangChain里需要自己实现，LlamaIndex开箱即用。
+
+LlamaIndex的局限。和LangChain类似，抽象层会隐藏底层细节。当你需要精细控制Milvus的索引参数、搜索参数、或者做复杂的混合检索时，框架的封装反而成了障碍。另外LlamaIndex的文档和API也在快速迭代，版本兼容性需要注意。
+
+LangChain vs LlamaIndex怎么选？如果你的重点是数据处理和检索质量，选LlamaIndex。如果你的重点是链路编排和Agent，选LangChain。如果两者都需要，可以混用——LlamaIndex处理数据和检索，LangChain编排整体流程。或者干脆都不用，直接pymilvus加自己的胶水代码，最灵活。
+
+好，总结一下。LlamaIndex是数据索引专家，擅长把各种数据源高效接入RAG。和Milvus配合，几行代码就能搭建高质量的检索系统。下一章我们换个方向，看图片检索怎么做。

@@ -1,0 +1,13 @@
+上一章我们用Docker把Milvus跑起来了，这一章深入pymilvus这个Python SDK。搞清楚五件事：怎么连接、怎么定义Schema、怎么建索引、怎么增删改查、以及生产环境的批量写入模式。这五件事覆盖了日常开发百分之九十的场景。
+
+先说连接。pymilvus提供了MilvusClient这个高层API，三行代码搞定。传入uri和token就能连上。本地开发不需要token，Zilliz Cloud需要API Key。连上之后调list_collections验证一下，没报错就说明OK。注意：新项目一律用MilvusClient，不要用旧版的connections.connect加Collection那套ORM。
+
+连上了，下一步定义Schema。Schema就是表结构：主键字段、标量字段、向量字段。主键推荐用VARCHAR加业务ID，这样才能用upsert做幂等写入。向量字段必须指定维度dim，要和Embedding模型输出一致。还有个开关叫enable_dynamic_field，开了之后可以写入Schema里没定义的字段，灵活但过滤性能差一些。
+
+Schema定义好了，接下来建索引。向量索引决定搜索速度和精度。HNSW适合中小规模、对延迟敏感的场景。IVF_FLAT适合数据量大但内存充足的场景。DISKANN适合超大规模、内存有限的场景。标量字段也可以建索引，用INVERTED类型，加速过滤查询。索引必须在load_collection之前创建。
+
+核心来了：增删改查。insert写入新数据，upsert写入或覆盖，delete按表达式删除。search是向量相似度搜索，返回TopK。query是标量条件查询，类似SQL的WHERE。search和query可以组合：先用向量找相似的，再用filter过滤不符合条件的。过滤表达式支持大于小于、in、like、JSON路径这些。
+
+最后说生产级的批量写入。一次upsert几万条数据，不要一条一条写。推荐每批一千到五千条，用循环分批提交。失败了要重试，用指数退避。写入前先检查数据格式，向量维度不对会直接报错。大批量写入时可以先不建索引，写完再统一建，速度快很多。
+
+好，总结一下。pymilvus的日常就是五个动作：connect、create、insert、search、query。记住用MilvusClient、用upsert、用HNSW加COSINE，这三个默认选择能覆盖大多数场景。下一章我们聊Collection设计的最佳实践。

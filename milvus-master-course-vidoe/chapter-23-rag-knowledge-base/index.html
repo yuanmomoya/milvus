@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 23 Rag Knowledge Base</title>
+</head>
+<body>
+<div data-composition-id="ch-23-rag-knowledge" data-start="0" data-duration="176.90" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="176.90" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们理解了RAG的架构，这一章动手 (0.0s - 21.5s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="21.48" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们理解了RAG的架构，这一章动手</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们理解了RAG的架构，这一章动手搭建一个完整的RAG知识库系统。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 从文档解析、切分、入库，到检索、生成、API接口，全流程跑通。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 用的是项目里的demos/rag-system，基于FastAPI加Milvus加OpenAI兼容API。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先看整体架构 (21.5s - 43.6s) -->
+  <div id="scene-2" class="scene clip" data-start="21.48" data-duration="22.08" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先看整体架构</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先看整体架构。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 四个模块：config.py管配置，embeddings.py管向量编码，vector_store.py管Milvus读</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 数据流是：文档上传、切分、编码、入库。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 查询时：问题编码、检索、拼Prompt、调LLM、返回答案。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 文档入库流程 (43.6s - 76.8s) -->
+  <div id="scene-3" class="scene clip" data-start="43.56" data-duration="33.19" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">文档入库流程</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 文档入库流程。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 第一步解析：支持纯文本、Markdown、PDF。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 第二步切分：按段落切，每段200到500字，重叠50字。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 第三步生成主键：用SHA1哈希内容加来源，保证幂等。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 检索流程 (76.8s - 95.8s) -->
+  <div id="scene-4" class="scene clip" data-start="76.75" data-duration="19.06" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">检索流程</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 检索流程。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 用户提问进来，先用同一个Embedding模型编码成向量。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 然后调Milvus的search，TopK设5到10。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 返回的每条结果带相似度分数和原始文本。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 生成流程 (95.8s - 119.1s) -->
+  <div id="scene-5" class="scene clip" data-start="95.81" data-duration="23.26" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">生成流程</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 生成流程。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 把检索到的Chunk按相关度排序，拼成上下文。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> Prompt模板是：系统提示加上下文加用户问题。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 系统提示告诉模型只基于提供的资料回答，不确定就说不知道。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 几个工程细节 (119.1s - 141.7s) -->
+  <div id="scene-6" class="scene clip" data-start="119.06" data-duration="22.68" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">几个工程细节</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 几个工程细节。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> Embedding模型在启动时加载一次，后续复用，避免每次请求都加载。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> Collection如果不存在就自动创建，存在就直接用。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 环境变量控制是否重建Collection，开发时设RECREATE_COLLECTION=true方便调试。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 这个系统的局限性 (141.7s - 159.2s) -->
+  <div id="scene-7" class="scene clip" data-start="141.74" data-duration="17.50" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">这个系统的局限性</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 这个系统的局限性。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 切分策略比较简单，复杂文档可能切得不好。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 没有Query Rewrite，用户问题表述不好时检索效果差。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 没有Rerank，TopK结果的排序可能不是最优的。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (159.2s - 176.9s) -->
+  <div id="scene-8" class="scene clip" data-start="159.24" data-duration="17.66" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 一个最小可用的RAG系统就是：切分加编码加入库加检索加生成。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 五个步骤，几百行代码。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 先跑通再优化，不要一开始就追求完美。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="176.90" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们理解了RAG的架构，这一章动手搭建一个完整的RAG知识库系统。</div>
+    <div class="subtitle-text" id="sub-01">从文档解析、切分、入库，到检索、生成、API接口，全流程跑通。</div>
+    <div class="subtitle-text" id="sub-02">用的是项目里的demos/rag-system，基于FastAPI加Milvus加OpenAI兼容API。</div>
+    <div class="subtitle-text" id="sub-03">先看整体架构。</div>
+    <div class="subtitle-text" id="sub-04">四个模块：config.py管配置，embeddings.py管向量编码，vector_store.py管Milvus读写，main.py是FastAPI入口。</div>
+    <div class="subtitle-text" id="sub-05">数据流是：文档上传、切分、编码、入库。</div>
+    <div class="subtitle-text" id="sub-06">查询时：问题编码、检索、拼Prompt、调LLM、返回答案。</div>
+    <div class="subtitle-text" id="sub-07">文档入库流程。</div>
+    <div class="subtitle-text" id="sub-08">第一步解析：支持纯文本、Markdown、PDF。</div>
+    <div class="subtitle-text" id="sub-09">第二步切分：按段落切，每段200到500字，重叠50字。</div>
+    <div class="subtitle-text" id="sub-10">第三步生成主键：用SHA1哈希内容加来源，保证幂等。</div>
+    <div class="subtitle-text" id="sub-11">第四步编码：用bge-small-zh把每个Chunk变成向量。</div>
+    <div class="subtitle-text" id="sub-12">第五步写入：upsert到Milvus，带上text、source、chunk_index等元数据。</div>
+    <div class="subtitle-text" id="sub-13">检索流程。</div>
+    <div class="subtitle-text" id="sub-14">用户提问进来，先用同一个Embedding模型编码成向量。</div>
+    <div class="subtitle-text" id="sub-15">然后调Milvus的search，TopK设5到10。</div>
+    <div class="subtitle-text" id="sub-16">返回的每条结果带相似度分数和原始文本。</div>
+    <div class="subtitle-text" id="sub-17">分数低于阈值的结果过滤掉，避免把不相关的内容喂给模型。</div>
+    <div class="subtitle-text" id="sub-18">生成流程。</div>
+    <div class="subtitle-text" id="sub-19">把检索到的Chunk按相关度排序，拼成上下文。</div>
+    <div class="subtitle-text" id="sub-20">Prompt模板是：系统提示加上下文加用户问题。</div>
+    <div class="subtitle-text" id="sub-21">系统提示告诉模型只基于提供的资料回答，不确定就说不知道。</div>
+    <div class="subtitle-text" id="sub-22">然后调OpenAI兼容API生成答案。</div>
+    <div class="subtitle-text" id="sub-23">答案里可以附上引用来源，方便用户验证。</div>
+    <div class="subtitle-text" id="sub-24">几个工程细节。</div>
+    <div class="subtitle-text" id="sub-25">Embedding模型在启动时加载一次，后续复用，避免每次请求都加载。</div>
+    <div class="subtitle-text" id="sub-26">Collection如果不存在就自动创建，存在就直接用。</div>
+    <div class="subtitle-text" id="sub-27">环境变量控制是否重建Collection，开发时设RECREATE_COLLECTION=true方便调试。</div>
+    <div class="subtitle-text" id="sub-28">API接口用FastAPI的异步特性，支持并发请求。</div>
+    <div class="subtitle-text" id="sub-29">这个系统的局限性。</div>
+    <div class="subtitle-text" id="sub-30">切分策略比较简单，复杂文档可能切得不好。</div>
+    <div class="subtitle-text" id="sub-31">没有Query Rewrite，用户问题表述不好时检索效果差。</div>
+    <div class="subtitle-text" id="sub-32">没有Rerank，TopK结果的排序可能不是最优的。</div>
+    <div class="subtitle-text" id="sub-33">这些优化我们后面几章逐一解决。</div>
+    <div class="subtitle-text" id="sub-34">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-35">一个最小可用的RAG系统就是：切分加编码加入库加检索加生成。</div>
+    <div class="subtitle-text" id="sub-36">五个步骤，几百行代码。</div>
+    <div class="subtitle-text" id="sub-37">先跑通再优化，不要一开始就追求完美。</div>
+    <div class="subtitle-text" id="sub-38">下一章我们优化检索环节，提升召回质量。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-23-rag-knowledge"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (21.5s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.78);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.68);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.18);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.68);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 27.18);
+
+  // === Scene 3 (43.6s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 43.86);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 44.76);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.26);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.76);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.26);
+
+  // === Scene 4 (76.8s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 77.05);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 77.95);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 79.45);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 80.95);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 82.45);
+
+  // === Scene 5 (95.8s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 96.11);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 97.01);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 98.51);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 100.01);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 101.51);
+
+  // === Scene 6 (119.1s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 119.36);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 120.26);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 121.76);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 123.26);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 124.76);
+
+  // === Scene 7 (141.7s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 142.04);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 142.94);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 144.44);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 145.94);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.44);
+
+  // === Scene 8 (159.2s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 159.54);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 160.44);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 161.94);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 163.44);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 164.94);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 6.14);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 6.44);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 11.69);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.99);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 21.18);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.48);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 22.32);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 22.62);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 35.30);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.60);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 38.39);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 38.69);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 43.26);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 43.56);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 44.64);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.94);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 49.58);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 49.88);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 55.11);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 55.41);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 60.25);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.55);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 66.57);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.87);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 76.45);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 76.75);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 77.34);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 77.64);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 82.51);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 82.81);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 87.32);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 87.62);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 90.70);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 91.00);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 95.51);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.81);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 96.50);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 96.80);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 101.03);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 101.33);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 105.76);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 106.06);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 111.28);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 111.58);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 115.02);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 115.32);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 118.77);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 119.06);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 119.82);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 120.12);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 125.11);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.41);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 129.34);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 129.64);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 137.51);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 137.81);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 141.44);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 141.74);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 143.00);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 143.30);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 146.46);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 146.76);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 151.84);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 152.14);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 156.34);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 156.64);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 158.94);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 159.24);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 160.39);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 160.69);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 166.63);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 166.93);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 168.91);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 169.21);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 172.65);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 172.95);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 176.60);
+
+  window.__timelines["ch-23-rag-knowledge"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

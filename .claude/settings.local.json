@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx hyperframes *)",
+      "Bash(nvm ls *)",
+      "Bash(brew install *)",
+      "Bash(pip install *)",
+      "Bash(espeak-ng --voices=zh)",
+      "Bash(PHONEMIZER_ESPEAK_LIBRARY=/opt/homebrew/lib/libespeak-ng.dylib python3 -c ' *)",
+      "Read(//Users/changmeng.yuan.o/.cache/hyperframes/tts/**)",
+      "Bash(python3 *)",
+      "Bash(PHONEMIZER_ESPEAK_LIBRARY=/opt/homebrew/lib/libespeak-ng.dylib ESPEAK_DATA_PATH=/opt/homebrew/share/espeak-ng-data python3 *)",
+      "Bash(ffmpeg -i /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-01-vector-database-basics/narration.wav -b:a 192k /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-01-vector-database-basics/narration.mp3 -y)",
+      "Bash(ffmpeg -i /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-02-milvus-architecture/narration.wav -b:a 192k /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-02-milvus-architecture/narration.mp3 -y)",
+      "Bash(ffprobe -v quiet -show_entries format=duration -of csv=p=0 /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-01-vector-database-basics/narration.mp3)",
+      "Bash(ffprobe -v quiet -show_entries format=duration -of csv=p=0 /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-02-milvus-architecture/narration.mp3)",
+      "Bash(ffmpeg -y -f concat -safe 0 -i filelist.txt -c copy narration.mp3)",
+      "Read(//usr/local/bin/**)",
+      "Bash(nvm --version)",
+      "Bash(command -v nvm)",
+      "Bash(ffprobe -v quiet -print_format json -show_format /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-01-vector-database-basics/narration.mp3)",
+      "Bash(ffprobe -v quiet -print_format json -show_format /Users/changmeng.yuan.o/Desktop/milvus/milvus-master-course-vidoe/chapter-02-milvus-architecture/narration.mp3)",
+      "Bash(python3.11 build_narration.py)",
+      "Bash(chmod +x *)",
+      "Bash(bash render_all.sh)",
+      "Bash(awk '{total+=$1} END {print NR \" files\"}')"
+    ]
+  }
+}

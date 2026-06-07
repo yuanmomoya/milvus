@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 16 Batch Write</title>
+</head>
+<body>
+<div data-composition-id="ch-16-batch-write" data-start="0" data-duration="172.01" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="172.01" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面几章我们一直在聊怎么搜，这一章换个方 (0.0s - 19.7s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="19.66" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面几章我们一直在聊怎么搜，这一章换个方</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面几章我们一直在聊怎么搜，这一章换个方向：怎么写。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 当你要往Milvus里灌几百万甚至几千万条数据时，一条一条写太慢了。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 批量写入优化要解决三个问题：batch_size怎么选、Segment碎片怎么避免、写入吞吐怎么最大化。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 先说batch_size (19.7s - 45.0s) -->
+  <div id="scene-2" class="scene clip" data-start="19.66" data-duration="25.30" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">先说batch_size</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 先说batch_size。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 每次upsert调用传入的数据条数就是batch_size。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 太小，网络开销占比高，吞吐上不去。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 太大，单次请求耗时长，容易超时，而且内存压力大。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 写入流程是这样的：数据先进WAL，然后D (45.0s - 68.5s) -->
+  <div id="scene-3" class="scene clip" data-start="44.95" data-duration="23.50" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">写入流程是这样的：数据先进WAL，然后D</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 写入流程是这样的：数据先进WAL，然后DataNode消费形成growing segment。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> growing segment达到阈值后自动seal变成sealed segment。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 如果你频繁flush或者batch_size太小，会产生大量小segment。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 小segment多了搜索性能会下降，因为每个segment都要单独搜索再合并。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 怎么避免Segment碎片 (68.5s - 88.3s) -->
+  <div id="scene-4" class="scene clip" data-start="68.45" data-duration="19.90" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">怎么避免Segment碎片</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 怎么避免Segment碎片？</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 第一，不要手动调flush，让Milvus自动管理。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 第二，batch_size不要太小。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 第三，如果已经产生了碎片，等Compaction自动合并，或者手动触发compact。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 写入吞吐怎么最大化 (88.3s - 117.8s) -->
+  <div id="scene-5" class="scene clip" data-start="88.34" data-duration="29.45" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">写入吞吐怎么最大化</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 写入吞吐怎么最大化？</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 几个技巧。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 第一，多线程并发写入，4到8个线程通常是最优。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 第二，先写数据再建索引。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 还有个生产级的模式：断点续传 (117.8s - 136.2s) -->
+  <div id="scene-6" class="scene clip" data-start="117.79" data-duration="18.46" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">还有个生产级的模式：断点续传</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 还有个生产级的模式：断点续传。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 大批量写入可能中途失败。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 用upsert加内容哈希主键，天然支持重试——失败了从断点重跑，已写入的数据会被覆盖不会重复。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 记录每批的offset，失败后从上次的offset继续。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 最后说一个坑：写入和搜索的资源竞争 (136.2s - 154.5s) -->
+  <div id="scene-7" class="scene clip" data-start="136.25" data-duration="18.29" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">最后说一个坑：写入和搜索的资源竞争</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 最后说一个坑：写入和搜索的资源竞争。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 大批量写入时，DataNode和IndexNode会占用大量CPU和IO，可能影响搜索延迟。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 生产环境建议在低峰期做批量导入，或者用单独的Milvus实例做离线导入再切换。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (154.5s - 172.0s) -->
+  <div id="scene-8" class="scene clip" data-start="154.54" data-duration="17.47" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 批量写入的核心是：合理的batch_size、避免Segment碎片、多线程并发、先写后建索引。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 掌握这些，百万级数据导入从小时级降到分钟级。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们回到搜索侧，聊查询性能调优。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="172.01" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面几章我们一直在聊怎么搜，这一章换个方向：怎么写。</div>
+    <div class="subtitle-text" id="sub-01">当你要往Milvus里灌几百万甚至几千万条数据时，一条一条写太慢了。</div>
+    <div class="subtitle-text" id="sub-02">批量写入优化要解决三个问题：batch_size怎么选、Segment碎片怎么避免、写入吞吐怎么最大化。</div>
+    <div class="subtitle-text" id="sub-03">先说batch_size。</div>
+    <div class="subtitle-text" id="sub-04">每次upsert调用传入的数据条数就是batch_size。</div>
+    <div class="subtitle-text" id="sub-05">太小，网络开销占比高，吞吐上不去。</div>
+    <div class="subtitle-text" id="sub-06">太大，单次请求耗时长，容易超时，而且内存压力大。</div>
+    <div class="subtitle-text" id="sub-07">经验值：768维向量，batch_size设1000到5000。</div>
+    <div class="subtitle-text" id="sub-08">384维可以更大，1024维适当减小。</div>
+    <div class="subtitle-text" id="sub-09">目标是每批数据在1到10MB之间。</div>
+    <div class="subtitle-text" id="sub-10">写入流程是这样的：数据先进WAL，然后DataNode消费形成growing segment。</div>
+    <div class="subtitle-text" id="sub-11">growing segment达到阈值后自动seal变成sealed segment。</div>
+    <div class="subtitle-text" id="sub-12">如果你频繁flush或者batch_size太小，会产生大量小segment。</div>
+    <div class="subtitle-text" id="sub-13">小segment多了搜索性能会下降，因为每个segment都要单独搜索再合并。</div>
+    <div class="subtitle-text" id="sub-14">怎么避免Segment碎片？</div>
+    <div class="subtitle-text" id="sub-15">第一，不要手动调flush，让Milvus自动管理。</div>
+    <div class="subtitle-text" id="sub-16">第二，batch_size不要太小。</div>
+    <div class="subtitle-text" id="sub-17">第三，如果已经产生了碎片，等Compaction自动合并，或者手动触发compact。</div>
+    <div class="subtitle-text" id="sub-18">Compaction会把小segment合并成大的，同时清理已删除的数据。</div>
+    <div class="subtitle-text" id="sub-19">写入吞吐怎么最大化？</div>
+    <div class="subtitle-text" id="sub-20">几个技巧。</div>
+    <div class="subtitle-text" id="sub-21">第一，多线程并发写入，4到8个线程通常是最优。</div>
+    <div class="subtitle-text" id="sub-22">第二，先写数据再建索引。</div>
+    <div class="subtitle-text" id="sub-23">如果是全量导入场景，先不建索引，写完所有数据后再create_index，速度快很多。</div>
+    <div class="subtitle-text" id="sub-24">第三，关闭auto_flush，写完后手动flush一次。</div>
+    <div class="subtitle-text" id="sub-25">第四，如果数据源是文件，用流式读取避免一次性加载到内存。</div>
+    <div class="subtitle-text" id="sub-26">还有个生产级的模式：断点续传。</div>
+    <div class="subtitle-text" id="sub-27">大批量写入可能中途失败。</div>
+    <div class="subtitle-text" id="sub-28">用upsert加内容哈希主键，天然支持重试——失败了从断点重跑，已写入的数据会被覆盖不会重复。</div>
+    <div class="subtitle-text" id="sub-29">记录每批的offset，失败后从上次的offset继续。</div>
+    <div class="subtitle-text" id="sub-30">最后说一个坑：写入和搜索的资源竞争。</div>
+    <div class="subtitle-text" id="sub-31">大批量写入时，DataNode和IndexNode会占用大量CPU和IO，可能影响搜索延迟。</div>
+    <div class="subtitle-text" id="sub-32">生产环境建议在低峰期做批量导入，或者用单独的Milvus实例做离线导入再切换。</div>
+    <div class="subtitle-text" id="sub-33">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-34">批量写入的核心是：合理的batch_size、避免Segment碎片、多线程并发、先写后建索引。</div>
+    <div class="subtitle-text" id="sub-35">掌握这些，百万级数据导入从小时级降到分钟级。</div>
+    <div class="subtitle-text" id="sub-36">下一章我们回到搜索侧，聊查询性能调优。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-16-batch-write"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (19.7s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 19.96);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 20.86);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.36);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.86);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.36);
+
+  // === Scene 3 (45.0s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 45.25);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.15);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.65);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.15);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 50.65);
+
+  // === Scene 4 (68.5s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 68.75);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 69.65);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 71.15);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 72.65);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 74.15);
+
+  // === Scene 5 (88.3s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 88.64);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 89.54);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 91.04);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 92.54);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 94.04);
+
+  // === Scene 6 (117.8s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 118.09);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 118.99);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 120.49);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 121.99);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 123.49);
+
+  // === Scene 7 (136.2s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 136.55);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 137.45);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 138.95);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 140.45);
+
+  // === Scene 8 (154.5s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 154.84);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 155.74);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 157.24);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 158.74);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 160.24);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 4.26);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.56);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 10.23);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 10.53);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 19.36);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 19.66);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 21.52);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.82);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.52);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.82);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 29.35);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 29.65);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 33.34);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 33.64);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 38.67);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 38.97);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 41.83);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 42.13);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 44.66);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 44.95);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 51.22);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 51.52);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 57.24);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 57.54);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 62.69);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 62.99);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 68.15);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 68.45);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 70.17);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.47);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 73.92);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 74.22);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 76.51);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 76.81);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 82.71);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 83.01);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 88.05);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 88.34);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 90.00);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.30);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 90.99);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 91.28);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 95.50);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.80);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 97.86);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 98.16);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 106.30);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 106.60);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 111.99);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 112.29);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 117.49);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 117.79);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 120.20);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 120.50);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 122.38);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 122.68);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 130.88);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.18);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 135.95);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 136.25);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 139.15);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 139.45);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 147.31);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 147.61);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 154.24);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 154.54);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 155.51);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.81);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 164.25);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 164.55);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 168.25);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.55);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 171.71);
+
+  window.__timelines["ch-16-batch-write"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

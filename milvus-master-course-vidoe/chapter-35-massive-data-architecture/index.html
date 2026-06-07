@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 35 Massive Data Architecture</title>
+</head>
+<body>
+<div data-composition-id="ch-35-massive-data" data-start="0" data-duration="200.45" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="200.45" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 当数据量从百万级跳到亿级甚至十亿级，很多 (0.0s - 21.3s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="21.26" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">当数据量从百万级跳到亿级甚至十亿级，很多</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 当数据量从百万级跳到亿级甚至十亿级，很多在小规模下不是问题的事情都变成了问题。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 内存放不下、索引建不完、搜索延迟飙升、写入吞吐跟不上。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这一章我们聊海量数据场景下的架构设计：分片策略、冷热分层、索引选择、以及容量规划。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 第一个问题：内存放不下 (21.3s - 46.3s) -->
+  <div id="scene-2" class="scene clip" data-start="21.26" data-duration="25.08" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">第一个问题：内存放不下</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 第一个问题：内存放不下。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 一亿条768维向量，光原始数据就要300G。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 加上HNSW索引的图结构，总共需要400G以上内存。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 单机肯定放不下。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 分片策略 (46.3s - 68.2s) -->
+  <div id="scene-3" class="scene clip" data-start="46.34" data-duration="21.91" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">分片策略</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 分片策略。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> Milvus内部按Segment分片，但业务层面也需要考虑分片。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 如果数据有天然的分区维度，比如按租户或按时间，用Partition物理隔离。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 搜索时只搜相关分区，减少扫描量。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 冷热分层是海量数据的标配 (68.3s - 89.5s) -->
+  <div id="scene-4" class="scene clip" data-start="68.26" data-duration="21.26" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">冷热分层是海量数据的标配</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 冷热分层是海量数据的标配。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 热数据是最近写入的、访问频率高的，放在内存里用HNSW索引，保证低延迟。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 冷数据是历史数据、访问频率低的，用DISKANN索引放磁盘，或者直接release不加载，需要时再load。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 定期把热数据降级为冷数据。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 索引选择在海量场景下更关键 (89.5s - 110.0s) -->
+  <div id="scene-5" class="scene clip" data-start="89.52" data-duration="20.47" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">索引选择在海量场景下更关键</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 索引选择在海量场景下更关键。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 一亿条以下用HNSW加多副本。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 一亿到十亿用IVF_PQ或DISKANN。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 十亿以上考虑分库：按业务维度拆成多个Collection，每个Collection独立管理。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 容量规划怎么做 (110.0s - 137.3s) -->
+  <div id="scene-6" class="scene clip" data-start="109.99" data-duration="27.29" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">容量规划怎么做</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 容量规划怎么做？</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 先算内存需求：向量数乘以维度乘以4字节乘以索引系数。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> HNSW系数约1.5，IVF_FLAT系数约1.1，IVF_PQ系数约0.1到0.3。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 然后加上标量字段和元数据的开销。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 写入吞吐怎么扩展 (137.3s - 159.3s) -->
+  <div id="scene-7" class="scene clip" data-start="137.28" data-duration="22.03" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">写入吞吐怎么扩展</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 写入吞吐怎么扩展？</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> DataNode水平扩展，每个DataNode并行消费写入消息。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 消息队列用Kafka或Pulsar，分区数要够多。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 批量写入时多线程并发，每个线程写不同的分区。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 一个实际案例：十亿级商品向量检索 (159.3s - 182.8s) -->
+  <div id="scene-8" class="scene clip" data-start="159.31" data-duration="23.47" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">一个实际案例：十亿级商品向量检索</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 一个实际案例：十亿级商品向量检索。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> 架构是：按一级类目分Partition，每个Partition用IVF_PQ索引。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> QueryNode 16个，每个64G内存。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 搜索时先确定类目再搜对应Partition。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 9: 好，总结一下 (182.8s - 200.4s) -->
+  <div id="scene-9" class="scene clip" data-start="182.78" data-duration="17.66" data-track-index="9">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s9-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s9-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s9-item2"><span class="item-bullet">▸</span> 海量数据架构的核心是：压缩减内存、分片减扫描、冷热分层减成本、水平扩展提吞吐。</div>
+        <div class="item-row" id="s9-item3"><span class="item-bullet">▸</span> 没有银弹，每个选择都是trade-off。</div>
+        <div class="item-row" id="s9-item4"><span class="item-bullet">▸</span> 下一章我们用Benchmark量化这些trade-off。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="200.45" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">当数据量从百万级跳到亿级甚至十亿级，很多在小规模下不是问题的事情都变成了问题。</div>
+    <div class="subtitle-text" id="sub-01">内存放不下、索引建不完、搜索延迟飙升、写入吞吐跟不上。</div>
+    <div class="subtitle-text" id="sub-02">这一章我们聊海量数据场景下的架构设计：分片策略、冷热分层、索引选择、以及容量规划。</div>
+    <div class="subtitle-text" id="sub-03">第一个问题：内存放不下。</div>
+    <div class="subtitle-text" id="sub-04">一亿条768维向量，光原始数据就要300G。</div>
+    <div class="subtitle-text" id="sub-05">加上HNSW索引的图结构，总共需要400G以上内存。</div>
+    <div class="subtitle-text" id="sub-06">单机肯定放不下。</div>
+    <div class="subtitle-text" id="sub-07">解决方案有三个：用PQ压缩减少内存、用DISKANN把索引放磁盘、或者用集群模式分散到多个QueryNode。</div>
+    <div class="subtitle-text" id="sub-08">分片策略。</div>
+    <div class="subtitle-text" id="sub-09">Milvus内部按Segment分片，但业务层面也需要考虑分片。</div>
+    <div class="subtitle-text" id="sub-10">如果数据有天然的分区维度，比如按租户或按时间，用Partition物理隔离。</div>
+    <div class="subtitle-text" id="sub-11">搜索时只搜相关分区，减少扫描量。</div>
+    <div class="subtitle-text" id="sub-12">如果没有天然分区维度，让Milvus自动管理Segment分布就行。</div>
+    <div class="subtitle-text" id="sub-13">冷热分层是海量数据的标配。</div>
+    <div class="subtitle-text" id="sub-14">热数据是最近写入的、访问频率高的，放在内存里用HNSW索引，保证低延迟。</div>
+    <div class="subtitle-text" id="sub-15">冷数据是历史数据、访问频率低的，用DISKANN索引放磁盘，或者直接release不加载，需要时再load。</div>
+    <div class="subtitle-text" id="sub-16">定期把热数据降级为冷数据。</div>
+    <div class="subtitle-text" id="sub-17">索引选择在海量场景下更关键。</div>
+    <div class="subtitle-text" id="sub-18">一亿条以下用HNSW加多副本。</div>
+    <div class="subtitle-text" id="sub-19">一亿到十亿用IVF_PQ或DISKANN。</div>
+    <div class="subtitle-text" id="sub-20">十亿以上考虑分库：按业务维度拆成多个Collection，每个Collection独立管理。</div>
+    <div class="subtitle-text" id="sub-21">或者用Milvus的Partition Key自动分片。</div>
+    <div class="subtitle-text" id="sub-22">容量规划怎么做？</div>
+    <div class="subtitle-text" id="sub-23">先算内存需求：向量数乘以维度乘以4字节乘以索引系数。</div>
+    <div class="subtitle-text" id="sub-24">HNSW系数约1.5，IVF_FLAT系数约1.1，IVF_PQ系数约0.1到0.3。</div>
+    <div class="subtitle-text" id="sub-25">然后加上标量字段和元数据的开销。</div>
+    <div class="subtitle-text" id="sub-26">最后乘以副本数。</div>
+    <div class="subtitle-text" id="sub-27">这就是总内存需求。</div>
+    <div class="subtitle-text" id="sub-28">按这个数字规划QueryNode的数量和规格。</div>
+    <div class="subtitle-text" id="sub-29">写入吞吐怎么扩展？</div>
+    <div class="subtitle-text" id="sub-30">DataNode水平扩展，每个DataNode并行消费写入消息。</div>
+    <div class="subtitle-text" id="sub-31">消息队列用Kafka或Pulsar，分区数要够多。</div>
+    <div class="subtitle-text" id="sub-32">批量写入时多线程并发，每个线程写不同的分区。</div>
+    <div class="subtitle-text" id="sub-33">索引构建用多个IndexNode并行，每个Node处理不同的Segment。</div>
+    <div class="subtitle-text" id="sub-34">一个实际案例：十亿级商品向量检索。</div>
+    <div class="subtitle-text" id="sub-35">架构是：按一级类目分Partition，每个Partition用IVF_PQ索引。</div>
+    <div class="subtitle-text" id="sub-36">QueryNode 16个，每个64G内存。</div>
+    <div class="subtitle-text" id="sub-37">搜索时先确定类目再搜对应Partition。</div>
+    <div class="subtitle-text" id="sub-38">P99延迟控制在50ms以内。</div>
+    <div class="subtitle-text" id="sub-39">写入用8个DataNode并行，日增量百万级。</div>
+    <div class="subtitle-text" id="sub-40">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-41">海量数据架构的核心是：压缩减内存、分片减扫描、冷热分层减成本、水平扩展提吞吐。</div>
+    <div class="subtitle-text" id="sub-42">没有银弹，每个选择都是trade-off。</div>
+    <div class="subtitle-text" id="sub-43">下一章我们用Benchmark量化这些trade-off。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-35-massive-data"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (21.3s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.56);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.46);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.96);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.46);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 26.96);
+
+  // === Scene 3 (46.3s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 46.64);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.54);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.04);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 50.54);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 52.04);
+
+  // === Scene 4 (68.3s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 68.56);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 69.46);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 70.96);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 72.46);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 73.96);
+
+  // === Scene 5 (89.5s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 89.82);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 90.72);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 92.22);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 93.72);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 95.22);
+
+  // === Scene 6 (110.0s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 110.29);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 111.19);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 112.69);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 114.19);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 115.69);
+
+  // === Scene 7 (137.3s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 137.58);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 138.48);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 139.98);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 141.48);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 142.98);
+
+  // === Scene 8 (159.3s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 159.61);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 160.51);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 162.01);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 163.51);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 165.01);
+
+  // === Scene 9 (182.8s) ===
+  tl.fromTo("#s9-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 183.08);
+  tl.fromTo("#s9-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 183.98);
+  tl.fromTo("#s9-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 185.48);
+  tl.fromTo("#s9-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 186.98);
+  tl.fromTo("#s9-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 188.48);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 7.45);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 7.75);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 12.81);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 13.11);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 20.96);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.26);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 23.41);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.71);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 27.89);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 28.19);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 33.19);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 33.49);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 34.83);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.13);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 46.04);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 46.34);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 46.92);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 47.22);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 52.53);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 52.83);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 59.19);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 59.49);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 61.99);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 62.29);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 67.95);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 68.26);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 70.34);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.64);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 76.94);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 77.24);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 86.84);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 87.14);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 89.22);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 89.52);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 91.53);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 91.83);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 94.01);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 94.31);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 97.47);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 97.77);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 105.07);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.37);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 109.69);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 109.99);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 111.33);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 111.63);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 116.67);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 116.97);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 125.49);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.79);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 128.77);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 129.07);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 130.41);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 130.71);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 132.26);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 132.56);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 136.98);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 137.28);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 138.55);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 138.85);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 144.15);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 144.45);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 148.52);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 148.82);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 152.37);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 152.67);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 159.01);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 159.31);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 161.86);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 162.16);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 168.73);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 169.03);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 172.42);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 172.72);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 176.11);
+  tl.fromTo("#sub-38", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 176.41);
+  tl.to("#sub-38", {opacity:0, duration:0.25, ease:"power2.in"}, 178.62);
+  tl.fromTo("#sub-39", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 178.92);
+  tl.to("#sub-39", {opacity:0, duration:0.25, ease:"power2.in"}, 182.48);
+  tl.fromTo("#sub-40", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 182.78);
+  tl.to("#sub-40", {opacity:0, duration:0.25, ease:"power2.in"}, 183.77);
+  tl.fromTo("#sub-41", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 184.07);
+  tl.to("#sub-41", {opacity:0, duration:0.25, ease:"power2.in"}, 190.94);
+  tl.fromTo("#sub-42", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 191.24);
+  tl.to("#sub-42", {opacity:0, duration:0.25, ease:"power2.in"}, 194.81);
+  tl.fromTo("#sub-43", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 195.11);
+  tl.to("#sub-43", {opacity:0, duration:0.25, ease:"power2.in"}, 200.14);
+
+  window.__timelines["ch-35-massive-data"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

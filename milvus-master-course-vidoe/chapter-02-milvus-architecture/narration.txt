@@ -1,0 +1,15 @@
+上一章我们知道了向量检索的原理，但原理只是一半，工程落地才是另一半。这一章我们搞清楚Milvus的整体架构：它是怎么把向量写入、索引构建和搜索这三件事，拆成一个可扩展的分布式系统的。理解了架构，后面排查问题就有方向了。
+
+先用一个类比建立直觉。Milvus的架构像一个大型物流中心。Proxy是前台接待，负责接收客户订单。Coord系列像调度室，决定货物放哪里、由谁搬运。Node系列是具体操作工位，真正干活。etcd是墙上的总账本，MinIO是后方仓库，消息队列是传送带。
+
+具体来看，Milvus有四类Coord：RootCoord管元数据，DataCoord管数据分片，QueryCoord管搜索调度，IndexCoord管索引任务。对应的Node也有三类：DataNode负责写入落盘，QueryNode负责搜索计算，IndexNode负责建索引。这种Coord加Node的拆分，让调度和执行可以独立扩缩容。
+
+知道了组件分工，来看数据怎么写进去。应用调用insert，Proxy先把数据写入WAL——就是消息队列。写入WAL成功就返回客户端OK。然后DataNode异步消费消息，形成growing segment。数据量够了就flush，segment被封存到MinIO。最后IndexNode给它建索引。
+
+光写入还不够，还得能搜出来。查询时Proxy把请求拆给多个QueryNode，每个Node搜自己负责的segment，返回局部TopK。Proxy再把所有局部结果归并排序，得到全局TopK返回给客户端。这就是scatter-gather模式。
+
+这里有个关键概念：Segment。它是Milvus数据管理的最小单位。新写入的数据先在growing segment里，flush后变成sealed segment，建完索引变成indexed segment。Compaction会定期合并小segment、清理删除数据。segment过碎会拖慢搜索，过大会拖慢加载。
+
+最后说说Standalone和Cluster的区别。Standalone把所有Coord和Node跑在一个进程里，用Rocksmq代替Pulsar做消息队列。适合开发和小规模场景。Cluster模式下每个组件独立部署，可以按需扩缩容，适合生产环境。
+
+好，总结一下。Milvus的核心是两条链路：写入链路把数据变成segment和索引，查询链路把分散的局部结果归并成全局TopK。后面所有调优都围绕这两条链路展开。下一章我们动手，五步把Milvus跑起来。

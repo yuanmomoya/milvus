@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 36 Benchmark</title>
+</head>
+<body>
+<div data-composition-id="ch-36-benchmark" data-start="0" data-duration="185.90" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="185.90" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 前面我们做了很多优化决策：选HNSW还是 (0.0s - 21.7s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="21.67" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">前面我们做了很多优化决策：选HNSW还是</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 前面我们做了很多优化决策：选HNSW还是IVF、M设16还是32、nprobe设多少。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 但这些决策不能靠猜，要靠数据说话。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这一章我们做性能压测：用Benchmark量化不同配置下的QPS、延迟和召回率，找到最优参数组合。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Benchmark要测什么 (21.7s - 46.1s) -->
+  <div id="scene-2" class="scene clip" data-start="21.67" data-duration="24.46" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">Benchmark要测什么</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> Benchmark要测什么？</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 三个核心指标。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> QPS：每秒能处理多少搜索请求，衡量吞吐能力。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 延迟P99：99%的请求在多少毫秒内返回，衡量尾部延迟。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 测试方法 (46.1s - 70.6s) -->
+  <div id="scene-3" class="scene clip" data-start="46.13" data-duration="24.46" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">测试方法</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 测试方法。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 准备一个数据集，比如十万或一百万条随机向量。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 先用FLAT索引做暴力搜索，得到每个查询的精确TopK作为ground truth。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 然后切换到ANN索引，用相同的查询测试，对比结果计算召回率。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: 项目里的benchmark脚本怎么用 (70.6s - 92.5s) -->
+  <div id="scene-4" class="scene clip" data-start="70.58" data-duration="21.89" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">项目里的benchmark脚本怎么用</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> 项目里的benchmark脚本怎么用。</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> cd到demos/benchmark目录，运行python benchmark.py。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 参数包括：rows数据量、dim维度、index索引类型、concurrency并发数。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 脚本会自动创建Collection、写入数据、建索引、执行搜索、输出结果报告。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 几个典型的对比实验 (92.5s - 122.9s) -->
+  <div id="scene-5" class="scene clip" data-start="92.47" data-duration="30.43" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">几个典型的对比实验</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 几个典型的对比实验。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 实验一：HNSW的M从8到64，观察内存、QPS和召回率的变化。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 实验二：IVF的nprobe从1到128，观察延迟和召回率的trade-off曲线。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 实验三：相同数据量下HNSW vs IVF_FLAT vs IVF_PQ的全面对比。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: 怎么解读结果 (122.9s - 142.0s) -->
+  <div id="scene-6" class="scene clip" data-start="122.90" data-duration="19.08" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">怎么解读结果</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> 怎么解读结果？</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 画两张图。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 第一张：召回率-延迟曲线，横轴延迟纵轴召回率，找到拐点。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 第二张：QPS-并发数曲线，找到吞吐饱和点。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 生产环境的压测注意事项 (142.0s - 168.7s) -->
+  <div id="scene-7" class="scene clip" data-start="141.98" data-duration="26.69" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">生产环境的压测注意事项</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 生产环境的压测注意事项。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 第一，用真实数据分布，不要用纯随机向量——真实数据的聚类特性会影响索引效果。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 第二，测试时要预热，前几百个请求的延迟不准确。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 第三，持续压测至少五分钟，观察是否有性能衰减。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (168.7s - 185.9s) -->
+  <div id="scene-8" class="scene clip" data-start="168.67" data-duration="17.23" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> Benchmark是参数调优的科学方法。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 不要猜，要测。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 用数据驱动决策：选索引、调参数、规划容量，都要有Benchmark数据支撑。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="185.90" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">前面我们做了很多优化决策：选HNSW还是IVF、M设16还是32、nprobe设多少。</div>
+    <div class="subtitle-text" id="sub-01">但这些决策不能靠猜，要靠数据说话。</div>
+    <div class="subtitle-text" id="sub-02">这一章我们做性能压测：用Benchmark量化不同配置下的QPS、延迟和召回率，找到最优参数组合。</div>
+    <div class="subtitle-text" id="sub-03">Benchmark要测什么？</div>
+    <div class="subtitle-text" id="sub-04">三个核心指标。</div>
+    <div class="subtitle-text" id="sub-05">QPS：每秒能处理多少搜索请求，衡量吞吐能力。</div>
+    <div class="subtitle-text" id="sub-06">延迟P99：99%的请求在多少毫秒内返回，衡量尾部延迟。</div>
+    <div class="subtitle-text" id="sub-07">召回率：TopK结果中包含真正最近邻的比例，衡量搜索质量。</div>
+    <div class="subtitle-text" id="sub-08">这三个指标互相牵制，不可能同时最优。</div>
+    <div class="subtitle-text" id="sub-09">测试方法。</div>
+    <div class="subtitle-text" id="sub-10">准备一个数据集，比如十万或一百万条随机向量。</div>
+    <div class="subtitle-text" id="sub-11">先用FLAT索引做暴力搜索，得到每个查询的精确TopK作为ground truth。</div>
+    <div class="subtitle-text" id="sub-12">然后切换到ANN索引，用相同的查询测试，对比结果计算召回率。</div>
+    <div class="subtitle-text" id="sub-13">同时用多线程并发发送请求，测量QPS和延迟。</div>
+    <div class="subtitle-text" id="sub-14">项目里的benchmark脚本怎么用。</div>
+    <div class="subtitle-text" id="sub-15">cd到demos/benchmark目录，运行python benchmark.py。</div>
+    <div class="subtitle-text" id="sub-16">参数包括：rows数据量、dim维度、index索引类型、concurrency并发数。</div>
+    <div class="subtitle-text" id="sub-17">脚本会自动创建Collection、写入数据、建索引、执行搜索、输出结果报告。</div>
+    <div class="subtitle-text" id="sub-18">几个典型的对比实验。</div>
+    <div class="subtitle-text" id="sub-19">实验一：HNSW的M从8到64，观察内存、QPS和召回率的变化。</div>
+    <div class="subtitle-text" id="sub-20">实验二：IVF的nprobe从1到128，观察延迟和召回率的trade-off曲线。</div>
+    <div class="subtitle-text" id="sub-21">实验三：相同数据量下HNSW vs IVF_FLAT vs IVF_PQ的全面对比。</div>
+    <div class="subtitle-text" id="sub-22">实验四：数据量从十万到一千万，观察各索引的性能衰减。</div>
+    <div class="subtitle-text" id="sub-23">怎么解读结果？</div>
+    <div class="subtitle-text" id="sub-24">画两张图。</div>
+    <div class="subtitle-text" id="sub-25">第一张：召回率-延迟曲线，横轴延迟纵轴召回率，找到拐点。</div>
+    <div class="subtitle-text" id="sub-26">第二张：QPS-并发数曲线，找到吞吐饱和点。</div>
+    <div class="subtitle-text" id="sub-27">拐点之前是性价比最高的区间，超过拐点后投入产出比急剧下降。</div>
+    <div class="subtitle-text" id="sub-28">生产环境的压测注意事项。</div>
+    <div class="subtitle-text" id="sub-29">第一，用真实数据分布，不要用纯随机向量——真实数据的聚类特性会影响索引效果。</div>
+    <div class="subtitle-text" id="sub-30">第二，测试时要预热，前几百个请求的延迟不准确。</div>
+    <div class="subtitle-text" id="sub-31">第三，持续压测至少五分钟，观察是否有性能衰减。</div>
+    <div class="subtitle-text" id="sub-32">第四，监控系统资源：CPU、内存、IO，找到瓶颈在哪。</div>
+    <div class="subtitle-text" id="sub-33">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-34">Benchmark是参数调优的科学方法。</div>
+    <div class="subtitle-text" id="sub-35">不要猜，要测。</div>
+    <div class="subtitle-text" id="sub-36">用数据驱动决策：选索引、调参数、规划容量，都要有Benchmark数据支撑。</div>
+    <div class="subtitle-text" id="sub-37">下一章我们聊问题排查，当系统出问题时怎么快速定位。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-36-benchmark"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (21.7s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.97);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.87);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.37);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.87);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 27.37);
+
+  // === Scene 3 (46.1s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 46.43);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 47.33);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 48.83);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 50.33);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 51.83);
+
+  // === Scene 4 (70.6s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 70.88);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 71.78);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 73.28);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 74.78);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 76.28);
+
+  // === Scene 5 (92.5s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 92.77);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 93.67);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 95.17);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 96.67);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 98.17);
+
+  // === Scene 6 (122.9s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 123.20);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 124.10);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 125.60);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 127.10);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 128.60);
+
+  // === Scene 7 (142.0s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 142.28);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 143.18);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 144.68);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 146.18);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.68);
+
+  // === Scene 8 (168.7s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 168.97);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 169.87);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 171.37);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 172.87);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 174.37);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 8.25);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 8.55);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 11.63);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.93);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 21.37);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 21.67);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 24.25);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 24.55);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 25.69);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 25.99);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 30.41);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 30.71);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 36.17);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 36.47);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 42.13);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 42.43);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 45.83);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 46.13);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 46.84);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 47.14);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 51.29);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 51.59);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 59.78);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.08);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 65.84);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.14);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 70.29);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.58);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 73.15);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 73.45);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 79.64);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.94);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 86.28);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 86.58);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 92.17);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 92.47);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 94.17);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 94.47);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 100.58);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 100.88);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 108.99);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 109.29);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 117.39);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 117.69);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 122.60);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 122.90);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 124.07);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 124.37);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 125.12);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.42);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 130.99);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 131.29);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 135.60);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 135.90);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 141.68);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 141.98);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 144.28);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 144.58);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 152.53);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 152.83);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 157.52);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 157.82);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 162.51);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 162.81);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 168.37);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 168.67);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 169.61);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 169.91);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 173.17);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 173.47);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 174.41);
+  tl.fromTo("#sub-36", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 174.71);
+  tl.to("#sub-36", {opacity:0, duration:0.25, ease:"power2.in"}, 181.16);
+  tl.fromTo("#sub-37", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 181.46);
+  tl.to("#sub-37", {opacity:0, duration:0.25, ease:"power2.in"}, 185.60);
+
+  window.__timelines["ch-36-benchmark"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

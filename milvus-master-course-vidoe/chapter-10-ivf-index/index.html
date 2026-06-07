@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 10 Ivf Index</title>
+</head>
+<body>
+<div data-composition-id="ch-10-ivf-index" data-start="0" data-duration="180.53" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="180.53" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们总览了五种索引，这一章深入IV (0.0s - 20.9s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="20.86" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们总览了五种索引，这一章深入IV</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们总览了五种索引，这一章深入IVF。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> IVF是最经典的向量索引之一，理解它的原理和调参方法，对后面学HNSW和PQ都有帮助。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 我们搞清楚三件事：IVF怎么建、怎么搜、nlist和nprobe怎么调。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: IVF的构建过程分两步 (20.9s - 45.7s) -->
+  <div id="scene-2" class="scene clip" data-start="20.86" data-duration="24.84" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">IVF的构建过程分两步</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> IVF的构建过程分两步。</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 第一步，用KMeans对所有向量做聚类，生成nlist个聚类中心。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 第二步，把每条向量分配到离它最近的中心，形成nlist个倒排列表。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> 每个列表里存的是属于这个簇的所有向量。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 搜索时也是两步 (45.7s - 66.4s) -->
+  <div id="scene-3" class="scene clip" data-start="45.70" data-duration="20.66" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">搜索时也是两步</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 搜索时也是两步。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 第一步，计算查询向量和所有nlist个中心的距离，找出最近的nprobe个中心。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 第二步，扫描这nprobe个列表里的所有向量，逐一计算距离，取TopK。</div>
+        <div class="item-row" id="s3-item4"><span class="item-bullet">▸</span> 所以搜索量大约是N乘以nprobe除以nlist，远小于全量N。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: nlist怎么设 (66.4s - 94.2s) -->
+  <div id="scene-4" class="scene clip" data-start="66.36" data-duration="27.89" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">nlist怎么设</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> nlist怎么设？</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 经验公式是4乘以根号N。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> 十万数据设128到256，一百万设1024到4096，一千万设4096到16384。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> nlist太小，每个列表太大，搜索还是慢。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: nprobe怎么调 (94.2s - 117.9s) -->
+  <div id="scene-5" class="scene clip" data-start="94.25" data-duration="23.64" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">nprobe怎么调</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> nprobe怎么调？</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> nprobe决定了搜索时看多少个列表。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> nprobe等于1最快但召回最低，nprobe等于nlist就退化成暴力搜索。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 实际中从nprobe等于16开始，逐步增大，观察召回率和延迟的变化。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: IVF有三个变体 (117.9s - 143.2s) -->
+  <div id="scene-6" class="scene clip" data-start="117.89" data-duration="25.27" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">IVF有三个变体</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> IVF有三个变体。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> IVF_FLAT：列表里存原始向量，精度最高，内存最大。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> IVF_SQ8：列表里存量化后的向量，每个float32压成int8，内存省四分之三，精度略降。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> IVF_PQ：列表里存PQ编码，压缩比最大，精度损失也最大。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 在Milvus里用IVF很简单 (143.2s - 163.1s) -->
+  <div id="scene-7" class="scene clip" data-start="143.16" data-duration="19.90" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">在Milvus里用IVF很简单</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 在Milvus里用IVF很简单。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 创建索引时指定index_type为IVF_FLAT，params里设nlist。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> 搜索时在search_params里设nprobe。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 建议先用小数据集测试不同nprobe下的召回率，找到满足业务要求的最小nprobe值，这就是最优配置。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (163.1s - 180.5s) -->
+  <div id="scene-8" class="scene clip" data-start="163.06" data-duration="17.47" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> IVF的核心是分区搜索：nlist决定分多少区，nprobe决定搜多少区。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 调参的本质是在召回率和延迟之间找平衡。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 下一章我们看HNSW，一种完全不同的索引思路。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="180.53" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们总览了五种索引，这一章深入IVF。</div>
+    <div class="subtitle-text" id="sub-01">IVF是最经典的向量索引之一，理解它的原理和调参方法，对后面学HNSW和PQ都有帮助。</div>
+    <div class="subtitle-text" id="sub-02">我们搞清楚三件事：IVF怎么建、怎么搜、nlist和nprobe怎么调。</div>
+    <div class="subtitle-text" id="sub-03">IVF的构建过程分两步。</div>
+    <div class="subtitle-text" id="sub-04">第一步，用KMeans对所有向量做聚类，生成nlist个聚类中心。</div>
+    <div class="subtitle-text" id="sub-05">第二步，把每条向量分配到离它最近的中心，形成nlist个倒排列表。</div>
+    <div class="subtitle-text" id="sub-06">每个列表里存的是属于这个簇的所有向量。</div>
+    <div class="subtitle-text" id="sub-07">构建完成后，搜索时只需要扫描部分列表，不用看全量数据。</div>
+    <div class="subtitle-text" id="sub-08">搜索时也是两步。</div>
+    <div class="subtitle-text" id="sub-09">第一步，计算查询向量和所有nlist个中心的距离，找出最近的nprobe个中心。</div>
+    <div class="subtitle-text" id="sub-10">第二步，扫描这nprobe个列表里的所有向量，逐一计算距离，取TopK。</div>
+    <div class="subtitle-text" id="sub-11">所以搜索量大约是N乘以nprobe除以nlist，远小于全量N。</div>
+    <div class="subtitle-text" id="sub-12">nlist怎么设？</div>
+    <div class="subtitle-text" id="sub-13">经验公式是4乘以根号N。</div>
+    <div class="subtitle-text" id="sub-14">十万数据设128到256，一百万设1024到4096，一千万设4096到16384。</div>
+    <div class="subtitle-text" id="sub-15">nlist太小，每个列表太大，搜索还是慢。</div>
+    <div class="subtitle-text" id="sub-16">nlist太大，每个列表太小，聚类中心不准确，召回率下降。</div>
+    <div class="subtitle-text" id="sub-17">而且nlist太大会导致训练时间变长。</div>
+    <div class="subtitle-text" id="sub-18">nprobe怎么调？</div>
+    <div class="subtitle-text" id="sub-19">nprobe决定了搜索时看多少个列表。</div>
+    <div class="subtitle-text" id="sub-20">nprobe等于1最快但召回最低，nprobe等于nlist就退化成暴力搜索。</div>
+    <div class="subtitle-text" id="sub-21">实际中从nprobe等于16开始，逐步增大，观察召回率和延迟的变化。</div>
+    <div class="subtitle-text" id="sub-22">通常nprobe在nlist的5%到10%之间能达到95%以上的召回率。</div>
+    <div class="subtitle-text" id="sub-23">IVF有三个变体。</div>
+    <div class="subtitle-text" id="sub-24">IVF_FLAT：列表里存原始向量，精度最高，内存最大。</div>
+    <div class="subtitle-text" id="sub-25">IVF_SQ8：列表里存量化后的向量，每个float32压成int8，内存省四分之三，精度略降。</div>
+    <div class="subtitle-text" id="sub-26">IVF_PQ：列表里存PQ编码，压缩比最大，精度损失也最大。</div>
+    <div class="subtitle-text" id="sub-27">选哪个看你的内存预算。</div>
+    <div class="subtitle-text" id="sub-28">在Milvus里用IVF很简单。</div>
+    <div class="subtitle-text" id="sub-29">创建索引时指定index_type为IVF_FLAT，params里设nlist。</div>
+    <div class="subtitle-text" id="sub-30">搜索时在search_params里设nprobe。</div>
+    <div class="subtitle-text" id="sub-31">建议先用小数据集测试不同nprobe下的召回率，找到满足业务要求的最小nprobe值，这就是最优配置。</div>
+    <div class="subtitle-text" id="sub-32">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-33">IVF的核心是分区搜索：nlist决定分多少区，nprobe决定搜多少区。</div>
+    <div class="subtitle-text" id="sub-34">调参的本质是在召回率和延迟之间找平衡。</div>
+    <div class="subtitle-text" id="sub-35">下一章我们看HNSW，一种完全不同的索引思路。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-10-ivf-index"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (20.9s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 21.16);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.06);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 23.56);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 25.06);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 26.56);
+
+  // === Scene 3 (45.7s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 46.00);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 46.90);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 48.40);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 49.90);
+  tl.fromTo("#s3-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 51.40);
+
+  // === Scene 4 (66.4s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 66.66);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 67.56);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 69.06);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 70.56);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 72.06);
+
+  // === Scene 5 (94.2s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 94.55);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 95.45);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 96.95);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 98.45);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 99.95);
+
+  // === Scene 6 (117.9s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 118.19);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 119.09);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 120.59);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 122.09);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 123.59);
+
+  // === Scene 7 (143.2s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 143.46);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 144.36);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 145.86);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 147.36);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 148.86);
+
+  // === Scene 8 (163.1s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 163.36);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 164.26);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 165.76);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 167.26);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 168.76);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 4.24);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.54);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 13.12);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 13.42);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 20.56);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.86);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 22.96);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 23.26);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 29.57);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 29.87);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 36.19);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 36.49);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 39.99);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 40.29);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 45.40);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 45.70);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 46.82);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 47.12);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 53.95);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 54.25);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 60.36);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 60.66);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 66.06);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 66.36);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 67.96);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 68.26);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 70.50);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 70.80);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 79.37);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.67);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 83.81);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 84.11);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 89.94);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 90.24);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 93.95);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 94.25);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 95.66);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 95.96);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 98.92);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 99.22);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 105.60);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 105.90);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 111.42);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 111.72);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 117.59);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 117.89);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 119.40);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 119.70);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 125.01);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 125.31);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 134.64);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 134.94);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 140.65);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 140.95);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 142.86);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 143.16);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 145.24);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 145.54);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 151.32);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 151.62);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 155.19);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 155.49);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 162.76);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 163.06);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 164.18);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 164.48);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 171.70);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 172.00);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 175.56);
+  tl.fromTo("#sub-35", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 175.86);
+  tl.to("#sub-35", {opacity:0, duration:0.25, ease:"power2.in"}, 180.23);
+
+  window.__timelines["ch-10-ivf-index"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>

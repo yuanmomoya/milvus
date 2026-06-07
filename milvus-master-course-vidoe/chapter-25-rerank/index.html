@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 25 Rerank</title>
+</head>
+<body>
+<div data-composition-id="ch-25-rerank" data-start="0" data-duration="167.78" data-width="1920" data-height="1080">
+
+  <audio id="narration" data-start="0" data-duration="167.78" data-track-index="0" src="narration.mp3" data-volume="1"></audio>
+
+  <!-- Scene 1: 上一章我们优化了召回，能找到更多相关文档 (0.0s - 18.7s) -->
+  <div id="scene-1" class="scene clip" data-start="0.00" data-duration="18.67" data-track-index="1">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s1-title">上一章我们优化了召回，能找到更多相关文档</div>
+      <div class="item-list">
+        <div class="item-row" id="s1-item1"><span class="item-bullet">▸</span> 上一章我们优化了召回，能找到更多相关文档了。</div>
+        <div class="item-row" id="s1-item2"><span class="item-bullet">▸</span> 但TopK个结果的排序可能不是最优的——向量相似度高不一定意味着对回答问题最有帮助。</div>
+        <div class="item-row" id="s1-item3"><span class="item-bullet">▸</span> 这一章我们加Rerank重排序：用一个更精确的模型对召回结果重新打分排序。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: 为什么需要Rerank (18.7s - 39.8s) -->
+  <div id="scene-2" class="scene clip" data-start="18.67" data-duration="21.10" data-track-index="2">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s2-title">为什么需要Rerank</div>
+      <div class="item-list">
+        <div class="item-row" id="s2-item1"><span class="item-bullet">▸</span> 为什么需要Rerank？</div>
+        <div class="item-row" id="s2-item2"><span class="item-bullet">▸</span> 向量检索是双塔模型：问题和文档分别编码，用向量距离衡量相关性。</div>
+        <div class="item-row" id="s2-item3"><span class="item-bullet">▸</span> 这种方式快但粗糙。</div>
+        <div class="item-row" id="s2-item4"><span class="item-bullet">▸</span> Rerank用交叉编码器：把问题和文档拼在一起输入模型，让模型直接判断相关程度。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: 典型的流程是：先用向量检索召回Top50 (39.8s - 58.1s) -->
+  <div id="scene-3" class="scene clip" data-start="39.77" data-duration="18.29" data-track-index="3">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s3-title">典型的流程是：先用向量检索召回Top50</div>
+      <div class="item-list">
+        <div class="item-row" id="s3-item1"><span class="item-bullet">▸</span> 典型的流程是：先用向量检索召回Top50，再用Rerank模型对这50条重新打分，取分数最高的Top5喂给LLM。</div>
+        <div class="item-row" id="s3-item2"><span class="item-bullet">▸</span> 这样既利用了向量检索的速度，又利用了Rerank的精度。</div>
+        <div class="item-row" id="s3-item3"><span class="item-bullet">▸</span> 两阶段架构：粗排加精排。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: Rerank模型怎么选 (58.1s - 78.3s) -->
+  <div id="scene-4" class="scene clip" data-start="58.06" data-duration="20.26" data-track-index="4">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s4-title">Rerank模型怎么选</div>
+      <div class="item-list">
+        <div class="item-row" id="s4-item1"><span class="item-bullet">▸</span> Rerank模型怎么选？</div>
+        <div class="item-row" id="s4-item2"><span class="item-bullet">▸</span> 中文场景推荐bge-reranker-base或bge-reranker-large。</div>
+        <div class="item-row" id="s4-item3"><span class="item-bullet">▸</span> API方式可以用Cohere的rerank接口。</div>
+        <div class="item-row" id="s4-item4"><span class="item-bullet">▸</span> 本地部署用sentence-transformers的CrossEncoder类。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: 代码实现很简单 (78.3s - 98.4s) -->
+  <div id="scene-5" class="scene clip" data-start="78.31" data-duration="20.06" data-track-index="5">
+    <div class="scene-bg">
+      <div class="glow glow-1a"></div>
+      <div class="glow glow-1b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s5-title">代码实现很简单</div>
+      <div class="item-list">
+        <div class="item-row" id="s5-item1"><span class="item-bullet">▸</span> 代码实现很简单。</div>
+        <div class="item-row" id="s5-item2"><span class="item-bullet">▸</span> 加载CrossEncoder模型，传入问题和文档列表，得到分数列表，按分数降序排列，取前几个。</div>
+        <div class="item-row" id="s5-item3"><span class="item-bullet">▸</span> 几行代码就能显著提升RAG的答案质量。</div>
+        <div class="item-row" id="s5-item4"><span class="item-bullet">▸</span> 注意Rerank模型也有延迟开销，通常每条几十毫秒，50条大约1到2秒。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: Rerank的调优点 (98.4s - 128.9s) -->
+  <div id="scene-6" class="scene clip" data-start="98.38" data-duration="30.50" data-track-index="6">
+    <div class="scene-bg">
+      <div class="glow glow-2a"></div>
+      <div class="glow glow-2b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s6-title">Rerank的调优点</div>
+      <div class="item-list">
+        <div class="item-row" id="s6-item1"><span class="item-bullet">▸</span> Rerank的调优点。</div>
+        <div class="item-row" id="s6-item2"><span class="item-bullet">▸</span> 第一，召回数量：给Rerank的候选集要够大，通常Top20到Top50。</div>
+        <div class="item-row" id="s6-item3"><span class="item-bullet">▸</span> 太少可能漏掉好结果，太多Rerank延迟太高。</div>
+        <div class="item-row" id="s6-item4"><span class="item-bullet">▸</span> 第二，分数阈值：Rerank分数低于某个阈值的结果直接丢弃，避免把不相关的内容喂给模型。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 7: 一个常见误区：以为Rerank能弥补召回 (128.9s - 148.9s) -->
+  <div id="scene-7" class="scene clip" data-start="128.88" data-duration="20.04" data-track-index="7">
+    <div class="scene-bg">
+      <div class="glow glow-3a"></div>
+      <div class="glow glow-3b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s7-title">一个常见误区：以为Rerank能弥补召回</div>
+      <div class="item-list">
+        <div class="item-row" id="s7-item1"><span class="item-bullet">▸</span> 一个常见误区：以为Rerank能弥补召回的不足。</div>
+        <div class="item-row" id="s7-item2"><span class="item-bullet">▸</span> 如果正确文档根本不在Top50里，Rerank也救不了。</div>
+        <div class="item-row" id="s7-item3"><span class="item-bullet">▸</span> Rerank只能改善排序，不能凭空创造结果。</div>
+        <div class="item-row" id="s7-item4"><span class="item-bullet">▸</span> 所以召回优化和Rerank是互补的，不是替代关系。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 8: 好，总结一下 (148.9s - 167.8s) -->
+  <div id="scene-8" class="scene clip" data-start="148.92" data-duration="18.86" data-track-index="8">
+    <div class="scene-bg">
+      <div class="glow glow-4a"></div>
+      <div class="glow glow-4b"></div>
+    </div>
+    <div class="scene-content">
+      <div class="section-title" id="s8-title">好，总结一下</div>
+      <div class="item-list">
+        <div class="item-row" id="s8-item1"><span class="item-bullet">▸</span> 好，总结一下。</div>
+        <div class="item-row" id="s8-item2"><span class="item-bullet">▸</span> Rerank是RAG精度的最后一公里。</div>
+        <div class="item-row" id="s8-item3"><span class="item-bullet">▸</span> 粗排用向量检索保速度，精排用交叉编码器保精度。</div>
+        <div class="item-row" id="s8-item4"><span class="item-bullet">▸</span> 两阶段配合，让最相关的内容排在最前面。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtitle Layer -->
+  <div id="subtitle-bar" class="subtitle-layer clip" data-start="0" data-duration="167.78" data-track-index="99">
+    <div class="subtitle-bg"></div>
+    <div class="subtitle-text" id="sub-00">上一章我们优化了召回，能找到更多相关文档了。</div>
+    <div class="subtitle-text" id="sub-01">但TopK个结果的排序可能不是最优的——向量相似度高不一定意味着对回答问题最有帮助。</div>
+    <div class="subtitle-text" id="sub-02">这一章我们加Rerank重排序：用一个更精确的模型对召回结果重新打分排序。</div>
+    <div class="subtitle-text" id="sub-03">为什么需要Rerank？</div>
+    <div class="subtitle-text" id="sub-04">向量检索是双塔模型：问题和文档分别编码，用向量距离衡量相关性。</div>
+    <div class="subtitle-text" id="sub-05">这种方式快但粗糙。</div>
+    <div class="subtitle-text" id="sub-06">Rerank用交叉编码器：把问题和文档拼在一起输入模型，让模型直接判断相关程度。</div>
+    <div class="subtitle-text" id="sub-07">精度高很多，但速度慢，所以只能对少量候选结果做。</div>
+    <div class="subtitle-text" id="sub-08">典型的流程是：先用向量检索召回Top50，再用Rerank模型对这50条重新打分，取分数最高的Top5喂给LLM。</div>
+    <div class="subtitle-text" id="sub-09">这样既利用了向量检索的速度，又利用了Rerank的精度。</div>
+    <div class="subtitle-text" id="sub-10">两阶段架构：粗排加精排。</div>
+    <div class="subtitle-text" id="sub-11">Rerank模型怎么选？</div>
+    <div class="subtitle-text" id="sub-12">中文场景推荐bge-reranker-base或bge-reranker-large。</div>
+    <div class="subtitle-text" id="sub-13">API方式可以用Cohere的rerank接口。</div>
+    <div class="subtitle-text" id="sub-14">本地部署用sentence-transformers的CrossEncoder类。</div>
+    <div class="subtitle-text" id="sub-15">输入是问题加文档对，输出是0到1的相关性分数。</div>
+    <div class="subtitle-text" id="sub-16">代码实现很简单。</div>
+    <div class="subtitle-text" id="sub-17">加载CrossEncoder模型，传入问题和文档列表，得到分数列表，按分数降序排列，取前几个。</div>
+    <div class="subtitle-text" id="sub-18">几行代码就能显著提升RAG的答案质量。</div>
+    <div class="subtitle-text" id="sub-19">注意Rerank模型也有延迟开销，通常每条几十毫秒，50条大约1到2秒。</div>
+    <div class="subtitle-text" id="sub-20">Rerank的调优点。</div>
+    <div class="subtitle-text" id="sub-21">第一，召回数量：给Rerank的候选集要够大，通常Top20到Top50。</div>
+    <div class="subtitle-text" id="sub-22">太少可能漏掉好结果，太多Rerank延迟太高。</div>
+    <div class="subtitle-text" id="sub-23">第二，分数阈值：Rerank分数低于某个阈值的结果直接丢弃，避免把不相关的内容喂给模型。</div>
+    <div class="subtitle-text" id="sub-24">第三，多样性：如果Top5结果都来自同一篇文档，可以加多样性约束，确保覆盖不同来源。</div>
+    <div class="subtitle-text" id="sub-25">一个常见误区：以为Rerank能弥补召回的不足。</div>
+    <div class="subtitle-text" id="sub-26">如果正确文档根本不在Top50里，Rerank也救不了。</div>
+    <div class="subtitle-text" id="sub-27">Rerank只能改善排序，不能凭空创造结果。</div>
+    <div class="subtitle-text" id="sub-28">所以召回优化和Rerank是互补的，不是替代关系。</div>
+    <div class="subtitle-text" id="sub-29">先保证召回率，再用Rerank提升精度。</div>
+    <div class="subtitle-text" id="sub-30">好，总结一下。</div>
+    <div class="subtitle-text" id="sub-31">Rerank是RAG精度的最后一公里。</div>
+    <div class="subtitle-text" id="sub-32">粗排用向量检索保速度，精排用交叉编码器保精度。</div>
+    <div class="subtitle-text" id="sub-33">两阶段配合，让最相关的内容排在最前面。</div>
+    <div class="subtitle-text" id="sub-34">下一章我们看多路召回架构，把前面学的检索优化技术整合起来。</div>
+  </div>
+
+</div>
+
+<style>
+[data-composition-id="ch-25-rerank"] {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #0f1729; font-family: "Noto Sans SC", "PingFang SC", sans-serif; color: #e8edf5;
+}
+.scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.scene-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.scene-content {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 100px 140px 160px; gap: 28px; box-sizing: border-box; z-index: 2;
+}
+
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+.glow-1a { width: 600px; height: 600px; background: #00d4aa; top: -100px; right: -100px; }
+.glow-1b { width: 400px; height: 400px; background: #a78bfa; bottom: -50px; left: 10%; }
+.glow-2a { width: 500px; height: 500px; background: #f59e0b; top: -100px; left: -50px; }
+.glow-2b { width: 350px; height: 350px; background: #00d4aa; bottom: -80px; right: 20%; }
+.glow-3a { width: 500px; height: 500px; background: #a78bfa; top: 50%; left: -100px; transform: translateY(-50%); }
+.glow-3b { width: 300px; height: 300px; background: #00d4aa; top: -80px; right: 15%; }
+.glow-4a { width: 600px; height: 500px; background: #00d4aa; bottom: -100px; right: -50px; }
+.glow-4b { width: 350px; height: 350px; background: #a78bfa; top: -80px; left: 20%; }
+
+.particle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; opacity: 0.3;
+  animation: drift 20s infinite ease-in-out;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-15px, 25px); }
+  75% { transform: translate(20px, 10px); }
+}
+
+.section-title { font-size: 56px; font-weight: 800; opacity: 0; }
+.item-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.item-row {
+  display: flex; align-items: center; gap: 16px; font-size: 32px;
+  background: #1a2744; padding: 18px 28px; border-radius: 10px;
+  color: #8b9dc3; opacity: 0;
+}
+.item-bullet { color: #00d4aa; font-size: 24px; }
+
+.subtitle-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+}
+.subtitle-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 41, 0.85);
+  border-top: 1px solid rgba(0, 212, 170, 0.3);
+}
+.subtitle-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 34px; font-weight: 500; color: #e8edf5; text-align: center;
+  width: 88%; opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function() {
+  var tl = gsap.timeline({ paused: true });
+
+  tl.to(".glow-1a", { scale: 1.08, opacity: 0.2, duration: 4, yoyo: true, repeat: 50, ease: "sine.inOut" }, 0);
+
+  // === Scene 1 (0.0s) ===
+  tl.fromTo("#s1-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 0.30);
+  tl.fromTo("#s1-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 1.20);
+  tl.fromTo("#s1-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 2.70);
+  tl.fromTo("#s1-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 4.20);
+
+  // === Scene 2 (18.7s) ===
+  tl.fromTo("#s2-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 18.97);
+  tl.fromTo("#s2-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 19.87);
+  tl.fromTo("#s2-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 21.37);
+  tl.fromTo("#s2-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 22.87);
+  tl.fromTo("#s2-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 24.37);
+
+  // === Scene 3 (39.8s) ===
+  tl.fromTo("#s3-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 40.07);
+  tl.fromTo("#s3-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 40.97);
+  tl.fromTo("#s3-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 42.47);
+  tl.fromTo("#s3-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 43.97);
+
+  // === Scene 4 (58.1s) ===
+  tl.fromTo("#s4-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 58.36);
+  tl.fromTo("#s4-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 59.26);
+  tl.fromTo("#s4-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 60.76);
+  tl.fromTo("#s4-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 62.26);
+  tl.fromTo("#s4-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 63.76);
+
+  // === Scene 5 (78.3s) ===
+  tl.fromTo("#s5-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 78.61);
+  tl.fromTo("#s5-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 79.51);
+  tl.fromTo("#s5-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 81.01);
+  tl.fromTo("#s5-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 82.51);
+  tl.fromTo("#s5-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 84.01);
+
+  // === Scene 6 (98.4s) ===
+  tl.fromTo("#s6-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 98.68);
+  tl.fromTo("#s6-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 99.58);
+  tl.fromTo("#s6-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 101.08);
+  tl.fromTo("#s6-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 102.58);
+  tl.fromTo("#s6-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 104.08);
+
+  // === Scene 7 (128.9s) ===
+  tl.fromTo("#s7-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 129.18);
+  tl.fromTo("#s7-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 130.08);
+  tl.fromTo("#s7-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 131.58);
+  tl.fromTo("#s7-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 133.08);
+  tl.fromTo("#s7-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 134.58);
+
+  // === Scene 8 (148.9s) ===
+  tl.fromTo("#s8-title", {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"expo.out"}, 149.22);
+  tl.fromTo("#s8-item1", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 150.12);
+  tl.fromTo("#s8-item2", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 151.62);
+  tl.fromTo("#s8-item3", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 153.12);
+  tl.fromTo("#s8-item4", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.4, ease:"power3.out"}, 154.62);
+
+  // === Subtitles ===
+  tl.fromTo("#sub-00", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 0.00);
+  tl.to("#sub-00", {opacity:0, duration:0.25, ease:"power2.in"}, 3.77);
+  tl.fromTo("#sub-01", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 4.07);
+  tl.to("#sub-01", {opacity:0, duration:0.25, ease:"power2.in"}, 11.53);
+  tl.fromTo("#sub-02", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 11.83);
+  tl.to("#sub-02", {opacity:0, duration:0.25, ease:"power2.in"}, 18.37);
+  tl.fromTo("#sub-03", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 18.67);
+  tl.to("#sub-03", {opacity:0, duration:0.25, ease:"power2.in"}, 20.55);
+  tl.fromTo("#sub-04", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 20.85);
+  tl.to("#sub-04", {opacity:0, duration:0.25, ease:"power2.in"}, 26.19);
+  tl.fromTo("#sub-05", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 26.49);
+  tl.to("#sub-05", {opacity:0, duration:0.25, ease:"power2.in"}, 27.83);
+  tl.fromTo("#sub-06", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 28.13);
+  tl.to("#sub-06", {opacity:0, duration:0.25, ease:"power2.in"}, 35.10);
+  tl.fromTo("#sub-07", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 35.40);
+  tl.to("#sub-07", {opacity:0, duration:0.25, ease:"power2.in"}, 39.47);
+  tl.fromTo("#sub-08", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 39.77);
+  tl.to("#sub-08", {opacity:0, duration:0.25, ease:"power2.in"}, 50.22);
+  tl.fromTo("#sub-09", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 50.52);
+  tl.to("#sub-09", {opacity:0, duration:0.25, ease:"power2.in"}, 55.50);
+  tl.fromTo("#sub-10", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 55.80);
+  tl.to("#sub-10", {opacity:0, duration:0.25, ease:"power2.in"}, 57.76);
+  tl.fromTo("#sub-11", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 58.06);
+  tl.to("#sub-11", {opacity:0, duration:0.25, ease:"power2.in"}, 59.46);
+  tl.fromTo("#sub-12", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 59.76);
+  tl.to("#sub-12", {opacity:0, duration:0.25, ease:"power2.in"}, 65.55);
+  tl.fromTo("#sub-13", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 65.85);
+  tl.to("#sub-13", {opacity:0, duration:0.25, ease:"power2.in"}, 68.95);
+  tl.fromTo("#sub-14", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 69.25);
+  tl.to("#sub-14", {opacity:0, duration:0.25, ease:"power2.in"}, 74.76);
+  tl.fromTo("#sub-15", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 75.06);
+  tl.to("#sub-15", {opacity:0, duration:0.25, ease:"power2.in"}, 78.02);
+  tl.fromTo("#sub-16", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 78.31);
+  tl.to("#sub-16", {opacity:0, duration:0.25, ease:"power2.in"}, 79.47);
+  tl.fromTo("#sub-17", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 79.77);
+  tl.to("#sub-17", {opacity:0, duration:0.25, ease:"power2.in"}, 88.04);
+  tl.fromTo("#sub-18", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 88.34);
+  tl.to("#sub-18", {opacity:0, duration:0.25, ease:"power2.in"}, 91.50);
+  tl.fromTo("#sub-19", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 91.80);
+  tl.to("#sub-19", {opacity:0, duration:0.25, ease:"power2.in"}, 98.07);
+  tl.fromTo("#sub-20", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 98.38);
+  tl.to("#sub-20", {opacity:0, duration:0.25, ease:"power2.in"}, 100.22);
+  tl.fromTo("#sub-21", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 100.52);
+  tl.to("#sub-21", {opacity:0, duration:0.25, ease:"power2.in"}, 107.40);
+  tl.fromTo("#sub-22", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 107.70);
+  tl.to("#sub-22", {opacity:0, duration:0.25, ease:"power2.in"}, 111.87);
+  tl.fromTo("#sub-23", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 112.17);
+  tl.to("#sub-23", {opacity:0, duration:0.25, ease:"power2.in"}, 120.42);
+  tl.fromTo("#sub-24", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 120.72);
+  tl.to("#sub-24", {opacity:0, duration:0.25, ease:"power2.in"}, 128.58);
+  tl.fromTo("#sub-25", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 128.88);
+  tl.to("#sub-25", {opacity:0, duration:0.25, ease:"power2.in"}, 132.62);
+  tl.fromTo("#sub-26", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 132.92);
+  tl.to("#sub-26", {opacity:0, duration:0.25, ease:"power2.in"}, 137.34);
+  tl.fromTo("#sub-27", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 137.64);
+  tl.to("#sub-27", {opacity:0, duration:0.25, ease:"power2.in"}, 141.04);
+  tl.fromTo("#sub-28", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 141.34);
+  tl.to("#sub-28", {opacity:0, duration:0.25, ease:"power2.in"}, 145.25);
+  tl.fromTo("#sub-29", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 145.55);
+  tl.to("#sub-29", {opacity:0, duration:0.25, ease:"power2.in"}, 148.62);
+  tl.fromTo("#sub-30", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 148.92);
+  tl.to("#sub-30", {opacity:0, duration:0.25, ease:"power2.in"}, 149.98);
+  tl.fromTo("#sub-31", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 150.28);
+  tl.to("#sub-31", {opacity:0, duration:0.25, ease:"power2.in"}, 153.68);
+  tl.fromTo("#sub-32", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 153.98);
+  tl.to("#sub-32", {opacity:0, duration:0.25, ease:"power2.in"}, 158.15);
+  tl.fromTo("#sub-33", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 158.45);
+  tl.to("#sub-33", {opacity:0, duration:0.25, ease:"power2.in"}, 161.84);
+  tl.fromTo("#sub-34", {opacity:0}, {opacity:1, duration:0.25, ease:"power2.out"}, 162.14);
+  tl.to("#sub-34", {opacity:0, duration:0.25, ease:"power2.in"}, 167.48);
+
+  window.__timelines["ch-25-rerank"] = tl;
+})();
+</script>
+
+</div>
+</body>
+</html>
