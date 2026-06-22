@@ -109,7 +109,7 @@ def build_prompt(question: str, docs: list[dict[str, Any]]) -> str:
     )
     return (
         "你是严谨的知识库问答助手。请只根据资料回答；"
-        "如果资料不足，请说"根据现有资料无法判断"。\n\n"
+        "如果资料不足，请说“根据现有资料无法判断”。\n\n"
         f"资料：\n{context}\n\n"
         f"问题：{question}\n\n"
         "请给出中文答案，并在关键结论后标注来源编号。"

@@ -53,7 +53,6 @@ services:
       MINIO_SECRET_KEY: minioadmin
     volumes:
       - milvus-data:/var/lib/milvus
-      - ./configs/milvus.yaml:/milvus/configs/milvus.yaml:ro
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9091/healthz']
       interval: 30s

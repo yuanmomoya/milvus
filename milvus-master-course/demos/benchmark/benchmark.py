@@ -18,13 +18,23 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from typing import Any
 
-import numpy as np
-from dotenv import load_dotenv
-from pymilvus import DataType, MilvusClient
 
-load_dotenv()
+def load_dotenv_if_available() -> None:
+    """加载 .env；未安装 python-dotenv 时仍允许 --help 等轻量命令运行。"""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    load_dotenv()
+
+
+load_dotenv_if_available()
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s - %(message)s")
 logger = logging.getLogger("benchmark")
+
+np: Any = None
+DataType: Any = None
+MilvusClient: Any = None
 
 
 @dataclass(frozen=True)
@@ -44,9 +54,27 @@ class BenchConfig:
 
 def random_vectors(rows: int, dim: int) -> np.ndarray:
     """生成随机归一化向量（模拟真实 Embedding 输出）"""
+    if np is None:
+        raise RuntimeError("请先调用 ensure_dependencies() 加载 numpy")
     vectors = np.random.random((rows, dim)).astype("float32")
     norms = np.linalg.norm(vectors, axis=1, keepdims=True)
     return vectors / np.maximum(norms, 1e-12)
+
+
+def ensure_dependencies() -> None:
+    """延迟加载压测依赖，让 --help 等命令不受运行时依赖影响。"""
+    global DataType, MilvusClient, np
+
+    try:
+        import numpy as numpy_module
+        from pymilvus import DataType as MilvusDataType
+        from pymilvus import MilvusClient as Client
+    except ImportError as exc:
+        raise RuntimeError("缺少压测依赖，请先执行 pip install -r requirements.txt") from exc
+
+    np = numpy_module
+    DataType = MilvusDataType
+    MilvusClient = Client
 
 
 def ensure_collection(client: MilvusClient, cfg: BenchConfig) -> None:
@@ -162,6 +190,9 @@ def parse_args() -> BenchConfig:
 
 def main() -> None:
     cfg = parse_args()
+    ensure_dependencies()
+    random.seed(42)
+    np.random.seed(42)
     client = MilvusClient(uri=cfg.uri, token=cfg.token or None)
 
     print(f"=== Milvus Benchmark ===")
@@ -182,6 +213,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    random.seed(42)
-    np.random.seed(42)
     main()

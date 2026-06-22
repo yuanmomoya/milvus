@@ -8,17 +8,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from pypdf import PdfReader
-from fastapi.testclient import TestClient
-
-from main import app
-
 
 def read_pdf(path: Path) -> str:
     """解析 PDF 文件，提取所有页面的文本内容
 
     每页文本前添加页码标记，方便后续追溯来源。
     """
+    from pypdf import PdfReader
+
     reader = PdfReader(str(path))
     pages: list[str] = []
     for index, page in enumerate(reader.pages, start=1):
@@ -45,6 +42,9 @@ def main() -> None:
 
     # 通过 FastAPI TestClient 调用入库接口
     # 这样可以复用 main.py 中的切块和 Embedding 逻辑
+    from fastapi.testclient import TestClient
+    from main import app
+
     client = TestClient(app)
     response = client.post("/ingest/text", json={"source": args.pdf.name, "text": text})
     response.raise_for_status()

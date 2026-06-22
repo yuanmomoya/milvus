@@ -8,21 +8,45 @@ common:
   security:
     authorizationEnabled: false
 
+mq:
+  # standalone 教学环境使用本地 RocksMQ，避免首次启动时推断为 Kafka。
+  type: rocksmq
+
+rocksmq:
+  path: /var/lib/milvus/rdb_data
+
+rootCoord:
+  # standalone 进程内 mixCoord 复用 rootCoord 端口；显式配置避免默认到 proxy 的 19530。
+  port: 22125
+
 proxy:
   maxNameLength: 255
   maxFieldNum: 64
+  port: 19530
+  internalPort: 19529
+
+queryCoord:
+  port: 19531
 
 queryNode:
+  port: 21123
   mmap:
     enabled: false
   lazyload:
     enabled: false
 
 dataCoord:
+  port: 13333
   segment:
     maxSize: 512
     sealProportion: 0.12
 
+dataNode:
+  port: 21124
+
 indexNode:
   scheduler:
     buildParallel: 1
+
+streamingNode:
+  port: 22222
