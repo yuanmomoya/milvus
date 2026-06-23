@@ -1,3 +1,5 @@
 第 05 章 · pymilvus完全指南
 
 上一章我们用Docker把Milvus跑起来了，这一章深入pymilvus这个Python SDK。搞清楚五件事：怎么连接、怎么定义Schema、怎么建索引、怎么增删改查、以及生产环境的批量写入模式。这五件事覆盖了日常开发百分之九十的场景。
+
+#Milvus #pymilvus #Python #SDK #MilvusClient #向量数据库

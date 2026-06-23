@@ -1,17 +1,17 @@
 系统跑着跑着突然出问题了：搜索变慢、写入报错、服务重启。这一章是问题排查指南：从现象到原因的排查思路、常用的诊断命令、以及典型问题的解决方案。
 
-排查的第一步永远是：确定问题在哪一层。是客户端的问题、网络的问题、Proxy的问题、还是后端Node的问题？用curl直接调Milvus的healthz接口，如果不通就是网络或服务本身的问题。如果通但SDK报错，可能是参数问题或超时设置。
+排查的第一步通常是确定问题在哪一层：客户端、网络、Proxy、后端组件还是依赖存储。用curl检查healthz可以确认HTTP健康端点是否可达；不通可能是网络、端口或服务问题，健康也不代表所有读写路径都正常，还要结合SDK错误、日志和指标继续判断。
 
 搜索变慢的排查流程。第一步，看监控：P99延迟是突然飙升还是逐渐上升？突然飙升通常是某个事件触发的，比如大批量写入、Compaction、或者某个QueryNode挂了。逐渐上升通常是数据量增长导致的，需要扩容或优化索引参数。
 
 第二步，看Segment状态。用pymilvus的get_collection_stats查看Segment数量和大小。如果有几千个小Segment，搜索合并开销大，需要Compaction。如果有Segment没建索引，搜索会退化成暴力扫描，检查IndexNode是否正常。
 
-写入报错的常见原因。维度不匹配：向量维度和Schema定义不一致，检查Embedding模型输出。主键冲突：auto_id=False时主键重复，用upsert代替insert。超时：batch_size太大或网络慢，减小batch_size或增加timeout。内存不足：DataNode OOM，增加内存或减小batch_size。
+写入报错的常见原因。维度不匹配：向量维度和Schema定义不一致，检查Embedding模型输出。主键冲突：auto_id=False时主键重复，需要确认业务是拒绝重复还是用upsert覆盖。超时：batch_size太大或网络慢，减小batch_size并排查链路。资源不足：检查Streaming Node、对象存储和WAL的指标，而不是只盯一个旧版组件名。
 
 服务重启的排查。先看docker compose ps或kubectl get pods，确定哪个组件在重启。然后看那个组件的日志，找到重启前的最后几行错误信息。常见原因：OOM被系统kill、etcd连接超时、磁盘空间不足、配置错误。
 
 几个实用的诊断命令。查看Collection加载状态：client.get_load_state。查看索引构建进度：client.describe_index。查看Segment详情：client.get_collection_stats。查看Milvus版本和配置：curl localhost:9091/api/v1/config。查看系统指标：curl localhost:9091/metrics。
 
-一个排查清单。搜索慢：检查索引是否建好、Segment是否过碎、ef/nprobe是否合理、output_fields是否过多。写入慢：检查batch_size、网络延迟、DataNode负载、消息队列积压。连接失败：检查端口、防火墙、鉴权配置、Proxy状态。
+一个排查清单。搜索慢：检查索引是否建好、Segment是否过碎、ef/nprobe是否合理、output_fields是否过多。写入慢：检查batch_size、网络延迟、WAL积压、Streaming Node和对象存储负载。连接失败：检查端口、防火墙、鉴权配置、Proxy状态。
 
 好，总结一下。问题排查的核心思路是：分层定位、看监控、看日志、看状态。大多数问题都能归结为：资源不足、配置错误、或者数据异常。养成看监控的习惯，很多问题在爆发前就有征兆。下一章我们看Milvus源码，理解内部实现。

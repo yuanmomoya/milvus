@@ -6,7 +6,7 @@
 
 光靠环境变量不够精细，Milvus还支持配置文件覆盖。把milvus.yaml挂载到容器的configs目录，就能控制日志级别、鉴权开关、Segment大小、索引并行度这些参数。开发环境关鉴权、调debug日志；生产环境开鉴权、调info日志、增大Segment上限。改完配置重启standalone容器就生效。
 
-跨平台部署有几个坑要注意。macOS上Docker Desktop默认只给2G内存，Milvus建议4G以上。Windows必须用WSL2后端，Hyper-V模式性能差很多。Linux要注意vm.max_map_count这个内核参数，太小会导致mmap失败。Apple Silicon完全兼容，不用担心。
+跨平台部署有几个坑要注意。macOS和Windows上的Docker Desktop要检查实际分配给虚拟机的内存，资源过小会导致启动慢或OOM，课程环境建议至少预留4G。Windows优先使用Docker Desktop当前推荐的WSL2后端。Linux如果启用了mmap相关能力，要按官方配置检查vm.max_map_count。Apple Silicon使用官方arm64镜像通常可以运行，但第三方插件和自定义镜像仍要确认架构支持。
 
 最后说说启动失败怎么排查。最常见的是Milvus反复重启——通常是etcd没就绪就启动了，检查depends_on配置。端口被占用用lsof查。OOM就给Docker加内存。etcd报database space exceeded就是元数据存储满了，需要compaction。记住一个排查思路：先docker compose ps看哪个服务不健康，再看那个服务的日志。
 

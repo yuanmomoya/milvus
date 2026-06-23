@@ -1,3 +1,5 @@
 第 29 章 · LlamaIndex集成
 
 上一章用LangChain集成Milvus，这一章看LlamaIndex。LlamaIndex和LangChain的定位不同：LangChain是通用的LLM应用框架，LlamaIndex专注于数据索引和检索。如果你的核心需求是把各种数据源高效地接入RAG，LlamaIndex可能更合适。
+
+#Milvus #LlamaIndex #RAG #数据索引 #知识库 #大模型应用

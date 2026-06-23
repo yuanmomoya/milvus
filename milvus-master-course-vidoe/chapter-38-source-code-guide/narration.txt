@@ -1,8 +1,8 @@
 前面三十七章我们一直在用Milvus，这一章我们打开它的源码看看里面是怎么实现的。不是要你成为Milvus开发者，而是理解内部机制后，遇到问题能更快定位，做架构决策时能更有底气。
 
-Milvus的源码在GitHub上，主要用Go语言写，搜索核心用C++和CGO桥接。目录结构大致是：internal/proxy是Proxy组件、internal/datacoord是DataCoord、internal/querynodev2是QueryNode、internal/indexnode是IndexNode。每个组件是一个独立的Go package。
+Milvus的源码在GitHub上，主要用Go语言写，搜索核心用C++并通过CGO桥接。目录结构会随版本调整，阅读时要先切到与部署一致的v2.6.x标签，再从internal/proxy、internal/datacoord、internal/streamingnode、internal/querynodev2和internal/indexnode等目录定位组件。
 
-先看写入路径。Proxy收到insert请求后，分配时间戳，按Shard路由，把数据序列化成消息发到消息队列。代码在internal/proxy/impl.go的Insert方法。DataNode从消息队列消费，写入内存的growing segment，代码在internal/datanode/flow_graph。
+先看写入路径。Proxy接收insert请求后进入流式写入链路，WAL和Streaming Node维护消息与growing segment。具体函数和目录在小版本间可能变化，不能把某个旧文件路径当成永久API。正确做法是从当前标签的Insert入口和接口定义开始，用IDE引用关系一路跟踪到streamingnode。
 
 再看搜索路径。Proxy收到search请求后，从QueryCoord获取Segment分布，把请求发给对应的QueryNode。QueryNode在本地执行ANN搜索，代码在internal/querynodev2/segments/segment.go。搜索核心是CGO调用C++的knowhere库，knowhere封装了HNSW、IVF等算法的实现。
 

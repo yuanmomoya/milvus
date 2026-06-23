@@ -1,0 +1,544 @@
+{
+  "started_at": "2026-06-22T22:19:04+08:00",
+  "chapters": {
+    "chapter-00-course-overview": {
+      "audio": {
+        "status": "skipped",
+        "at": "2026-06-22T22:20:12+08:00"
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:07+08:00"
+      }
+    },
+    "chapter-01-vector-database-basics": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:20:41+08:00",
+        "elapsed_seconds": 29.3,
+        "duration": 197.38,
+        "scenes": 10
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:07+08:00"
+      }
+    },
+    "chapter-02-milvus-architecture": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:21:09+08:00",
+        "elapsed_seconds": 28.2,
+        "duration": 191.21,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:07+08:00"
+      }
+    },
+    "chapter-03-quick-start": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:21:35+08:00",
+        "elapsed_seconds": 25.4,
+        "duration": 169.42,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:07+08:00"
+      }
+    },
+    "chapter-04-docker-deploy": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:21:58+08:00",
+        "elapsed_seconds": 23.3,
+        "duration": 176.69,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:07+08:00"
+      }
+    },
+    "chapter-05-pymilvus-guide": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:22:23+08:00",
+        "elapsed_seconds": 25.0,
+        "duration": 166.75,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-06-collection-design": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:22:47+08:00",
+        "elapsed_seconds": 23.8,
+        "duration": 175.15,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-07-vector-data-modeling": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:23:12+08:00",
+        "elapsed_seconds": 24.7,
+        "duration": 164.95,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-08-embedding-models": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:23:34+08:00",
+        "elapsed_seconds": 22.5,
+        "duration": 169.18,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-09-vector-index-theory": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:24:00+08:00",
+        "elapsed_seconds": 25.5,
+        "duration": 181.82,
+        "scenes": 9
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-10-ivf-index": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:24:25+08:00",
+        "elapsed_seconds": 25.1,
+        "duration": 178.8,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-11-hnsw-index": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:24:53+08:00",
+        "elapsed_seconds": 28.1,
+        "duration": 203.54,
+        "scenes": 9
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-12-pq-quantization": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:25:21+08:00",
+        "elapsed_seconds": 28.2,
+        "duration": 203.76,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-13-hybrid-search": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:25:45+08:00",
+        "elapsed_seconds": 24.0,
+        "duration": 154.13,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-14-scalar-filter": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:26:11+08:00",
+        "elapsed_seconds": 25.5,
+        "duration": 158.21,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:08+08:00"
+      }
+    },
+    "chapter-15-partition-design": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:26:36+08:00",
+        "elapsed_seconds": 26.0,
+        "duration": 172.46,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-16-batch-write": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:27:03+08:00",
+        "elapsed_seconds": 26.9,
+        "duration": 187.82,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-17-query-tuning": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:27:29+08:00",
+        "elapsed_seconds": 25.1,
+        "duration": 177.77,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-18-cluster-deploy": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:27:52+08:00",
+        "elapsed_seconds": 23.3,
+        "duration": 160.39,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-19-high-availability": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:28:16+08:00",
+        "elapsed_seconds": 24.2,
+        "duration": 164.42,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-20-monitoring": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:28:39+08:00",
+        "elapsed_seconds": 23.2,
+        "duration": 163.18,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-21-production-best-practices": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:29:01+08:00",
+        "elapsed_seconds": 21.7,
+        "duration": 166.42,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-22-rag-basics": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:29:24+08:00",
+        "elapsed_seconds": 23.1,
+        "duration": 155.64,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-23-rag-knowledge-base": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:29:48+08:00",
+        "elapsed_seconds": 23.8,
+        "duration": 180.05,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-24-rag-retrieval-optimization": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:30:12+08:00",
+        "elapsed_seconds": 23.9,
+        "duration": 174.58,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-25-rerank": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:30:37+08:00",
+        "elapsed_seconds": 25.4,
+        "duration": 168.6,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:09+08:00"
+      }
+    },
+    "chapter-26-multi-route-retrieval": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:31:03+08:00",
+        "elapsed_seconds": 26.4,
+        "duration": 174.38,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-27-agent-milvus": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:31:29+08:00",
+        "elapsed_seconds": 25.6,
+        "duration": 173.81,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-28-langchain-integration": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:31:52+08:00",
+        "elapsed_seconds": 23.2,
+        "duration": 154.51,
+        "scenes": 7
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-29-llamaindex-integration": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:32:17+08:00",
+        "elapsed_seconds": 24.5,
+        "duration": 170.3,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-30-image-search": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:32:42+08:00",
+        "elapsed_seconds": 25.2,
+        "duration": 170.93,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-31-clip-multimodal": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:33:04+08:00",
+        "elapsed_seconds": 21.9,
+        "duration": 161.57,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-32-video-search": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:33:29+08:00",
+        "elapsed_seconds": 24.9,
+        "duration": 174.41,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-33-fastapi-development": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:33:52+08:00",
+        "elapsed_seconds": 23.5,
+        "duration": 166.56,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-34-ai-search-system": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:34:17+08:00",
+        "elapsed_seconds": 24.3,
+        "duration": 173.98,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-35-massive-data-architecture": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:34:47+08:00",
+        "elapsed_seconds": 30.5,
+        "duration": 202.94,
+        "scenes": 9
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:10+08:00"
+      }
+    },
+    "chapter-36-benchmark": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:35:13+08:00",
+        "elapsed_seconds": 25.6,
+        "duration": 185.42,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:11+08:00"
+      }
+    },
+    "chapter-37-troubleshooting": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:35:44+08:00",
+        "elapsed_seconds": 31.4,
+        "duration": 211.87,
+        "scenes": 9
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:11+08:00"
+      }
+    },
+    "chapter-38-source-code-guide": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:36:10+08:00",
+        "elapsed_seconds": 25.7,
+        "duration": 182.52,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:11+08:00"
+      }
+    },
+    "chapter-39-interview-questions": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:36:34+08:00",
+        "elapsed_seconds": 24.0,
+        "duration": 163.68,
+        "scenes": 9
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:11+08:00"
+      }
+    },
+    "chapter-40-future-trends": {
+      "audio": {
+        "status": "completed",
+        "at": "2026-06-22T22:36:58+08:00",
+        "elapsed_seconds": 23.9,
+        "duration": 168.82,
+        "scenes": 8
+      },
+      "render": {
+        "status": "validated",
+        "at": "2026-06-23T00:23:11+08:00"
+      }
+    }
+  },
+  "command": {
+    "phase": "render",
+    "from_chapter": "00",
+    "to_chapter": "40",
+    "force": false
+  },
+  "updated_at": "2026-06-23T00:23:11+08:00",
+  "finished_at": "2026-06-23T00:23:11+08:00",
+  "failures": []
+}

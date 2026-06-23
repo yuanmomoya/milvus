@@ -205,16 +205,16 @@ sequenceDiagram
     participant App as Python 应用
     participant Proxy as Milvus Proxy
     participant WAL as WAL/MQ
-    participant DN as DataNode
+    participant SN as Streaming Node
     participant S3 as MinIO
 
     App->>Proxy: upsert(rows)
     Proxy->>WAL: 写入消息
     WAL-->>Proxy: ack
     Proxy-->>App: 返回成功
-    WAL->>DN: 异步消费
-    DN->>DN: 累积到 growing segment
-    DN->>S3: flush 后持久化
+    WAL->>SN: 异步消费
+    SN->>SN: 累积到 growing segment
+    SN->>S3: flush 后持久化
 ```
 
 注意：`upsert` 返回成功意味着数据进入 WAL，不代表索引已构建。对于 growing segment 中的新数据，Milvus 会用暴力搜索保证可查询。

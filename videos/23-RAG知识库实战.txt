@@ -1,3 +1,5 @@
 第 23 章 · RAG知识库实战
 
 上一章我们理解了RAG的架构，这一章动手搭建一个完整的RAG知识库系统。从文档解析、切分、入库，到检索、生成、API接口，全流程跑通。用的是项目里的demos/rag-system，基于FastAPI加Milvus加OpenAI兼容API。
+
+#Milvus #RAG #知识库 #FastAPI #OpenAI #实战项目

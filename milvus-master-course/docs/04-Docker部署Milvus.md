@@ -282,7 +282,7 @@ docker compose up -d
 注意事项：
 - Docker Desktop 默认内存 2GB，Milvus 建议 4GB+
 - 设置路径：Docker Desktop → Settings → Resources → Memory
-- Apple Silicon (M1/M2/M3) 完全兼容，镜像支持 arm64
+- Apple Silicon 可使用官方 arm64 镜像；第三方插件和自定义镜像仍需单独确认架构支持
 - 文件系统性能比 Linux 差，大数据量时感知明显
 
 ### Windows (Docker Desktop + WSL2)

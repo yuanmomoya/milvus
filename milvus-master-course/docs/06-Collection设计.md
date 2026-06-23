@@ -43,7 +43,7 @@ flowchart TB
 |---|---|---|---|
 | `VARCHAR` (业务 ID) | 可读、可追溯、支持 upsert | 需要业务保证唯一 | 文档库、商品库、知识库 |
 | `INT64` (自增) | 紧凑、排序友好 | 需要外部生成、不可读 | 日志、事件流 |
-| `auto_id=True` | 无需管理 | 不支持 upsert、不可预测 | 只追加不更新的场景 |
+| `auto_id=True` | 无需管理 | upsert 会生成新主键，不能按原业务实体覆盖 | 只追加、不依赖业务主键更新的场景 |
 
 ### 主键生成策略
 
@@ -113,8 +113,8 @@ schema.add_field(field_name="title_embedding", datatype=DataType.FLOAT_VECTOR, d
 
 | 维度范围 | 典型模型 | 适用场景 |
 |---|---|---|
-| 256-384 | bge-small, MiniLM | 资源受限、低延迟要求 |
-| 512-768 | bge-base, bge-large | 通用文本检索 |
+| 256-384 | MiniLM、部分轻量模型 | 资源受限、低延迟要求 |
+| 512-768 | bge-small-zh、bge-base 等 | 通用文本检索 |
 | 1024-1536 | OpenAI text-embedding-3, Cohere | 高精度要求 |
 
 ---
@@ -227,8 +227,8 @@ data = [
 
 | 维度 | 动态字段 | 显式定义 |
 |---|---|---|
-| 灵活性 | 高，随时加字段 | 低，需要重建 Collection |
-| 过滤性能 | 差（无法建标量索引） | 好（可建 INVERTED 索引） |
+| 灵活性 | 高，随时写入新的动态键 | 2.6 可新增 nullable 标量字段；向量字段或不兼容变更仍需迁移 |
+| 过滤性能 | 未建 JSON 路径索引时较差；可为常用动态键建立 JSON 路径索引 | 可直接建立对应标量索引 |
 | 类型安全 | 无（JSON 存储） | 有（类型校验） |
 | 存储效率 | 较低（JSON 开销） | 高（列式存储） |
 | 适用场景 | 元数据不固定、探索阶段 | 字段稳定、高频过滤 |
@@ -273,18 +273,19 @@ data = [
 
 ## Schema 演进策略
 
-Milvus 不支持 ALTER TABLE 式的 Schema 变更。应对策略：
+Milvus 2.6 支持向已有 Collection 增加 nullable 标量字段，但不能原地增加向量字段，也不能任意修改主键、向量维度或已有字段类型。应对策略：
 
 ### 场景一：新增标量字段
 
 ```mermaid
 flowchart LR
-    A[开启 dynamic_field] --> B[新字段直接写入]
-    B --> C[验证查询正常]
-    C --> D[如需索引则重建 Collection]
+    A{"字段是否稳定"} -->|临时或不固定| B[写入 dynamic field]
+    A -->|稳定标量字段| C[新增 nullable 标量字段]
+    B --> D[按需建立 JSON 路径索引]
+    C --> E[回填数据并建立标量索引]
 ```
 
-如果已开启 `enable_dynamic_field`，直接在写入数据中加新字段即可。但动态字段无法建索引。
+如果已开启 `enable_dynamic_field`，可以直接写入新动态键并按需建立 JSON 路径索引。对于稳定的标量字段，也可以使用 2.6 的新增字段能力，但新字段必须允许已有实体缺少该值。字段需要严格类型约束或长期作为核心过滤条件时，优先使用显式字段。
 
 ### 场景二：Embedding 模型升级
 
@@ -400,8 +401,8 @@ results = client.search(
 |---|---|---|
 | 过滤搜索很慢 | 过滤字段没建标量索引 | 添加 INVERTED 索引 |
 | 写入报 `max_length exceeded` | 文本超过 VARCHAR 上限 | 截断或增大 max_length |
-| upsert 不生效 | 使用了 `auto_id=True` | 改为业务主键 |
-| 动态字段过滤慢 | 动态字段无法建索引 | 高频字段改为显式定义 |
+| upsert 没有覆盖原实体 | 使用了 `auto_id=True`，服务端生成了新主键 | 改为稳定的业务主键 |
+| 动态字段过滤慢 | 常用动态键没有 JSON 路径索引 | 增加 JSON 路径索引，或改为显式字段 |
 | 模型升级后搜索乱 | 新旧向量混在同一 Collection | 新建 Collection，灰度迁移 |
 | 单行写入报错 | 行总大小超过限制 | 大文本存外部，Collection 只存摘要 |
 
@@ -413,7 +414,7 @@ results = client.search(
    内容 hash 天然去重，相同内容多次写入不会产生重复数据。自增 ID 需要额外的去重逻辑，且在分布式环境下生成全局唯一 ID 有额外成本。
 
 2. **enable_dynamic_field 的性能代价是什么？**
-   动态字段以 JSON 格式存储，无法建标量索引，过滤时需要解析 JSON。对于高频过滤字段，性能远不如显式定义的字段。
+   动态字段以 JSON 格式存储，可以为常用键建立 JSON 路径索引；但显式字段拥有更清晰的类型校验和维护边界，因此核心过滤字段通常仍优先显式定义。
 
 3. **多租户场景为什么推荐 Partition Key 而不是独立 Collection？**
    独立 Collection 每个都需要独立的索引和内存，100 个租户就是 100 份开销。Partition Key 共享索引结构，搜索时自动路由到对应分区，资源利用率高。

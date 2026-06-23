@@ -671,7 +671,7 @@ results = client.search(..., anns_field="title_embedding", ...)
 | `max_length exceeded` | VARCHAR 内容超过 max_length | 截断文本或增大 max_length |
 | `timeout` | 单批数据太大或 Milvus 负载高 | 减小 batch_size，检查服务状态 |
 | `metric type mismatch` | search 的 metric_type 与索引不一致 | 保持一致，或不传（自动匹配） |
-| `upsert on auto_id collection` | auto_id=True 不支持 upsert | 改用 auto_id=False |
+| `upsert on auto_id collection` 没覆盖原实体 | auto_id=True 会为 upsert 生成新主键 | 需要覆盖语义时改用稳定业务主键 |
 
 ---
 
@@ -690,7 +690,7 @@ results = client.search(..., anns_field="title_embedding", ...)
    当大部分数据被过滤掉时，ANN 索引的候选集中有效结果太少，Milvus 可能需要扩大搜索范围甚至退化为暴力扫描。解决方案：用 Partition 按过滤维度分区，或增大 ef/nprobe。
 
 5. **如何安全地做 Schema 变更？**
-   Milvus 不支持 ALTER COLUMN。变更策略：创建新 Collection → 迁移数据 → 切换流量 → 删除旧 Collection。enable_dynamic_field 可以缓解部分场景。
+   Milvus 2.6 可以向已有 Collection 增加 nullable 标量字段，但修改向量维度、主键或已有字段类型仍需要：创建新 Collection → 迁移数据 → 切换流量 → 删除旧 Collection。`enable_dynamic_field` 可以缓解元数据不固定的场景。
 
 ---
 

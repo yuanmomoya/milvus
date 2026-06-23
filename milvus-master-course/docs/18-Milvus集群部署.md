@@ -6,7 +6,7 @@
 
 - 理解 Milvus 分布式集群的组件拓扑。
 - 使用 Docker Compose 或 Helm 部署集群模式。
-- 配置多 QueryNode、多 DataNode 实现水平扩展。
+- 配置多 QueryNode、多 Streaming Node 实现水平扩展。
 - 规划集群的资源分配和容量。
 - 处理集群部署中的常见问题。
 
@@ -19,9 +19,9 @@
 | 组件 | 所有角色在一个进程 | Coord、Node 独立部署 |
 | 扩展性 | 垂直扩展（加 CPU/内存） | 水平扩展（加节点） |
 | 高可用 | 单点故障 | 组件级容错 |
-| 适用规模 | < 2000 万向量 | > 2000 万或高可用要求 |
+| 适用规模 | 取决于单机资源和索引 | 超出单机资源或有高可用要求 |
 | 运维复杂度 | 低 | 高 |
-| 依赖 | etcd + MinIO | etcd + MinIO/S3 + Pulsar/Kafka |
+| 依赖 | etcd + MinIO/S3 + 内置流式存储 | etcd + MinIO/S3 + 可配置的流式存储 |
 
 ---
 
@@ -36,30 +36,27 @@ flowchart TB
     Proxy1 --> RC[RootCoord]
     Proxy1 --> DC[DataCoord]
     Proxy1 --> QC[QueryCoord]
-    Proxy1 --> IC[IndexCoord]
     Proxy2 --> RC
     Proxy2 --> DC
     Proxy2 --> QC
-    Proxy2 --> IC
-
-    DC --> DN1[DataNode 1]
-    DC --> DN2[DataNode 2]
+    DC --> SN1[Streaming Node 1]
+    DC --> SN2[Streaming Node 2]
     QC --> QN1[QueryNode 1]
     QC --> QN2[QueryNode 2]
     QC --> QN3[QueryNode 3]
-    IC --> IN1[IndexNode 1]
-    IC --> IN2[IndexNode 2]
+    DC --> IN1[IndexNode 1]
+    DC --> IN2[IndexNode 2]
 
     subgraph 基础设施
         Etcd[(etcd 集群)]
-        MQ[(Pulsar / Kafka)]
+        WAL[(WAL / Streaming Storage)]
         S3[(S3 / MinIO)]
     end
 
     RC --> Etcd
     DC --> Etcd
-    DN1 --> MQ
-    DN2 --> MQ
+    SN1 --> WAL
+    SN2 --> WAL
     QN1 --> S3
     IN1 --> S3
 ```
@@ -72,8 +69,7 @@ flowchart TB
 | RootCoord | 否（单实例） | DDL、时间戳 | 无需扩展 |
 | DataCoord | 否（单实例） | Segment 调度 | 无需扩展 |
 | QueryCoord | 否（单实例） | 查询调度 | 无需扩展 |
-| IndexCoord | 否（单实例） | 索引任务调度 | 无需扩展 |
-| DataNode | 是 | 写入消费 | 写入吞吐不足时加 |
+| Streaming Node | 是 | WAL、流式写入、growing Segment | 写入吞吐不足时加 |
 | QueryNode | 是 | 搜索执行 | 搜索延迟高/QPS 不足时加 |
 | IndexNode | 是 | 索引构建 | 索引构建慢时加 |
 
@@ -81,152 +77,17 @@ flowchart TB
 
 ## Docker Compose 集群部署
 
-适合开发测试和小规模生产：
+Docker Compose 适合学习和联调，但分布式组件名称会随 Milvus 版本演进。不要手写一份旧版组件清单长期复用，应下载与目标版本严格匹配的官方分布式 Compose 文件：
 
-```yaml
-name: milvus-cluster
-
-services:
-  etcd:
-    image: quay.io/coreos/etcd:v3.5.18
-    command: >
-      etcd
-      -advertise-client-urls=http://127.0.0.1:2379
-      -listen-client-urls=http://0.0.0.0:2379
-      --data-dir=/etcd
-    volumes:
-      - etcd-data:/etcd
-    healthcheck:
-      test: ['CMD', 'etcdctl', 'endpoint', 'health']
-      interval: 30s
-      timeout: 20s
-      retries: 3
-
-  minio:
-    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
-    environment:
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-    command: minio server /minio_data --console-address ':9001'
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - minio-data:/minio_data
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 30s
-      timeout: 20s
-      retries: 3
-
-  pulsar:
-    image: apachepulsar/pulsar:3.1.2
-    command: bin/pulsar standalone
-    ports:
-      - '6650:6650'
-    volumes:
-      - pulsar-data:/pulsar/data
-    healthcheck:
-      test: ['CMD', 'bin/pulsar-admin', 'brokers', 'healthcheck']
-      interval: 30s
-      timeout: 20s
-      retries: 3
-
-  rootcoord:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'rootcoord']
-    environment: &milvus-env
-      ETCD_ENDPOINTS: etcd:2379
-      MINIO_ADDRESS: minio:9000
-      PULSAR_ADDRESS: pulsar://pulsar:6650
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  datacoord:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'datacoord']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  querycoord:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'querycoord']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  indexcoord:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'indexcoord']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  datanode:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'datanode']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  querynode1:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'querynode']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  querynode2:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'querynode']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  indexnode:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'indexnode']
-    environment: *milvus-env
-    depends_on:
-      etcd: { condition: service_healthy }
-      minio: { condition: service_healthy }
-      pulsar: { condition: service_healthy }
-
-  proxy:
-    image: milvusdb/milvus:v2.6.15
-    command: ['milvus', 'run', 'proxy']
-    environment: *milvus-env
-    ports:
-      - '19530:19530'
-      - '9091:9091'
-    depends_on:
-      rootcoord: { condition: service_started }
-      datacoord: { condition: service_started }
-      querycoord: { condition: service_started }
-      indexcoord: { condition: service_started }
-
-volumes:
-  etcd-data:
-  minio-data:
-  pulsar-data:
+```bash
+export MILVUS_VERSION=v2.6.15
+curl -L \
+  "https://github.com/milvus-io/milvus/releases/download/${MILVUS_VERSION}/milvus-distributed-docker-compose.yml" \
+  -o docker-compose.yml
+docker compose up -d
 ```
+
+下载后先检查镜像 tag、WAL/流式存储、对象存储和 etcd 配置，再根据环境修改资源限制。生产环境更推荐使用官方 Helm Chart。
 
 ---
 
@@ -327,7 +188,7 @@ QueryNode 需要加载索引和向量到内存：
 |---|---|---|---|---|
 | Proxy | 2-4 核 | 2-4 GB | 无 | 2+（按 QPS） |
 | QueryNode | 4-8 核 | 8-32 GB | SSD（mmap 时） | 按数据量 |
-| DataNode | 2-4 核 | 4-8 GB | 无 | 2+（按写入量） |
+| Streaming Node | 2-4 核 | 4-8 GB | 按 WAL 配置 | 按写入量 |
 | IndexNode | 4-8 核 | 8-16 GB | SSD（临时） | 1-2 |
 | Coord 系列 | 1-2 核 | 2-4 GB | 无 | 各 1 |
 | etcd | 2 核 | 4 GB | SSD 10-50 GB | 3（高可用） |
@@ -352,12 +213,12 @@ docker compose up -d --scale querynode=4
 
 QueryCoord 会自动将 Segment 重新分配到新的 QueryNode。
 
-### 扩展 DataNode
+### 扩展 Streaming Node
 
 当写入吞吐不足时：
 
 ```bash
-helm upgrade milvus milvus/milvus --set dataNode.replicas=4 -n milvus
+helm upgrade milvus milvus/milvus --set streamingNode.replicas=4 -n milvus
 ```
 
 ### 扩展 IndexNode
@@ -376,7 +237,7 @@ helm upgrade milvus milvus/milvus --set indexNode.replicas=4 -n milvus
 |---|---|---|---|
 | Pulsar | Milvus 默认支持，功能完整 | 部署复杂，资源占用大 | 生产集群 |
 | Kafka | 生态成熟，运维经验多 | 需要额外配置 | 已有 Kafka 集群 |
-| RocksMQ | 内嵌，无需额外部署 | 不支持集群模式 | 仅 Standalone |
+| 内置流式存储 | Standalone 部署简单 | 能力和配置随版本变化 | 本地与中小规模部署 |
 
 ---
 
@@ -405,7 +266,7 @@ kubectl logs -f deployment/milvus-querynode -n milvus
 |---|---|---|
 | Proxy 启动失败 | Coord 组件未就绪 | 检查 Coord 日志，确认 etcd 连接 |
 | QueryNode OOM | 数据量超过单节点内存 | 增加 QueryNode 数量或开启 mmap |
-| 写入延迟高 | Pulsar 积压 | 检查 Pulsar 健康，增加 DataNode |
+| 写入延迟高 | WAL 或 Streaming Node 成为瓶颈 | 检查流式存储和 Streaming Node 指标 |
 | 索引构建慢 | IndexNode 资源不足 | 增加 IndexNode 或增大 CPU |
 | etcd 空间不足 | 元数据过多 | 执行 etcd compaction，增大 quota |
 | 搜索结果不一致 | Segment 正在迁移 | 等待 QueryCoord 完成 balance |
@@ -415,7 +276,7 @@ kubectl logs -f deployment/milvus-querynode -n milvus
 ## 面试题
 
 1. **Standalone 和 Cluster 的核心区别是什么？**
-   Standalone 所有角色在一个进程，共享内存，用 RocksMQ 做消息队列。Cluster 各角色独立部署，通过 Pulsar/Kafka 通信，可以独立扩缩容。
+   Standalone 将多数角色合并在一个进程并使用内置流式存储；Cluster 将角色拆分部署，并可配置外部或分布式流式存储，从而独立扩缩容。
 
 2. **为什么 Coord 组件不需要多副本？**
    Coord 是调度器，不处理数据面流量。它的负载很轻，单实例足够。高可用通过 etcd 选主实现——Coord 挂了会自动重新选主恢复。
@@ -423,8 +284,8 @@ kubectl logs -f deployment/milvus-querynode -n milvus
 3. **增加 QueryNode 后搜索性能一定会提升吗？**
    不一定。如果瓶颈在网络、Proxy 或索引参数，加 QueryNode 无效。只有当 QueryNode CPU/内存是瓶颈时，水平扩展才有效。
 
-4. **集群模式为什么需要 Pulsar/Kafka？**
-   集群中 DataNode 和 QueryNode 是独立进程，需要通过消息队列传递写入日志。Standalone 用进程内的 RocksMQ 就够了。
+4. **集群模式为什么需要可靠的 WAL / 流式存储？**
+   写入链路需要在多个组件之间可靠传递和重放事件。具体使用哪种实现取决于 Milvus 版本及部署配置，不能把 Pulsar/Kafka 写成所有版本的唯一选择。
 
 5. **如何判断需要从 Standalone 升级到 Cluster？**
    当出现以下情况：单机内存不够加载所有数据、需要高可用（不能单点故障）、写入吞吐需要水平扩展、搜索 QPS 超过单机上限。
@@ -445,4 +306,4 @@ kubectl logs -f deployment/milvus-querynode -n milvus
 
 ## 小结
 
-Milvus 集群部署的核心是理解哪些组件可以水平扩展（Proxy、QueryNode、DataNode、IndexNode）以及何时需要扩展。QueryNode 决定搜索能力，DataNode 决定写入能力，IndexNode 决定索引构建速度。生产环境推荐 Helm + Kubernetes 部署，配合监控和自动扩缩容。
+Milvus 集群部署的核心是理解哪些组件可以水平扩展（Proxy、QueryNode、Streaming Node、IndexNode）以及何时需要扩展。QueryNode 决定搜索能力，Streaming Node 与 WAL 影响流式写入能力，IndexNode 决定索引构建速度。生产环境推荐 Helm + Kubernetes 部署，配合监控和自动扩缩容。

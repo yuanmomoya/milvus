@@ -233,4 +233,4 @@ def diagnose_search_latency(client: MilvusClient, collection: str, dim: int):
 
 ## 小结
 
-问题排查的核心是系统化：确认现象 → 缩小范围 → 查日志/指标 → 定位根因 → 修复验证。90% 的问题可以通过 healthz + 日志 + describe_collection 三步定位。建立 Checklist 避免遗漏，积累常见问题的处理经验。
+问题排查的核心是系统化：确认现象 → 缩小范围 → 查日志/指标 → 定位根因 → 修复验证。healthz、日志和 describe_collection 是常用起点，但分布式故障还可能需要结合组件指标、对象存储和网络状态继续定位。建立 Checklist 避免遗漏，积累常见问题的处理经验。

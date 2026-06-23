@@ -1,12 +1,12 @@
 前面十七章我们一直在单机Standalone模式下工作。单机有天花板：CPU、内存、磁盘IO都是硬上限。当数据量超过单机容量、写入吞吐需要水平扩展、或者需要高可用时，就该上集群了。这一章我们看Milvus集群怎么部署。
 
-集群模式和Standalone的核心区别是：每个组件独立部署、可以独立扩缩容。Proxy可以有多个，做负载均衡。DataNode可以有多个，并行消费写入。QueryNode可以有多个，分担搜索压力。IndexNode可以有多个，加速索引构建。Coord系列通常各一个就够，它们是轻量的调度角色。
+集群模式和Standalone的核心区别是：组件可以拆分部署和独立扩缩容。Proxy可以有多个，做负载均衡。Streaming Node可以扩展流式写入能力，QueryNode分担搜索压力，IndexNode并行构建索引。Coord系列负责调度，不应简单用固定副本数套所有环境，要按官方Chart和高可用配置部署。
 
-基础设施也不一样。Standalone用Rocksmq做消息队列，集群模式要换成Pulsar或Kafka。etcd和MinIO还是必须的，但生产环境建议用三节点etcd集群和分布式对象存储。这些基础设施的可靠性直接决定了Milvus集群的可靠性。
+基础设施也不一样。Standalone使用内置流式存储，集群模式需要可靠的WAL或流式存储，具体实现取决于Milvus版本和部署配置。etcd与对象存储仍需要独立保障高可用。这些基础设施的可靠性直接决定了Milvus集群的可靠性。
 
 部署方式有三种。Helm Chart部署到Kubernetes，这是生产推荐方式。Docker Compose部署，适合测试和开发。Milvus Operator，Kubernetes原生的方式，支持声明式管理和自动扩缩容。大多数团队选Helm加Kubernetes。
 
-扩容的思路是按瓶颈扩。搜索慢就加QueryNode。写入慢就加DataNode。索引构建慢就加IndexNode。连接数不够就加Proxy。每种Node的资源需求不同：QueryNode吃内存，IndexNode吃CPU，DataNode吃IO。按需分配资源，不要一刀切。
+扩容的思路是按瓶颈扩。搜索资源不足时评估QueryNode，流式写入受限时检查WAL和Streaming Node，索引积压时评估IndexNode，接入层饱和时增加Proxy。每种组件的资源模型不同，必须先看监控再扩容，不能把“慢”直接等同于“节点少”。
 
 集群部署后，数据怎么分布？Milvus用Segment作为调度单位。QueryCoord负责把Segment分配给不同的QueryNode。一个Collection的数据可能分散在多个QueryNode上。搜索时Proxy把请求广播给所有相关的QueryNode，收集局部结果后合并。
 

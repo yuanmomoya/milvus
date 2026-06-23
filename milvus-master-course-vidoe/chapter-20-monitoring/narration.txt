@@ -4,7 +4,7 @@ Milvus内置了Prometheus指标暴露。每个组件的9091端口都有一个met
 
 搭建监控的步骤很简单。第一步，部署Prometheus，配置scrape_configs指向Milvus的metrics端口。第二步，部署Grafana，导入Milvus官方的Dashboard模板。第三步，配置告警规则。整个过程用Docker Compose加几个配置文件就能搞定。
 
-最重要的几个指标。搜索延迟P99：超过阈值说明QueryNode压力大或索引参数不合理。写入吞吐：突然下降说明DataNode或消息队列有问题。Segment数量：持续增长说明Compaction跟不上。内存使用率：接近上限就该扩容或释放不用的Collection。
+最重要的几个指标。搜索延迟P99：超过基线时检查QueryNode、过滤和索引参数。写入吞吐：突然下降时沿客户端、Proxy、WAL、Streaming Node和对象存储逐层排查。Segment数量持续增长可能表示Compaction跟不上。内存使用率接近安全水位时再评估扩容、mmap或释放不用的Collection。
 
 告警规则怎么配？几个必配的。搜索P99延迟超过500ms告警。写入错误率超过1%告警。QueryNode内存使用超过80%告警。etcd磁盘使用超过70%告警。Segment数量超过阈值告警。告警发到Slack或钉钉，确保oncall能及时响应。
 

@@ -263,7 +263,7 @@ flowchart TB
 检查顺序：
 1. `milvus_proxy_mutation_latency` → Proxy 层延迟
 2. `milvus_datanode_flush_segment_count` → flush 是否频繁
-3. Pulsar/Kafka 消费延迟 → 消息队列是否积压
+3. WAL / Streaming Storage 延迟 → 流式写入是否积压
 4. MinIO 延迟 → 对象存储是否正常
 
 ### 场景三：内存持续增长

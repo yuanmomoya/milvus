@@ -20,13 +20,12 @@ flowchart TB
         RC["RootCoord"]
         DC["DataCoord"]
         QC["QueryCoord"]
-        IC["IndexCoord"]
     end
 
     subgraph SG_AUTO_2["可扩展组件（部分故障不影响服务）"]
         Proxy["Proxy × N"]
         QN["QueryNode × N"]
-        DN["DataNode × N"]
+        SN["Streaming Node × N"]
         IN["IndexNode × N"]
     end
 
@@ -43,12 +42,12 @@ flowchart TB
 |---|---|---|---|
 | Proxy | 部分请求失败 | 负载均衡切换到其他 Proxy | 秒级 |
 | QueryNode | 部分 Segment 不可搜索 | QueryCoord 迁移 Segment 到其他节点 | 10-60s |
-| DataNode | 写入暂停 | DataCoord 重新分配 channel | 10-30s |
-| IndexNode | 索引构建暂停 | IndexCoord 重新调度任务 | 分钟级 |
+| Streaming Node | 部分流式写入受影响 | WAL 重放并重新分配任务 | 取决于积压与恢复配置 |
+| IndexNode | 索引构建暂停 | DataCoord 重新调度任务 | 取决于索引大小和资源 |
 | RootCoord | DDL 操作不可用 | etcd 选主恢复 | 10-30s |
 | DataCoord | 新 Segment 分配暂停 | etcd 选主恢复 | 10-30s |
 | QueryCoord | Segment 调度暂停 | etcd 选主恢复 | 10-30s |
-| etcd | **全部不可用** | etcd 集群自愈 | 取决于集群配置 |
+| etcd | 元数据与调度操作不可用，存量查询的影响取决于故障范围 | etcd 集群恢复多数派 | 取决于集群配置 |
 | MinIO/S3 | 新数据无法持久化 | 对象存储集群自愈 | 取决于存储方案 |
 | Pulsar/Kafka | 写入不可用 | 消息队列集群自愈 | 取决于集群配置 |
 
@@ -105,7 +104,7 @@ flowchart TB
 
 ## etcd 高可用
 
-etcd 是 Milvus 的元数据存储，etcd 不可用 = Milvus 完全不可用。
+etcd 是 Milvus 的元数据存储。etcd 集群失去多数派后，DDL、元数据和调度相关操作会失败；不要笼统承诺所有存量查询都会立即停止，实际影响取决于组件缓存和故障持续时间。
 
 ### 三节点 etcd 集群
 
@@ -344,7 +343,7 @@ flowchart LR
 | 现象 | 原因 | 修复 |
 |---|---|---|
 | 单 QueryNode 故障后搜索报错 | 副本数为 1 | 设置 replica_number >= 2 |
-| etcd 故障后 Milvus 完全不可用 | 单节点 etcd | 部署 3 节点 etcd 集群 |
+| etcd 故障后元数据和调度操作失败 | 单节点 etcd | 部署 3 节点 etcd 集群 |
 | 数据丢失 | MinIO 单节点磁盘损坏 | 使用分布式 MinIO 或云 S3 |
 | 恢复后数据不一致 | etcd 和 MinIO 备份时间点不同 | 统一备份时间点，先停写再备份 |
 | 副本数设置后内存不足 | 副本数 × 数据量 > 总内存 | 增加 QueryNode 或降低副本数 |

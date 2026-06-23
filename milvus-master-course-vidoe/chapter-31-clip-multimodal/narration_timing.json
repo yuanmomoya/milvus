@@ -1,52 +1,52 @@
 {
-  "total_duration": 167.35,
+  "total_duration": 161.57,
   "scenes": [
     {
       "index": 0,
       "start": 0.0,
-      "duration": 19.66,
+      "duration": 19.25,
       "chars": 102
     },
     {
       "index": 1,
-      "start": 19.66,
-      "duration": 21.67,
+      "start": 19.25,
+      "duration": 20.86,
       "chars": 104
     },
     {
       "index": 2,
-      "start": 41.33,
-      "duration": 22.46,
+      "start": 40.1,
+      "duration": 21.65,
       "chars": 112
     },
     {
       "index": 3,
-      "start": 63.79,
-      "duration": 24.48,
+      "start": 61.75,
+      "duration": 23.28,
       "chars": 122
     },
     {
       "index": 4,
-      "start": 88.27,
-      "duration": 20.47,
+      "start": 85.03,
+      "duration": 19.87,
       "chars": 111
     },
     {
       "index": 5,
-      "start": 108.74,
-      "duration": 17.66,
+      "start": 104.9,
+      "duration": 16.68,
       "chars": 104
     },
     {
       "index": 6,
-      "start": 126.41,
-      "duration": 23.47,
+      "start": 121.58,
+      "duration": 23.26,
       "chars": 126
     },
     {
       "index": 7,
-      "start": 149.88,
-      "duration": 17.47,
+      "start": 144.84,
+      "duration": 16.68,
       "chars": 90
     }
   ]

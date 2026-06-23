@@ -4,7 +4,7 @@
 
 学完本章后，你应该能够：
 
-- 说清 Proxy、Coord、Node、etcd、MinIO、Pulsar/Rocksmq 的职责。
+- 说清 Proxy、Coord、Worker Node、etcd、对象存储和 WAL 的职责。
 - 画出 Milvus 写入流、查询流和索引构建流。
 - 理解 Segment 生命周期、Flush、Compaction、WAL。
 - 判断一个生产问题大概率发生在哪个组件。
@@ -12,15 +12,15 @@
 
 ## 理论知识：形象化理解
 
-Milvus 的架构可以想象成一个大型物流中心。Proxy 是前台接待，负责接收客户订单；Coord 系列像调度室，决定货物放在哪里、由谁搬运、什么时候合并；Node 系列像具体操作工位，真正执行写入、查询和建索引；etcd 是调度室墙上的总账本，MinIO/S3 是后方仓库，消息队列则是传送带和流水号系统。
+Milvus 的架构可以想象成一个大型物流中心。Proxy 是前台接待，负责接收客户订单；Coord 系列像调度室，决定货物放在哪里、由谁处理、什么时候合并；Worker Node 像具体操作工位，真正执行流式写入、查询和建索引；etcd 是调度室墙上的总账本，MinIO/S3 是后方仓库，WAL 则是带流水号的传送带。
 
-写入一条向量，不是把数据直接塞进某个单独文件就结束。它会先进入 WAL，像订单先贴上可追溯的流水号；DataNode 再消费消息、形成 growing segment；Flush 后数据落到对象存储，Segment 被封存；IndexNode 再把它加工成适合快速搜索的索引。查询时，Proxy 会把请求拆给多个 QueryNode，拿到局部 TopK 后再归并成全局 TopK。
+写入一条向量，不是把数据直接塞进某个单独文件就结束。它会先进入 WAL，像订单先贴上可追溯的流水号；Streaming Node 维护流式写入和 growing segment；Flush 后数据落到对象存储，Segment 被封存；IndexNode 再把它加工成适合快速搜索的索引。查询时，Proxy 会把请求拆给多个 QueryNode，拿到局部 TopK 后再归并成全局 TopK。
 
 所以排查 Milvus 问题要像看物流链路一样定位：是前台接单慢、传送带堵了、仓库 IO 慢、调度表错了，还是搜索工位内存不够。架构图不是背组件名，而是建立“现象到组件”的映射。
 
 ## 总体架构
 
-Milvus 采用计算存储分离和多组件协同架构。Proxy 接入请求，Coord 系列负责元数据和调度，Node 系列负责具体执行，etcd 保存元数据，对象存储保存 Binlog/Index 文件，消息队列承载写入日志和事件流。
+Milvus 采用计算存储分离和多组件协同架构。Proxy 接入请求，Coord 系列负责元数据和调度，Worker Node 负责具体执行，etcd 保存元数据，对象存储保存 Binlog/Index 文件，WAL 承载可靠的流式写入日志。下面按本课程使用的 Milvus 2.6 系列描述；其他版本的组件名称可能不同。
 
 ```mermaid
 flowchart TB
@@ -28,20 +28,16 @@ flowchart TB
     Proxy --> RootCoord[RootCoord]
     Proxy --> QueryCoord[QueryCoord]
     Proxy --> DataCoord[DataCoord]
-    Proxy --> IndexCoord[IndexCoord]
 
-    DataCoord --> DataNode[DataNode]
+    DataCoord --> StreamingNode[Streaming Node]
     QueryCoord --> QueryNode[QueryNode]
-    IndexCoord --> IndexNode[IndexNode]
+    DataCoord --> IndexNode[IndexNode]
 
     RootCoord --> Etcd[(etcd 元数据)]
     DataCoord --> Etcd
     QueryCoord --> Etcd
-    IndexCoord --> Etcd
-
-    DataNode --> MQ[(Pulsar/Rocksmq 消息流)]
-    QueryNode --> MQ
-    DataNode --> Obj[(MinIO/S3 对象存储)]
+    StreamingNode --> WAL[(WAL / Streaming Storage)]
+    StreamingNode --> Obj[(MinIO/S3 对象存储)]
     IndexNode --> Obj
     QueryNode --> Obj
 ```
@@ -53,14 +49,13 @@ flowchart TB
 | Proxy | 接收客户端请求、鉴权、路由、参数校验 | QPS、连接数、请求错误率 |
 | RootCoord | 管理数据库、Collection、字段、时间戳 | 元数据一致性、DDL 延迟 |
 | DataCoord | 管理 Segment、Flush、Compaction | Segment 数量、Compaction 积压 |
-| DataNode | 消费写入日志，生成 Binlog | 写入吞吐、Flush 延迟 |
+| Streaming Node | 维护 WAL、流式写入和 growing Segment | 写入吞吐、WAL 延迟、Flush 延迟 |
 | QueryCoord | 调度 QueryNode，管理 load/release | 加载耗时、副本分配 |
 | QueryNode | 加载 Segment，执行搜索和查询 | 内存、搜索延迟、慢查询 |
-| IndexCoord | 调度索引构建任务 | 索引任务积压 |
 | IndexNode | 构建向量/标量索引 | CPU/GPU、构建耗时 |
 | etcd | 元数据和服务发现 | 备份、延迟、磁盘空间 |
 | MinIO/S3 | Binlog、DeltaLog、Index 文件 | 容量、吞吐、可靠性 |
-| Pulsar/Rocksmq | WAL 和消息流 | 消费延迟、积压、持久化 |
+| WAL / Streaming Storage | 可靠写入日志和事件流 | 延迟、积压、持久化；实现取决于版本和部署配置 |
 
 ## 写入流程
 
@@ -68,24 +63,24 @@ flowchart TB
 sequenceDiagram
     participant App as 应用
     participant Proxy
-    participant MQ as WAL/MQ
-    participant DataNode
+    participant WAL
+    participant StreamingNode
     participant Obj as MinIO/S3
     participant DataCoord
     participant QueryNode
 
     App->>Proxy: insert/upsert
-    Proxy->>MQ: 写入 WAL
-    MQ-->>Proxy: ack
+    Proxy->>WAL: 追加写入日志
+    WAL-->>Proxy: 达到一致性要求
     Proxy-->>App: 写入成功
-    MQ->>DataNode: 消费写入消息
-    DataNode->>DataNode: 形成 growing segment
-    DataNode->>Obj: flush binlog
-    DataNode->>DataCoord: 上报 sealed segment
+    WAL->>StreamingNode: 流式消费
+    StreamingNode->>StreamingNode: 维护 growing segment
+    StreamingNode->>Obj: flush binlog
+    StreamingNode->>DataCoord: 上报 sealed segment
     DataCoord->>QueryNode: 通知加载新 segment
 ```
 
-写入成功通常意味着数据进入 WAL，并不等于索引已经构建完成。新写入数据可能先在 growing segment 中被暴力搜索，Flush 后成为 sealed segment，再由 IndexNode 构建索引。
+写入成功、按一致性级别可见、索引构建完成是三个不同时间点。新写入数据可能先在 growing segment 中参与搜索，Flush 后成为 sealed segment，再由 IndexNode 构建索引。
 
 ## 查询流程
 
@@ -143,9 +138,9 @@ stateDiagram-v2
 
 | 现象 | 可能组件 | 排查方向 |
 |---|---|---|
-| insert 返回慢 | Proxy/DataNode/MQ | 看写入吞吐、消息队列积压、批大小 |
+| insert 返回慢 | Proxy/Streaming Node/WAL | 看写入吞吐、WAL 延迟、批大小 |
 | search 慢 | QueryNode/Proxy | 看 Collection load 状态、Segment 数量、索引参数 |
-| create index 慢 | IndexCoord/IndexNode | 看索引任务队列、CPU/GPU、对象存储吞吐 |
+| create index 慢 | DataCoord/IndexNode | 看索引任务队列、CPU/GPU、对象存储吞吐 |
 | 元数据异常 | RootCoord/etcd | 检查 etcd 健康和磁盘空间 |
 
 ## 面试题
