@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import OpenAI
 from pydantic import BaseModel, Field
@@ -30,6 +30,15 @@ store = RagVectorStore(settings.milvus_uri, settings.milvus_token, settings.coll
 app = FastAPI(title="Milvus RAG System", version="1.0.0")
 
 
+def verify_api_key(request: Request) -> None:
+    """可选 API Key 鉴权：设置了 API_KEY 环境变量时启用"""
+    if not settings.api_key:
+        return
+    token = request.headers.get("X-API-Key") or request.query_params.get("api_key")
+    if token != settings.api_key:
+        raise HTTPException(status_code=401, detail="无效的 API Key")
+
+
 # ==================== 请求/响应模型 ====================
 
 class IngestTextRequest(BaseModel):
@@ -41,7 +50,7 @@ class IngestTextRequest(BaseModel):
 
 class AskRequest(BaseModel):
     question: str
-    top_k: int = 10
+    top_k: int = Field(default=10, ge=1, le=100)
     history: list[dict[str, str]] = Field(default_factory=list)
 
 
@@ -140,7 +149,7 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.post("/ingest/text")
+@app.post("/ingest/text", dependencies=[Depends(verify_api_key)])
 def ingest_text(payload: IngestTextRequest) -> dict[str, int]:
     """文本入库：切块 → Embedding → 写入 Milvus"""
     chunk_size = payload.chunk_size or settings.chunk_size
@@ -160,7 +169,7 @@ def ingest_text(payload: IngestTextRequest) -> dict[str, int]:
     return {"chunks": count}
 
 
-@app.post("/ask", response_model=AskResponse)
+@app.post("/ask", response_model=AskResponse, dependencies=[Depends(verify_api_key)])
 def ask(payload: AskRequest) -> AskResponse:
     """RAG 问答：完整链路 Query Rewrite → 召回 → Rerank → 生成"""
     if not payload.question.strip():

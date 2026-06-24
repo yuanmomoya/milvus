@@ -41,5 +41,8 @@ class Settings:
     # Rerank 后保留的文档数，进入 LLM Prompt
     rerank_top_n: int = int(os.getenv("RERANK_TOP_N", "5"))
 
+    # API 鉴权（设置后所有写入/查询接口需携带 X-API-Key）
+    api_key: str = os.getenv("API_KEY", "")
+
     # 日志
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
