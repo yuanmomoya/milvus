@@ -9,30 +9,31 @@
 from __future__ import annotations
 
 import hashlib
-import logging
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import torch
-from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from PIL import Image
 from pymilvus import DataType, MilvusClient
-from transformers import CLIPModel, CLIPProcessor
 
-load_dotenv()
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s - %(message)s")
-logger = logging.getLogger("multimodal-search")
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from shared.clip_embedding import CLIPEmbeddingService
+from shared.config import BaseSettings
+from shared.logging_setup import configure_logging
+from shared.milvus_client import build_milvus_client, hnsw_index_params
+
+logger = configure_logging("multimodal-search")
 
 
 @dataclass(frozen=True)
-class Settings:
+class Settings(BaseSettings):
     """配置项"""
-    milvus_uri: str = os.getenv("MILVUS_URI", "http://localhost:19530")
-    milvus_token: str = os.getenv("MILVUS_TOKEN", "")
     collection_name: str = os.getenv("COLLECTION_NAME", "course_multimodal_vectors")
     clip_model: str = os.getenv("CLIP_MODEL", "openai/clip-vit-base-patch32")
     image_dir: Path = Path(os.getenv("IMAGE_DIR", "sample_images"))
@@ -42,11 +43,9 @@ settings = Settings()
 app = FastAPI(title="Milvus Multimodal Search", version="1.0.0")
 
 # 加载 CLIP 模型（图片和文本共享同一个向量空间）
-processor = CLIPProcessor.from_pretrained(settings.clip_model)
-model = CLIPModel.from_pretrained(settings.clip_model)
-model.eval()
+clip_svc = CLIPEmbeddingService(settings.clip_model)
 
-client = MilvusClient(uri=settings.milvus_uri, token=settings.milvus_token or None)
+client = build_milvus_client(settings.milvus_uri, settings.milvus_token)
 
 
 def ensure_collection(dim: int = 512) -> None:
@@ -64,31 +63,9 @@ def ensure_collection(dim: int = 512) -> None:
     schema.add_field("caption", DataType.VARCHAR, max_length=1024)
     schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
     index_params = MilvusClient.prepare_index_params()
-    index_params.add_index("embedding", index_type="HNSW", metric_type="COSINE", params={"M": 16, "efConstruction": 128})
+    index_params.add_index(**hnsw_index_params())
     client.create_collection(settings.collection_name, schema=schema, index_params=index_params)
     client.load_collection(settings.collection_name)
-
-
-def normalize(vector: torch.Tensor) -> list[float]:
-    """L2 归一化"""
-    vector = vector / vector.norm(dim=-1, keepdim=True)
-    return vector.detach().cpu().numpy().astype("float32")[0].tolist()
-
-
-def embed_text(text: str) -> list[float]:
-    """CLIP 文本编码"""
-    inputs = processor(text=[text], return_tensors="pt", padding=True)
-    with torch.no_grad():
-        features = model.get_text_features(**inputs)
-    return normalize(features)
-
-
-def embed_image(image: Image.Image) -> list[float]:
-    """CLIP 图片编码"""
-    inputs = processor(images=image.convert("RGB"), return_tensors="pt")
-    with torch.no_grad():
-        features = model.get_image_features(**inputs)
-    return normalize(features)
 
 
 def search_vector(vector: list[float], top_k: int) -> list[dict[str, Any]]:
@@ -144,7 +121,7 @@ def index_local_images() -> dict[str, int]:
             continue
         try:
             image = Image.open(path)
-            vector = embed_image(image)
+            vector = clip_svc.encode_image(image)
             image_id = hashlib.sha1(str(path).encode("utf-8")).hexdigest()
             rows.append({"id": image_id, "image_path": str(path), "caption": path.stem, "embedding": vector})
         except Exception as e:
@@ -157,11 +134,11 @@ def index_local_images() -> dict[str, int]:
 @app.get("/search/text")
 def search_by_text(q: str, top_k: int = 5) -> list[dict[str, Any]]:
     """文搜图：CLIP 文本向量搜索图片向量"""
-    return search_vector(embed_text(q), top_k)
+    return search_vector(clip_svc.encode_text(q), top_k)
 
 
 @app.post("/search/image")
 def search_by_image(file: UploadFile = File(...), top_k: int = Form(5)) -> list[dict[str, Any]]:
     """图搜图：CLIP 图片向量搜索相似图片"""
     image = Image.open(file.file)
-    return search_vector(embed_image(image), top_k)
+    return search_vector(clip_svc.encode_image(image), top_k)

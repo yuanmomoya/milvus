@@ -7,10 +7,17 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from pymilvus import DataType, MilvusClient
+
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from shared.milvus_client import build_milvus_client, hnsw_index_params
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +42,7 @@ class RagVectorStore:
 
     def __init__(self, uri: str, token: str, collection_name: str, dim: int) -> None:
         self.collection_name = collection_name
-        self.client = MilvusClient(uri=uri, token=token or None)
+        self.client = build_milvus_client(uri, token)
         self.dim = dim
         self.ensure_collection()
 
@@ -56,12 +63,7 @@ class RagVectorStore:
 
         # HNSW 索引：中小规模文本检索的默认选择
         index_params = MilvusClient.prepare_index_params()
-        index_params.add_index(
-            "embedding",
-            index_type="HNSW",
-            metric_type="COSINE",
-            params={"M": 16, "efConstruction": 128},
-        )
+        index_params.add_index(**hnsw_index_params())
         self.client.create_collection(self.collection_name, schema=schema, index_params=index_params)
         self.client.load_collection(self.collection_name)
         logger.info("RAG Collection 创建完成: %s", self.collection_name)

@@ -8,7 +8,8 @@
 """
 from __future__ import annotations
 
-import logging
+import sys
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -16,13 +17,17 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from shared.logging_setup import configure_logging
+from shared.text_embedding import EmbeddingService
+
 from config import Settings
-from embeddings import EmbeddingService
 from vector_store import Chunk, RagVectorStore
 
 settings = Settings()
-logging.basicConfig(level=settings.log_level, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
-logger = logging.getLogger("rag-system")
+logger = configure_logging("rag-system")
 
 # 初始化核心服务（应用启动时加载模型，避免每次请求重复加载）
 embedding_service = EmbeddingService(settings.embedding_model)
@@ -109,7 +114,7 @@ def build_prompt(question: str, docs: list[dict[str, Any]]) -> str:
     )
     return (
         "你是严谨的知识库问答助手。请只根据资料回答；"
-        "如果资料不足，请说“根据现有资料无法判断”。\n\n"
+        "如果资料不足，请说\u201c根据现有资料无法判断\u201d。\n\n"
         f"资料：\n{context}\n\n"
         f"问题：{question}\n\n"
         "请给出中文答案，并在关键结论后标注来源编号。"

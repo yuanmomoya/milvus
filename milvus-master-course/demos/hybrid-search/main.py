@@ -6,34 +6,31 @@
 """
 from __future__ import annotations
 
-import logging
 import os
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
 from pymilvus import AnnSearchRequest, DataType, MilvusClient, RRFRanker
-from sentence_transformers import SentenceTransformer
 
-load_dotenv()
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s - %(message)s")
-logger = logging.getLogger("hybrid-search")
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from shared.config import BaseSettings
+from shared.logging_setup import configure_logging
+from shared.milvus_client import build_milvus_client, hnsw_index_params
+from shared.text_embedding import EmbeddingService
+
+logger = configure_logging("hybrid-search")
 
 
 @dataclass(frozen=True)
-class Settings:
+class Settings(BaseSettings):
     """配置项"""
-    milvus_uri: str = os.getenv("MILVUS_URI", "http://localhost:19530")
-    milvus_token: str = os.getenv("MILVUS_TOKEN", "")
     collection_name: str = os.getenv("COLLECTION_NAME", "course_hybrid_docs")
-    embedding_model: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
     recreate: bool = os.getenv("RECREATE_COLLECTION", "false").lower() == "true"
     top_k: int = int(os.getenv("TOP_K", "5"))
-
-
-def embed(model: SentenceTransformer, texts: list[str]) -> list[list[float]]:
-    """文本向量化（归一化）"""
-    return model.encode(texts, normalize_embeddings=True, show_progress_bar=False).astype("float32").tolist()
 
 
 def ensure_collection(client: MilvusClient, settings: Settings, dim: int) -> None:
@@ -56,13 +53,13 @@ def ensure_collection(client: MilvusClient, settings: Settings, dim: int) -> Non
     # 每个向量字段独立建索引
     index_params = MilvusClient.prepare_index_params()
     for field in ["title_vector", "body_vector"]:
-        index_params.add_index(field, index_type="HNSW", metric_type="COSINE", params={"M": 16, "efConstruction": 128})
+        index_params.add_index(**hnsw_index_params(field_name=field))
 
     client.create_collection(settings.collection_name, schema=schema, index_params=index_params)
     client.load_collection(settings.collection_name)
 
 
-def seed(client: MilvusClient, settings: Settings, model: SentenceTransformer) -> None:
+def seed(client: MilvusClient, settings: Settings, embed_svc: EmbeddingService) -> None:
     """写入示例数据：标题和正文分别编码为向量"""
     docs = [
         {"id": "hy-001", "title": "Milvus 架构", "body": "Proxy、QueryNode、DataNode 和 Coord 共同完成写入和查询。", "category": "milvus"},
@@ -70,21 +67,21 @@ def seed(client: MilvusClient, settings: Settings, model: SentenceTransformer) -
         {"id": "hy-003", "title": "RAG 召回优化", "body": "可以结合向量召回、关键词召回、Rerank 和 Query Rewrite。", "category": "rag"},
         {"id": "hy-004", "title": "图片检索", "body": "CLIP 支持文搜图和图搜图，适合多模态搜索。", "category": "image"},
     ]
-    title_vectors = embed(model, [doc["title"] for doc in docs])
-    body_vectors = embed(model, [doc["body"] for doc in docs])
+    title_vectors = embed_svc.encode([doc["title"] for doc in docs])
+    body_vectors = embed_svc.encode([doc["body"] for doc in docs])
     rows: list[dict[str, Any]] = []
     for doc, title_vector, body_vector in zip(docs, title_vectors, body_vectors, strict=True):
         rows.append({**doc, "title_vector": title_vector, "body_vector": body_vector})
     client.upsert(settings.collection_name, rows)
 
 
-def hybrid_search(client: MilvusClient, settings: Settings, model: SentenceTransformer, query: str) -> None:
+def hybrid_search(client: MilvusClient, settings: Settings, embed_svc: EmbeddingService, query: str) -> None:
     """混合搜索：同时搜索标题和正文向量，用 RRF 融合排序
 
     RRF（Reciprocal Rank Fusion）只看排名不看分数绝对值，
     适合融合不同向量字段的搜索结果。
     """
-    qv = embed(model, [query])[0]
+    qv = embed_svc.encode([query])[0]
 
     # 标题向量搜索请求
     title_req = AnnSearchRequest(
@@ -118,14 +115,11 @@ def hybrid_search(client: MilvusClient, settings: Settings, model: SentenceTrans
 
 def main() -> None:
     settings = Settings()
-    model = SentenceTransformer(settings.embedding_model)
-    dim = model.get_sentence_embedding_dimension()
-    if dim is None:
-        raise RuntimeError("无法读取模型向量维度")
-    client = MilvusClient(uri=settings.milvus_uri, token=settings.milvus_token or None)
-    ensure_collection(client, settings, dim)
-    seed(client, settings, model)
-    hybrid_search(client, settings, model, "怎样提升 RAG 的召回效果？")
+    embed_svc = EmbeddingService(settings.embedding_model)
+    client = build_milvus_client(settings.milvus_uri, settings.milvus_token)
+    ensure_collection(client, settings, embed_svc.dim)
+    seed(client, settings, embed_svc)
+    hybrid_search(client, settings, embed_svc, "怎样提升 RAG 的召回效果？")
 
 
 if __name__ == "__main__":
