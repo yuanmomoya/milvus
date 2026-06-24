@@ -6,24 +6,22 @@
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 
-from dotenv import load_dotenv
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-load_dotenv()
+from shared.config import BaseSettings
 
 
 @dataclass(frozen=True)
-class Settings:
+class Settings(BaseSettings):
     """应用配置，所有参数均可通过环境变量覆盖"""
 
-    # Milvus 连接
-    milvus_uri: str = os.getenv("MILVUS_URI", "http://localhost:19530")
-    milvus_token: str = os.getenv("MILVUS_TOKEN", "")
+    # Milvus 连接（继承自 BaseSettings）
     collection_name: str = os.getenv("COLLECTION_NAME", "course_rag_chunks")
-
-    # Embedding 模型（本地 sentence-transformers）
-    embedding_model: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
 
     # LLM 配置（兼容 OpenAI API 格式，可对接 Ollama/vLLM 等本地服务）
     openai_base_url: str = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")

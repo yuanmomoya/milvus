@@ -7,29 +7,31 @@
 """
 from __future__ import annotations
 
-import logging
 import os
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from pymilvus import DataType, MilvusClient
-from sentence_transformers import SentenceTransformer
 
-load_dotenv()
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s - %(message)s")
-logger = logging.getLogger("fastapi-service")
+# 将 milvus-master-course/ 加入搜索路径，以便导入 shared 包
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from shared.config import BaseSettings
+from shared.logging_setup import configure_logging
+from shared.milvus_client import build_milvus_client, hnsw_index_params
+from shared.text_embedding import EmbeddingService
+
+logger = configure_logging("fastapi-service")
 
 
 @dataclass(frozen=True)
-class Settings:
+class Settings(BaseSettings):
     """服务配置"""
-    milvus_uri: str = os.getenv("MILVUS_URI", "http://localhost:19530")
-    milvus_token: str = os.getenv("MILVUS_TOKEN", "")
     collection_name: str = os.getenv("COLLECTION_NAME", "course_search_service")
-    embedding_model: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
 
 
 # ==================== 请求/响应模型 ====================
@@ -53,13 +55,10 @@ class SearchRequest(BaseModel):
 settings = Settings()
 
 # 加载 Embedding 模型（启动时一次性加载）
-model = SentenceTransformer(settings.embedding_model)
-dim = model.get_sentence_embedding_dimension()
-if dim is None:
-    raise RuntimeError("无法读取模型向量维度")
+embed_svc = EmbeddingService(settings.embedding_model)
 
 # 创建 Milvus 客户端（全局复用，内部维护连接池）
-client = MilvusClient(uri=settings.milvus_uri, token=settings.milvus_token or None)
+client = build_milvus_client(settings.milvus_uri, settings.milvus_token)
 app = FastAPI(title="Milvus Search API", version="1.0.0")
 
 
@@ -72,16 +71,11 @@ def ensure_collection() -> None:
     schema.add_field("id", DataType.VARCHAR, is_primary=True, max_length=64)
     schema.add_field("text", DataType.VARCHAR, max_length=4096)
     schema.add_field("source", DataType.VARCHAR, max_length=256)
-    schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
+    schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=embed_svc.dim)
     index_params = MilvusClient.prepare_index_params()
-    index_params.add_index("embedding", index_type="HNSW", metric_type="COSINE", params={"M": 16, "efConstruction": 128})
+    index_params.add_index(**hnsw_index_params())
     client.create_collection(settings.collection_name, schema=schema, index_params=index_params)
     client.load_collection(settings.collection_name)
-
-
-def embed(texts: list[str]) -> list[list[float]]:
-    """文本向量化"""
-    return model.encode(texts, normalize_embeddings=True, show_progress_bar=False).astype("float32").tolist()
 
 
 # ==================== API 端点 ====================
@@ -106,7 +100,7 @@ def upsert_document(payload: UpsertRequest) -> dict[str, str]:
     """
     if not payload.text.strip():
         raise HTTPException(status_code=400, detail="text 不能为空")
-    vector = embed([payload.text])[0]
+    vector = embed_svc.encode([payload.text])[0]
     client.upsert(settings.collection_name, [{"id": payload.id, "text": payload.text, "source": payload.source, "embedding": vector}])
     return {"status": "upserted", "id": payload.id}
 
@@ -117,7 +111,7 @@ def search(payload: SearchRequest) -> list[dict[str, Any]]:
 
     支持可选的 source 过滤，只搜索指定来源的文档。
     """
-    vector = embed([payload.query])[0]
+    vector = embed_svc.encode([payload.query])[0]
     # 构建过滤表达式（可选）
     filter_expr = f'source == "{payload.source}"' if payload.source else ""
     results = client.search(
