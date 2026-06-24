@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import logging
 import os
 from dataclasses import dataclass
@@ -17,11 +18,13 @@ from typing import Any
 
 import torch
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.responses import HTMLResponse
 from PIL import Image
 from pymilvus import DataType, MilvusClient
 from transformers import CLIPModel, CLIPProcessor
+
+_MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s - %(message)s")
@@ -36,10 +39,20 @@ class Settings:
     collection_name: str = os.getenv("COLLECTION_NAME", "course_multimodal_vectors")
     clip_model: str = os.getenv("CLIP_MODEL", "openai/clip-vit-base-patch32")
     image_dir: Path = Path(os.getenv("IMAGE_DIR", "sample_images"))
+    api_key: str = os.getenv("API_KEY", "")
 
 
 settings = Settings()
 app = FastAPI(title="Milvus Multimodal Search", version="1.0.0")
+
+
+def verify_api_key(request: Request) -> None:
+    """可选 API Key 鉴权"""
+    if not settings.api_key:
+        return
+    token = request.headers.get("X-API-Key") or request.query_params.get("api_key")
+    if token != settings.api_key:
+        raise HTTPException(status_code=401, detail="无效的 API Key")
 
 # 加载 CLIP 模型（图片和文本共享同一个向量空间）
 processor = CLIPProcessor.from_pretrained(settings.clip_model)
@@ -134,7 +147,7 @@ def index() -> str:
     """
 
 
-@app.post("/index/local")
+@app.post("/index/local", dependencies=[Depends(verify_api_key)])
 def index_local_images() -> dict[str, int]:
     """批量导入本地图片"""
     ensure_collection()
@@ -154,14 +167,17 @@ def index_local_images() -> dict[str, int]:
     return {"indexed": len(rows)}
 
 
-@app.get("/search/text")
-def search_by_text(q: str, top_k: int = 5) -> list[dict[str, Any]]:
+@app.get("/search/text", dependencies=[Depends(verify_api_key)])
+def search_by_text(q: str, top_k: int = Query(default=5, ge=1, le=50)) -> list[dict[str, Any]]:
     """文搜图：CLIP 文本向量搜索图片向量"""
     return search_vector(embed_text(q), top_k)
 
 
-@app.post("/search/image")
-def search_by_image(file: UploadFile = File(...), top_k: int = Form(5)) -> list[dict[str, Any]]:
+@app.post("/search/image", dependencies=[Depends(verify_api_key)])
+def search_by_image(file: UploadFile = File(...), top_k: int = Form(default=5, ge=1, le=50)) -> list[dict[str, Any]]:
     """图搜图：CLIP 图片向量搜索相似图片"""
-    image = Image.open(file.file)
+    contents = file.file.read()
+    if len(contents) > _MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=413, detail="图片大小不能超过 10 MB")
+    image = Image.open(io.BytesIO(contents))
     return search_vector(embed_image(image), top_k)

@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 from dataclasses import dataclass
 from typing import Any
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from pymilvus import DataType, MilvusClient
 from sentence_transformers import SentenceTransformer
@@ -30,6 +31,7 @@ class Settings:
     milvus_token: str = os.getenv("MILVUS_TOKEN", "")
     collection_name: str = os.getenv("COLLECTION_NAME", "course_search_service")
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
+    api_key: str = os.getenv("API_KEY", "")
 
 
 # ==================== 请求/响应模型 ====================
@@ -45,7 +47,7 @@ class SearchRequest(BaseModel):
     """搜索请求"""
     query: str
     top_k: int = Field(default=5, ge=1, le=50)
-    source: str | None = None  # 可选：按来源过滤
+    source: str | None = Field(default=None, max_length=256)  # 可选：按来源过滤
 
 
 # ==================== 初始化 ====================
@@ -61,6 +63,18 @@ if dim is None:
 # 创建 Milvus 客户端（全局复用，内部维护连接池）
 client = MilvusClient(uri=settings.milvus_uri, token=settings.milvus_token or None)
 app = FastAPI(title="Milvus Search API", version="1.0.0")
+
+# 合法标识符正则：只允许字母、数字、下划线、连字符、点
+_SAFE_IDENTIFIER = re.compile(r"^[\w.\-]+$", re.UNICODE)
+
+
+def verify_api_key(request: Request) -> None:
+    """可选 API Key 鉴权：设置了 API_KEY 环境变量时启用"""
+    if not settings.api_key:
+        return
+    token = request.headers.get("X-API-Key") or request.query_params.get("api_key")
+    if token != settings.api_key:
+        raise HTTPException(status_code=401, detail="无效的 API Key")
 
 
 def ensure_collection() -> None:
@@ -94,11 +108,11 @@ def startup() -> None:
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    """健康检查"""
+    """健康检查（无需鉴权）"""
     return {"status": "ok"}
 
 
-@app.post("/documents")
+@app.post("/documents", dependencies=[Depends(verify_api_key)])
 def upsert_document(payload: UpsertRequest) -> dict[str, str]:
     """写入单条文档（自动 Embedding）
 
@@ -111,15 +125,19 @@ def upsert_document(payload: UpsertRequest) -> dict[str, str]:
     return {"status": "upserted", "id": payload.id}
 
 
-@app.post("/search")
+@app.post("/search", dependencies=[Depends(verify_api_key)])
 def search(payload: SearchRequest) -> list[dict[str, Any]]:
     """语义搜索
 
     支持可选的 source 过滤，只搜索指定来源的文档。
     """
     vector = embed([payload.query])[0]
-    # 构建过滤表达式（可选）
-    filter_expr = f'source == "{payload.source}"' if payload.source else ""
+    # 构建过滤表达式（可选），校验输入防止表达式注入
+    filter_expr = ""
+    if payload.source:
+        if not _SAFE_IDENTIFIER.match(payload.source):
+            raise HTTPException(status_code=400, detail="source 包含非法字符")
+        filter_expr = f'source == "{payload.source}"'
     results = client.search(
         collection_name=settings.collection_name,
         data=[vector],
