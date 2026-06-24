@@ -31,14 +31,12 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.pdf.exists():
-        print(f"文件不存在: {args.pdf}")
-        return
+        raise FileNotFoundError(f"文件不存在: {args.pdf}")
 
     # 读取 PDF 文本
     text = read_pdf(args.pdf)
     if not text.strip():
-        print("PDF 无有效文本内容")
-        return
+        raise ValueError(f"PDF 无有效文本内容: {args.pdf}")
 
     # 通过 FastAPI TestClient 调用入库接口
     # 这样可以复用 main.py 中的切块和 Embedding 逻辑

@@ -53,7 +53,11 @@ def main() -> None:
         dest_mp4 = DEST / f"{num}-{cn_name}.mp4"
         dest_txt = DEST / f"{num}-{cn_name}.txt"
 
-        shutil.copy2(src_mp4, dest_mp4)
+        try:
+            shutil.copy2(src_mp4, dest_mp4)
+        except OSError as exc:
+            print(f"[FAIL {num}] 复制视频失败: {exc}")
+            continue
 
         narration = src_txt.read_text(encoding="utf-8") if src_txt.exists() else ""
         dest_txt.write_text(make_intro(num, cn_name, narration), encoding="utf-8")

@@ -76,7 +76,7 @@ def main():
         {"start": 116.7, "duration": 23},
         {"start": 139.7, "duration": 13.3},
     ]
-    with open(ch01 / "narration_timing.json") as f:
+    with open(ch01 / "narration_timing.json", encoding="utf-8") as f:
         timing = json.load(f)
     new_ch01 = [{"start": s["start"], "duration": s["duration"]} for s in timing["scenes"]]
     remap_chapter(ch01, old_ch01, new_ch01)
@@ -93,7 +93,7 @@ def main():
         {"start": 123.6, "duration": 23.8},
         {"start": 147.4, "duration": 12.6},
     ]
-    with open(ch02 / "narration_timing.json") as f:
+    with open(ch02 / "narration_timing.json", encoding="utf-8") as f:
         timing = json.load(f)
     new_ch02 = [{"start": s["start"], "duration": s["duration"]} for s in timing["scenes"]]
     remap_chapter(ch02, old_ch02, new_ch02)

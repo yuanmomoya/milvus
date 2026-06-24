@@ -43,9 +43,21 @@ def validate_chapter(chapter_dir: Path) -> list[str]:
     except (ValueError, tomllib.TOMLDecodeError) as exc:
         return [f"storyboard 解析失败: {exc}"]
 
-    narration = (chapter_dir / "narration.txt").read_text(encoding="utf-8")
+    narration_path = chapter_dir / "narration.txt"
+    timing_path = chapter_dir / "narration_timing.json"
+    if not narration_path.exists():
+        errors.append("缺少 narration.txt")
+        return errors
+    if not timing_path.exists():
+        errors.append("缺少 narration_timing.json")
+        return errors
+    narration = narration_path.read_text(encoding="utf-8")
     paragraphs = [part.strip() for part in narration.split("\n\n") if part.strip()]
-    timing = json.loads((chapter_dir / "narration_timing.json").read_text(encoding="utf-8"))
+    try:
+        timing = json.loads(timing_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"narration_timing.json 不是有效 JSON: {exc}")
+        return errors
     scenes = storyboard.get("scenes", [])
     expected_chapter = chapter_dir.name.split("-", 2)[1]
 

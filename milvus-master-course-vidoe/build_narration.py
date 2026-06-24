@@ -16,7 +16,20 @@ def get_duration(path: Path) -> float:
         ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", str(path)],
         capture_output=True, text=True,
     )
-    return float(json.loads(result.stdout)["format"]["duration"])
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"ffprobe 执行失败 (exit {result.returncode}): {path}\n{result.stderr}"
+        )
+    try:
+        info = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"ffprobe 输出不是有效 JSON: {path}") from exc
+    try:
+        return float(info["format"]["duration"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeError(
+            f"ffprobe 输出缺少 format.duration 字段: {path}"
+        ) from exc
 
 
 def build_narration(chapter_dir: Path) -> dict:

@@ -151,12 +151,21 @@ def run_searches(client: MilvusClient, cfg: BenchConfig) -> dict[str, float]:
         one_search(client, cfg)
 
     latencies: list[float] = []
+    errors = 0
     start = time.perf_counter()
     with ThreadPoolExecutor(max_workers=cfg.concurrency) as pool:
         futures = [pool.submit(one_search, client, cfg) for _ in range(cfg.searches)]
         for future in as_completed(futures):
-            latencies.append(future.result())
+            try:
+                latencies.append(future.result())
+            except Exception as exc:
+                errors += 1
+                logger.warning("搜索请求失败: %s", exc)
     elapsed = time.perf_counter() - start
+    if errors:
+        logger.warning("搜索阶段失败请求: %d/%d", errors, cfg.searches)
+    if not latencies:
+        raise RuntimeError("所有搜索请求均失败，无法计算性能指标")
 
     return {
         "qps": cfg.searches / elapsed,
