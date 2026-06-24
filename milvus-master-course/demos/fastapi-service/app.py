@@ -89,7 +89,11 @@ def embed(texts: list[str]) -> list[list[float]]:
 @app.on_event("startup")
 def startup() -> None:
     """应用启动时初始化 Collection"""
-    ensure_collection()
+    try:
+        ensure_collection()
+    except Exception:
+        logger.exception("启动时初始化 Collection 失败，服务可能无法正常工作")
+        raise
 
 
 @app.get("/health")

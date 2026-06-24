@@ -123,12 +123,18 @@ def call_llm(prompt: str) -> str:
     """
     if not settings.openai_api_key:
         return "未配置 OPENAI_API_KEY，以下是检索到的资料摘要：\n" + prompt[:1200]
-    client = OpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url)
-    response = client.chat.completions.create(
-        model=settings.openai_model,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.2,  # 低温度减少随机性，提高答案一致性
-    )
+    llm_client = OpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url)
+    try:
+        response = llm_client.chat.completions.create(
+            model=settings.openai_model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.2,  # 低温度减少随机性，提高答案一致性
+        )
+    except Exception as exc:
+        logger.error("LLM 调用失败: %s", exc)
+        raise HTTPException(
+            status_code=502, detail=f"LLM 服务调用失败: {exc}"
+        ) from exc
     return response.choices[0].message.content or ""
 
 

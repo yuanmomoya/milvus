@@ -596,7 +596,7 @@ def render_visual(chapter: str, scene_no: int, scene: dict) -> str:
         return render_kpi_dashboard()
     if visual_type == "recap":
         return render_recap()
-    return render_generic(scene)
+    return render_generic_cards(scene)
 
 
 def render_scene(chapter: str, scene_no: int, scene: dict, timing: dict, duration: float) -> str:

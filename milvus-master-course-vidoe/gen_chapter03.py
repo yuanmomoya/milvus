@@ -6,8 +6,16 @@ import re
 from pathlib import Path
 
 CH_DIR = Path(__file__).parent / "chapter-03-quick-start"
-TIMING = json.loads((CH_DIR / "narration_timing.json").read_text())
-NARRATION = (CH_DIR / "narration.txt").read_text()
+
+_timing_path = CH_DIR / "narration_timing.json"
+_narration_path = CH_DIR / "narration.txt"
+if not _timing_path.exists():
+    raise FileNotFoundError(f"缺少 timing 文件: {_timing_path}")
+if not _narration_path.exists():
+    raise FileNotFoundError(f"缺少旁白文件: {_narration_path}")
+
+TIMING = json.loads(_timing_path.read_text(encoding="utf-8"))
+NARRATION = _narration_path.read_text(encoding="utf-8")
 
 TOTAL = TIMING["total_duration"]
 SCENES = TIMING["scenes"]

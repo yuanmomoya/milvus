@@ -86,7 +86,12 @@ def synthesize(text: str, output: Path, config: TTSConfig = TTSConfig()) -> Path
             logger.warning("第 %d 次请求失败（%s），%.1f 秒后重试...", attempt, e, wait)
             time.sleep(wait)
 
-    body = resp.json()
+    try:
+        body = resp.json()
+    except (ValueError, json.JSONDecodeError) as exc:
+        raise RuntimeError(
+            f"TTS 响应不是有效 JSON (HTTP {resp.status_code}): {resp.text[:200]}"
+        ) from exc
 
     if body.get("code") != 3000:
         raise RuntimeError(f"TTS 失败: code={body.get('code')}, message={body.get('message')}")

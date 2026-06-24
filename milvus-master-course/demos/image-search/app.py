@@ -16,7 +16,7 @@ from typing import Any
 
 import torch
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse
 from PIL import Image
 from pymilvus import DataType, MilvusClient
@@ -147,7 +147,7 @@ def index_local_images() -> dict[str, int]:
             vector = embed_image(image)
             image_id = hashlib.sha1(str(path).encode("utf-8")).hexdigest()
             rows.append({"id": image_id, "image_path": str(path), "caption": path.stem, "embedding": vector})
-        except Exception as e:
+        except (OSError, ValueError) as e:
             logger.warning("跳过图片 %s: %s", path.name, e)
     if rows:
         client.upsert(settings.collection_name, rows)
@@ -168,5 +168,11 @@ def search_by_text(q: str, top_k: int = 5) -> list[dict[str, Any]]:
 @app.post("/search/image")
 def search_by_image(file: UploadFile = File(...), top_k: int = Form(5)) -> list[dict[str, Any]]:
     """图搜图：上传图片搜索相似图片"""
+    try:
+        image = Image.open(file.file)
+        image.verify()
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"无法解析上传的图片: {exc}") from exc
+    file.file.seek(0)
     image = Image.open(file.file)
     return search_vector(embed_image(image), top_k)

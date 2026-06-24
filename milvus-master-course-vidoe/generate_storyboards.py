@@ -302,6 +302,7 @@ def main() -> None:
     args = parser.parse_args()
     generated = 0
     skipped = 0
+    errors = 0
     for chapter_dir in sorted(BASE.glob("chapter-*")):
         if not chapter_dir.is_dir():
             continue
@@ -314,10 +315,15 @@ def main() -> None:
             print(f"SKIP {chapter_dir.name}: storyboard.md 已存在")
             skipped += 1
             continue
-        output.write_text(build_storyboard(chapter_dir), encoding="utf-8")
+        try:
+            output.write_text(build_storyboard(chapter_dir), encoding="utf-8")
+        except (ValueError, FileNotFoundError, json.JSONDecodeError) as exc:
+            print(f"ERROR {chapter_dir.name}: {exc}")
+            errors += 1
+            continue
         print(f"WRITE {output.relative_to(BASE)}")
         generated += 1
-    print(f"Done: generated={generated}, skipped={skipped}")
+    print(f"Done: generated={generated}, skipped={skipped}, errors={errors}")
 
 
 if __name__ == "__main__":
